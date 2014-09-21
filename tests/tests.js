@@ -12,9 +12,9 @@ test('2 + 2 equals 4', function (t) {
 	t.end();
 });
 
-test('2 + 2 equals 2', function (t) {
-	t.equal(2 + 2, 2);
-	t.end();
-});
+// test('2 + 2 equals 2', function (t) {
+// 	t.equal(2 + 2, 2);
+// 	t.end();
+// });
 
 window.global_test_results = tape.getResults();
