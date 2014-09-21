@@ -89,6 +89,7 @@ initConfig.browserify = {
 		files: {
 			// 'build/backwards.min.js': ['src/backwards.js'],
 			'tests/_tests.min.js': [
+				// '../src/backwards.js',
 				'tests/**/*.js',
 				'!tests/_tests.min.js'
 			]

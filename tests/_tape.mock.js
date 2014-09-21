@@ -14,21 +14,23 @@ F.prototype = {
 	equal: function (actual, expected) {
 		this.actual   = actual;
 		this.expected = expected;
+		num_total++;
 
 		if (actual === expected) {
 			this.status = 'passed';
+			num_passed++;
 		} else {
 			this.status = 'failed';
+			num_failed++;
 		}
 	},
 
 	end: function () {
-		this.duration = +new Date() - this.timestamp;
-		num_total++;
+		// this.duration = +new Date() - this.timestamp;
 		if (this.status === 'passed') {
-			num_passed++;
+			// num_passed++;
 		} else if (this.status === 'failed') {
-			num_failed++;
+			// num_failed++;
 		} else {
 			throw new Error('Test neither passed nor failed');
 		}
