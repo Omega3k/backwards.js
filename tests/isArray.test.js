@@ -1,19 +1,19 @@
 module.exports = function (test, backwards) {
-	var f = backwards.isArguments;
+	var f = backwards.isArray;
 	
-	test('backwards.isArguments should be a function', function (t) {
+	test('backwards.isArray should be a function', function (t) {
 		t.equal(typeof f, 'function');
 		t.end();
 	});
 
-	test('it should return true if passed an Arguments-object', function (t) {
-		t.equal(f( arguments ), true);
+	test('it should return false if passed an Arguments-object', function (t) {
+		t.equal(f( arguments ), false);
 		t.end();
 	});
 
-	test('it should return false if passed an Array', function (t) {
-		t.equal(f( new Array() ), false);
-		t.equal(f( [] ), false);
+	test('it should return true if passed an Array', function (t) {
+		t.equal(f( new Array() ), true);
+		t.equal(f( [] ), true);
 		t.end();
 	});
 

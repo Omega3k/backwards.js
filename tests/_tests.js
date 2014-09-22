@@ -3,8 +3,10 @@ var tape = require( './_tape.mock.js' )
 
 	, backwards   = require( '../src/backwards.js' )
 	, isArguments = require( './isArguments.test.js' )
+	, isArray     = require( './isArray.test.js' )
 ;
 
-isArguments( test, backwards.isArguments );
+isArguments( test, backwards );
+isArray( test, backwards );
 
-window.global_test_results = tape.getResults();
+this.global_test_results = tape.getResults();
