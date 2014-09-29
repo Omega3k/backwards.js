@@ -15,9 +15,9 @@ var tape        = require( './_tape.mock.js' )
 	, isNumber    = require( './isNumber.test.js' )( test, backwards )
 	, isObject    = require( './isObject.test.js' )( test, backwards )
 	, isString    = require( './isString.test.js' )( test, backwards )
-	, isUndefined = require( './isUndefined.test.js' )( test, backwards )
+	// , isUndefined = require( './isUndefined.test.js' )( test, backwards )
 
-	, compose     = require( './compose.test.js' )( test, backwards )
+	// , compose     = require( './compose.test.js' )( test, backwards )
 ;
 
 window.global_test_results = tape.getResults();
