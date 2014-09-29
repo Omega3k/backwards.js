@@ -3,6 +3,7 @@ var test       = require( 'tape' )
 	, num_total  = 0
 	, num_passed = 0
 	, num_failed = 0
+	, return_obj = {}
 	, F
 ;
 
@@ -68,3 +69,11 @@ module.exports.getResults = function () {
 		tests   : result
 	};
 };
+
+// module.exports = return_obj;
+
+// if (define) {
+// 	define('tape', [], function () {
+// 		return return_obj;
+// 	});
+// }
