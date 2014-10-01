@@ -3,7 +3,6 @@ var test       = require( 'tape' )
 	, num_total  = 0
 	, num_passed = 0
 	, num_failed = 0
-	, return_obj = {}
 	, F
 ;
 
@@ -13,40 +12,36 @@ F.prototype = {
 	status: 'pending',
 
 	equal: function (actual, expected) {
-		this.actual   = actual;
-		this.expected = expected;
+		var test = {};
 		num_total++;
 
-		if (actual === expected) {
-			this.status = 'passed';
+		test.id = num_total;
+		test.actual = actual;
+		test.expected = expected;
+
+		if ( actual === expected ) {
 			num_passed++;
+			test.passed = true;
 		} else {
-			this.status = 'failed';
 			num_failed++;
+			test.passed = false;
 		}
+
+		this.tests.push( test );
 	},
 
 	end: function () {
-		// this.duration = +new Date() - this.timestamp;
-		if (this.status === 'passed') {
-			// num_passed++;
-		} else if (this.status === 'failed') {
-			// num_failed++;
-		} else {
-			throw new Error('Test neither passed nor failed');
-		}
-
 		cache.push(this);
 	}
 };
 
 module.exports.test = function ( string, f ) {
-	var _f  = new F();
-	_f.id   = cache.length;
-	_f.name = string;
+	var _f   = new F();
+	_f.name  = string;
+	_f.tests = [];
 	// _f.timestamp = +new Date();
 
-	test( string, f(_f) );
+	f( _f );
 	test( string, f );
 };
 
@@ -66,7 +61,8 @@ module.exports.getResults = function () {
 		failed  : num_failed,
 		total   : num_total,
 		// duration: 'TODO Duration',
-		tests   : result
+		// tests   : result
+		tests   : cache
 	};
 };
 

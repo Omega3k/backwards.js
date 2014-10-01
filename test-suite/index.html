@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Test-Suite</title>
+
+  <!-- <link rel="shortcut icon" type="image/png" href="lib/jasmine-2.0.3/jasmine_favicon.png">
+  <link rel="stylesheet" type="text/css" href="lib/jasmine-2.0.3/jasmine.css"> -->
+
+  <!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
+  <!-- <script src="almond.js"></script>
+  <script src="require-tape.js"></script>
+  <script src="../src/backwards.js"></script>
+  <script src="isArguments.unit.test.js"></script> -->
+  
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  
+  <!-- https://kuler.adobe.com/Tangy-Pop-color-theme-221639/ -->
+</head>
+
+<body>
+  <div id="test" class="container"></div>
+  
+  <div id="container">
+    <div id="summary" class="container">
+      <h1>Test-suite Summary</h1>
+      <span class="total">Total: 99</span>
+      <span class="passed">Passed: 98</span>
+      <span class="failed">Failed: 1</span>
+    </div>
+
+    <div id="failed-tests" class="container">
+      <ul>
+        <li>
+          <span class="number">135</span>
+          <span>
+            backwards.isArray should return true if passed an Array
+          </span>
+        </li>
+
+        <li>
+          <span class="number">134</span>
+          <span>
+            backwards.isArray should return false if passed a String
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div id="passed-tests" class="container">
+      <ul>
+        <li>
+          <span class="number">010</span>
+          <span>
+            backwards.isArray should return false if passed an Object
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="../tests/_tests.min.js"></script>
+	
+  <script>
+	// 	window.global_test_results = require('tape').getResults();
+	</script>
+</body>
+</html>

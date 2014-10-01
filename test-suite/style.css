@@ -1,0 +1,92 @@
+/*
+The color-scheme is taken from: 
+http://adobe.ly/1oy3lAf
+*/
+
+html, body
+, #passed-tests ul, #passed-tests ul li
+, #failed-tests ul, #failed-tests ul li
+, h1, h2, h3, h4, h5, h6 {
+	margin : 0;
+	padding: 0;
+}
+
+h1 {
+	font-size: 3em;
+	font-weight: 700;
+}
+
+h2 {
+	font-size: 1.2em;
+	font-weight: 700;
+}
+
+body {
+	/*background-color: #444;*/
+	background-color: #33363C;
+	color      : #444;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.container {
+	width: 90%;
+	margin: 0 auto;
+}
+
+span.number {
+  margin-right    : 0.5em;
+  padding         : 0.5em;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#summary {
+	color: #fff;
+	text-shadow: 0 1px 1px #000;
+}
+
+#summary span {
+	margin: 0 1em 0 0;
+}
+
+#summary, #passed-tests, #failed-tests {
+	margin: 1em auto 0;
+	/*text-shadow: 1px 2px 1px #000;*/
+}
+
+#passed-tests ul, #failed-tests ul {
+  list-style: none;
+  border    : none;
+}
+
+#passed-tests ul li, #failed-tests ul li {
+	margin-bottom: .5em;
+  padding: 1em;
+}
+
+#passed-tests ul li { background-color: #75C979; }
+#failed-tests ul li { background-color: #FF300D; }
+
+#passed-tests ul li { background-color: #2BB29D; }
+#failed-tests ul li { background-color: #FF3F40; }
+
+#passed-tests ul li ul li
+, #failed-tests ul li ul li {
+	margin : 0;
+	padding: .5em;
+}
+
+/*#passed-tests ul li {
+	margin  : .2em;
+	padding : 0;
+	float   : left;
+	width   : .7em;
+	height  : .7em;
+	border-radius: 1em;
+}
+
+#passed-tests ul li h2
+, #passed-tests ul li ul
+, #passed-tests ul li ul li
+, #passed-tests ul li ul li span {
+	display: none;
+}*/

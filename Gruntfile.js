@@ -6,39 +6,171 @@ var   browsers = []
 	, initConfig = {}
 ;
 
+// browsers.push({
+// 	browserName: 'firefox',
+// 	version    : '19',
+// 	platform   : 'XP'
+// });
+
+// browsers.push({
+// 	browserName: 'chrome',
+// 	platform   : 'XP'
+// });
+
+// browsers.push({
+// 	browserName: 'chrome',
+// 	platform   : 'linux'
+// });
+
+// browsers.push({
+// 	browserName: 'internet explorer',
+// 	version    : '10',
+// 	platform   : 'WIN8'
+// });
+
+// browsers.push({
+// 	browserName: 'internet explorer',
+// 	version    : '9',
+// 	platform   : 'VISTA'
+// });
+
+// browsers.push({
+// 	browserName: 'opera',
+// 	version    : '12',
+// 	platform   : 'Windows 2008'
+// });
+
+// IOS iPhone / iPad
+// =================
+
+browsers.push({
+	browserName: 'iphone',
+	platform   : 'OS X 10.9'
+});
+
+browsers.push({
+	browserName: 'ipad',
+	platform   : 'OS X 10.9'
+});
+
+// Android
+// =======
+
+browsers.push({
+	browserName: 'android',
+	platform   : 'Linux'
+});
+
+// Windows 8.1
+// ===========
+
 browsers.push({
 	browserName: 'firefox',
-	version    : '19',
-	platform   : 'XP'
+	platform   : 'Windows 8.1'
 });
 
 browsers.push({
 	browserName: 'chrome',
-	platform   : 'XP'
+	platform   : 'Windows 8.1'
 });
 
 browsers.push({
-	browserName: 'chrome',
-	platform   : 'linux'
+	browserName: 'internet explorer',
+	version    : '11',
+	platform   : 'Windows 8.1'
 });
+
+// Windows 8
+// =========
 
 browsers.push({
 	browserName: 'internet explorer',
 	version    : '10',
-	platform   : 'WIN8'
+	platform   : 'Windows 8'
 });
+
+// Windows 7
+// =========
 
 browsers.push({
 	browserName: 'internet explorer',
 	version    : '9',
-	platform   : 'VISTA'
+	platform   : 'Windows 7'
+});
+
+// Windows XP
+// ==========
+
+browsers.push({
+	browserName: 'firefox',
+	platform   : 'Windows XP'
+});
+
+browsers.push({
+	browserName: 'chrome',
+	platform   : 'Windows XP'
 });
 
 browsers.push({
 	browserName: 'opera',
-	version    : '12',
-	platform   : 'Windows 2008'
+	platform   : 'Windows XP'
 });
+
+browsers.push({
+	browserName: 'internet explorer',
+	version    : '8',
+	platform   : 'Windows XP'
+});
+
+browsers.push({
+	browserName: 'internet explorer',
+	version    : '7',
+	platform   : 'Windows XP'
+});
+
+browsers.push({
+	browserName: 'internet explorer',
+	version    : '6',
+	platform   : 'Windows XP'
+});
+
+// OS X 10.9 Mavericks
+// ===================
+
+browsers.push({
+	browserName: 'firefox',
+	platform   : 'OS X 10.9'
+});
+
+browsers.push({
+	browserName: 'chrome',
+	platform   : 'OS X 10.9'
+});
+
+browsers.push({
+	browserName: 'safari',
+	platform   : 'OS X 10.9'
+});
+
+
+// Linux
+// =====
+
+browsers.push({
+	browserName: 'firefox',
+	platform   : 'Linux'
+});
+
+browsers.push({
+	browserName: 'chrome',
+	platform   : 'Linux'
+});
+
+browsers.push({
+	browserName: 'opera',
+	platform   : 'Linux'
+});
+
 
 // Connect-server
 initConfig.connect = {
@@ -72,10 +204,10 @@ initConfig['saucelabs-jasmine'] = {
 initConfig['saucelabs-custom'] = {
 	all: {
 		options: {
-			urls: ['http://0.0.0.0:9999/tests/_tests.html'],
+			urls: ['http://0.0.0.0:9999/test-suite/'],
 			tunnelTimeout: 5,
 			build: process.env.TRAVIS_JOB_ID,
-			concurrency: 3,
+			concurrency: 6,
 			browsers: browsers,
 			testname: 'backwards.js',
 			tags: ['master']
@@ -97,14 +229,14 @@ initConfig.browserify = {
 				'tests/_tests.js'
 			]
 
-			, 'tests/require-tape.js': [
-				// './node_modules/tape/index.js',
-				// 'tests/almond.js',
-				'tests/_tape.mock.js'
-				// 'tests/window.require-tape.js'
-			]
+			// , 'tests/require-tape.js': [
+			// 	// './node_modules/tape/index.js',
+			// 	// 'tests/almond.js',
+			// 	'tests/_tape.mock.js'
+			// 	// 'tests/window.require-tape.js'
+			// ]
 
-			, 'tests/tests.bundle.js': ['tests/**/*.unit.test.js']
+			// , 'tests/tests.bundle.js': ['tests/**/*.unit.test.js']
 		}
 	}
 };
