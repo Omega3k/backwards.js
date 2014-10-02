@@ -24,10 +24,11 @@ browsers.push({
 // Android
 // =======
 
-// browsers.push({
-// 	browserName: 'android',
-// 	platform   : 'Linux'
-// });
+browsers.push({
+	browserName: 'android',
+	version    : '4.4',
+	platform   : 'Linux'
+});
 
 // Windows 8.1
 // ===========
@@ -102,6 +103,14 @@ browsers.push({
 	platform   : 'Windows XP'
 });
 
+// OS X 10.6 Snow Leopard
+// ======================
+
+browsers.push({
+	browserName: 'safari',
+	platform   : 'OS X 10.6'
+});
+
 // OS X 10.9 Mavericks
 // ===================
 
@@ -114,11 +123,6 @@ browsers.push({
 	browserName: 'chrome',
 	platform   : 'OS X 10.9'
 });
-
-// browsers.push({
-// 	browserName: 'safari',
-// 	platform   : 'OS X 10.9'
-// });
 
 
 // Linux
