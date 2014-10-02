@@ -6,40 +6,6 @@ var   browsers = []
 	, initConfig = {}
 ;
 
-// browsers.push({
-// 	browserName: 'firefox',
-// 	version    : '19',
-// 	platform   : 'XP'
-// });
-
-// browsers.push({
-// 	browserName: 'chrome',
-// 	platform   : 'XP'
-// });
-
-// browsers.push({
-// 	browserName: 'chrome',
-// 	platform   : 'linux'
-// });
-
-// browsers.push({
-// 	browserName: 'internet explorer',
-// 	version    : '10',
-// 	platform   : 'WIN8'
-// });
-
-// browsers.push({
-// 	browserName: 'internet explorer',
-// 	version    : '9',
-// 	platform   : 'VISTA'
-// });
-
-// browsers.push({
-// 	browserName: 'opera',
-// 	version    : '12',
-// 	platform   : 'Windows 2008'
-// });
-
 // https://saucelabs.com/platforms/webdriver
 
 // IOS iPhone / iPad
@@ -58,10 +24,10 @@ browsers.push({
 // Android
 // =======
 
-browsers.push({
-	browserName: 'android',
-	platform   : 'Linux'
-});
+// browsers.push({
+// 	browserName: 'android',
+// 	platform   : 'Linux'
+// });
 
 // Windows 8.1
 // ===========
@@ -149,10 +115,10 @@ browsers.push({
 	platform   : 'OS X 10.9'
 });
 
-browsers.push({
-	browserName: 'safari',
-	platform   : 'OS X 10.9'
-});
+// browsers.push({
+// 	browserName: 'safari',
+// 	platform   : 'OS X 10.9'
+// });
 
 
 // Linux
