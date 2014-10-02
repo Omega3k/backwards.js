@@ -46,15 +46,27 @@ module.exports.test = function ( string, f ) {
 };
 
 module.exports.getResults = function () {
-	var result = [];
+	var result = []
+		, length = cache.length
+		, i, x
+	;
 
-	cache.forEach(function (x, i, array) {
+	for ( i = 0; i < length; i++ ) {
+		x = cache[i];
 		result.push({
 			name: x.name,
 			result: x.status === 'passed',
 			message: 'Expected ' + x.actual + ' to equal ' + x.expected
 		});
-	});
+	}
+
+	// cache.forEach(function (x, i, array) {
+	// 	result.push({
+	// 		name: x.name,
+	// 		result: x.status === 'passed',
+	// 		message: 'Expected ' + x.actual + ' to equal ' + x.expected
+	// 	});
+	// });
 
 	return {
 		passed  : num_passed,

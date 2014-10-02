@@ -52,7 +52,7 @@ window.global_test_results = {
 	tests: failed_tests
 };
 
-console.log( passed_tests, failed_tests );
+// console.log( passed_tests, failed_tests );
 
 var $summary = window.document.getElementById( 'summary' );
 $summary.innerHTML = htmlbuilder.summary( test_results );

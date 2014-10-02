@@ -40,6 +40,8 @@ var   browsers = []
 // 	platform   : 'Windows 2008'
 // });
 
+// https://saucelabs.com/platforms/webdriver
+
 // IOS iPhone / iPad
 // =================
 
