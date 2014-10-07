@@ -7,6 +7,7 @@ var   browsers = []
 ;
 
 // https://saucelabs.com/platforms/webdriver
+// https://docs.saucelabs.com/reference/rest-api/#jsunit
 
 // IOS iPhone / iPad
 // =================
@@ -155,7 +156,22 @@ initConfig.connect = {
 };
 
 // Watch-task
-initConfig.watch = {};
+initConfig.watch = {
+	tests: {
+		files: ['tests/**/*.test.js'],
+		tasks: ['browserify']
+	}
+};
+
+// watch: {
+//   scripts: {
+//     files: ['**/*.js'],
+//     tasks: ['jshint'],
+//     options: {
+//       spawn: false,
+//     },
+//   },
+// },
 
 // Saucelabs Jasmine
 initConfig['saucelabs-jasmine'] = {

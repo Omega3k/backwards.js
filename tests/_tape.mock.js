@@ -15,8 +15,8 @@ F.prototype = {
 		var test = {};
 		num_total++;
 
-		test.id = num_total;
-		test.actual = actual;
+		test.id       = num_total;
+		test.actual   = actual;
 		test.expected = expected;
 
 		if ( actual === expected ) {
@@ -54,19 +54,11 @@ module.exports.getResults = function () {
 	for ( i = 0; i < length; i++ ) {
 		x = cache[i];
 		result.push({
-			name: x.name,
-			result: x.status === 'passed',
+			name   : x.name,
+			result : x.status === 'passed',
 			message: 'Expected ' + x.actual + ' to equal ' + x.expected
 		});
 	}
-
-	// cache.forEach(function (x, i, array) {
-	// 	result.push({
-	// 		name: x.name,
-	// 		result: x.status === 'passed',
-	// 		message: 'Expected ' + x.actual + ' to equal ' + x.expected
-	// 	});
-	// });
 
 	return {
 		passed  : num_passed,
@@ -77,11 +69,3 @@ module.exports.getResults = function () {
 		tests   : cache
 	};
 };
-
-// module.exports = return_obj;
-
-// if (define) {
-// 	define('tape', [], function () {
-// 		return return_obj;
-// 	});
-// }

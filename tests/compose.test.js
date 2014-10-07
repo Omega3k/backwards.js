@@ -1,6 +1,14 @@
 module.exports = function (test, backwards) {
 	var f, compose;
 	f = compose = backwards.compose;
+
+	function addOne (x) {
+		return x + 1;
+	}
+
+	function timesTwo (x) {
+		return x * 2;
+	}
 	
 	test('backwards.compose should be a function', function (t) {
 		t.equal(typeof f, 'function');
@@ -8,20 +16,11 @@ module.exports = function (test, backwards) {
 	});
 
 	test('backwards.compose should compose functions correctly', function (t) {
-		var nine, ten;
-		function addOne (x) {
-			return x + 1;
-		}
+		var nine = compose( addOne, timesTwo )( 4 );
+		var ten  = compose( timesTwo, addOne )( 4 );
 
-		function timesTwo (x) {
-			return x * 2;
-		}
-
-		nine = compose( addOne, timesTwo );
-		ten  = compose( timesTwo, addOne );
-
-		t.equal( nine( 4 ), 9 );
-		t.equal( ten( 4 ), 10 );
+		t.equal( nine, 9 );
+		t.equal( ten, 10 );
 		t.end();
 	});
 };

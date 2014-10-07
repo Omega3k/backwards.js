@@ -20,6 +20,7 @@ var tape         = require( './_tape.mock.js' )
 	, isUndefined  = require( './isUndefined.test.js' )( test, backwards )
 	
 	, compose      = require( './compose.test.js' )( test, backwards )
+	, map          = require( './map.test.js' )( test, backwards )
 
 	, test_results = tape.getResults()
 	, passed_tests = []
@@ -52,8 +53,6 @@ window.global_test_results = {
 	tests: failed_tests
 };
 
-// console.log( passed_tests, failed_tests );
-
 var $summary = window.document.getElementById( 'summary' );
 $summary.innerHTML = htmlbuilder.summary( test_results );
 
@@ -62,5 +61,3 @@ $failed_tests.innerHTML = htmlbuilder.passedTests( failed_tests );
 
 var $passed_tests = window.document.getElementById( 'passed-tests' );
 $passed_tests.innerHTML = htmlbuilder.passedTests( passed_tests );
-
-// window.global_test_results = test_results;
