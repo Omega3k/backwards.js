@@ -285,9 +285,14 @@
       if (len === 0 || i >= len) {
         return -1;
       } else if (i < 0) {
-        console.log('Modified variable BEFORE: ' + i);
+        // console.log('Modified variable BEFORE: ' + i);
         i = len + i;
-        console.log('Modified variable AFTER: ' + i);
+        // console.log('Modified variable AFTER: ' + i);
+
+        if (i < 0) {
+          i = 0;
+          // console.log('Reset variable TO: ' + i);
+        }
       }
 
       while(len > i){
