@@ -32,6 +32,7 @@ module.exports = function (test, backwards) {
 
 		t.equal( sum( [0, 1, 2, 3] ), 6 );
 		t.equal( flatten( [[0, 1], [2, 3], [4, 5]] ).toString(), [0, 1, 2, 3, 4, 5].toString() );
+		// 4, 5, 2, 3, 0, 1 ( ie8, ie7, ie6 )
 
 		t.equal( arrOne.toString(), [0, 1, 2, 3].toString() );
 		t.equal( arrTwo.toString(), [1, 2, 3, 4].toString() );

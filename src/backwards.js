@@ -267,12 +267,29 @@
   
   //+ reduce :: Function -> a -> a -> a
   module.reduce = function (f, acc, x) {
+    var result = acc;
     map(function (val, i, obj) {
-      acc = f(acc, val, i, obj);
+      result = f(result, val, i, obj);
     }, x);
 
-    return acc;
+    return result;
   }.autoCurry();
+
+  // module.reduce = function (f, acc, x) {
+  //   var i = x.length;
+  //   while (i--) {
+  //     if (i in x) {
+  //       acc = f(x[i], i, x);
+  //     }
+  //   }
+  //   return acc;
+  // }.autoCurry();
+
+  // function mapper (f, x) {
+  //   return reduce(function (val, i, arr) {
+  //     return f(val);
+  //   }, [], x);
+  // }.autoCurry();
   
   //+ filter :: Function -> Array -> Array
   module.filter = function (f, x) {
