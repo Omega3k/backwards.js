@@ -22,6 +22,8 @@ var tape         = require( './_tape.mock.js' )
 	, compose      = require( './compose.test.js' )( test, backwards )
 	, reduce       = require( './reduce.test.js' )( test, backwards )
 	, map          = require( './map.test.js' )( test, backwards )
+	, filter       = require( './filter.test.js' )( test, backwards )
+	, indexOf      = require( './indexOf.test.js' )( test, backwards )
 
 	, test_results = tape.getResults()
 	, passed_tests = []

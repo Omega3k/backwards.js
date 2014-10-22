@@ -194,96 +194,14 @@
   toArray = function(x) {
     return slice.call(x);
   };
-  
-  // //+ objectMap :: Function -> Object -> a
-  // objectMap = function (f, x) {
-  //   var result = {}, prop;
-    
-  //   if (x.forEach) {
-  //     x.forEach(function (val, i, obj) {
-  //       result[i] = f(val);
-  //     });
-  //   } else {
-  //     for (prop in x) {
-  //       if (x.hasOwnProperty(prop)) {
-  //         result[prop] = f(x[prop], prop, x);
-  //       }
-  //     }
-  //   }
-    
-  //   return result;
-  // };
-
-  // //+ objectMap :: Function -> Object -> a
-  // objectMap = function (f, x) {
-  //   var result = {}, prop;
-    
-  //   for (prop in x) {
-  //     if (x.hasOwnProperty(prop)) {
-  //       result[prop] = f(x[prop], prop, x);
-  //     }
-  //   }
-    
-  //   return result;
-  // };
-
-  // //+ arrayMap :: Function -> Array -> a
-  // arrayMap = function (f, x) {
-  //   var result = []
-  //     , i      = x.length;
-
-  //   while (i--) {
-  //     if (i in x) {
-  //       result[i] = f(x[i], i, x);
-  //     }
-  //   }
-    
-  //   return result;
-  // };
-
-  //+ arrayMap :: Function -> Array -> a
-  arrayMap = function (f, x) {
-    return module.reduce(function (acc, val, i, arr) {
-      acc[i] = f(val, i, arr);
-      return acc;
-    }, [], x);
-  };
-
-  //+ objectMap :: Function -> Object -> a
-  objectMap = function (f, x) {
-    return module.reduce(function (acc, val, i, arr) {
-      acc[i] = f(val, i, arr);
-      return acc;
-    }, {}, x);
-  };
-  
-  //+ promiseMap :: Function -> Promise -> a
-  // promiseMap = function (f, x) {
-  //   return x.then(function (data) {
-  //     return f(data);
-  //   }, function (error) {
-  //     throw error;
-  //   });
-  // };
-  
-  //+ map :: Function -> a -> b
-  map = module.map = function (f, x) {
-    if (isArray(x) || isArguments(x)) {
-      return arrayMap(f, x);
-    } else if (isObject(x)) {
-      return objectMap(f, x);
-    } else {
-      return f(x);
-    }
-  }.autoCurry();
 
   //+ reduce :: ( Function -> a -> a ) -> a
-  module.reduce = function (f, acc, x) {
-    var i;
+  function reduce (f, acc, x) {
+    var i, len;
 
     if (isArray(x) || isArguments(x)) {
-      i = x.length;
-      while (i--) {
+      len = x.length;
+      for (i = 0; i < len; i++) {
         if (i in x) {
           acc = f(acc, x[i], i, x);
         }
@@ -297,39 +215,82 @@
     }
 
     return acc;
-  }.autoCurry();
+  }
+
+  module.reduce = autoCurry(reduce);
+
+  // Internal function used with .forEach & .map
+  function __reducingFunction (f, acc, x) {
+    return reduce(function (acc, val, key, obj) {
+      acc[key] = f(val, key, obj);
+      return acc;
+    }, acc, x);
+  }
+
+  function forEach (f, x) {
+    if ( isArray(x) || isArguments(x) || isObject(x) ) {
+      return __reducingFunction( f, x, x );
+    } else {
+      return f(x);
+    }
+  }
+
+  module.forEach = autoCurry(forEach);
+  
+  //+ map :: Function -> a -> b
+  function map (f, x) {
+    if (isArray(x) || isArguments(x)) {
+      return __reducingFunction( f, [], x );
+    }
+    else if (isObject(x)) {
+      return __reducingFunction( f, {}, x );
+    }
+    else {
+      return f(x);
+    }
+  }
+
+  module.map = autoCurry(map);
+
+  //+ promiseMap :: Function -> Promise -> a
+  // promiseMap = function (f, x) {
+  //   return x.then(function (data) {
+  //     return f(data);
+  //   }, function (error) {
+  //     throw error;
+  //   });
+  // };
   
   //+ filter :: Function -> Array -> Array
-  module.filter = function (f, x) {
-    var result = [], i, length, tmp; 
-
-    if (x.filter) {
-      return x.filter(f);
-    } else {
-      length = x.length;
-      for (i = 0; i < length; i++) {
-        tmp = f(x[i], i, x);
-        if (tmp) {
-          result.push(x[i]);
-        }
+  function filter (f, x) {
+    return reduce(function (acc, val, i, arr) {
+      if ( f(val, i, arr) ) {
+        acc.push(val);
       }
-      return result;
-    }
-  }.autoCurry();
+      return acc;
+    }, [], x);
+  }
 
-  module.indexOf = function (search, i, x) {
-    var length;
+  module.filter = autoCurry(filter);
 
-    if (x.indexOf) {
-      return x.indexOf(search, i);
-    } else {
-      length = x.length;
+  function indexOf (search, i, x) {
+    var len;
 
-      if (length === 0 || i >= length) {
+    // if (x.indexOf) {
+    //   return x.indexOf(search, i);
+    // }
+
+      len = x.length;
+
+      if (len === 0 || i >= len) {
         return -1;
+      } else if (i < 0) {
+        console.log('Modified variable BEFORE: ' + i);
+        i = len + i;
+        console.log('Modified variable AFTER: ' + i);
       }
 
-      while(length > i){
+      while(len > i){
         if (i in x && x[i] === search) {
           return i;
         }
@@ -337,8 +298,9 @@
       }
 
       return -1;
-    }
-  }.autoCurry();
+  }
+
+  module.indexOf = autoCurry(indexOf);
   
   module.either = function (x, y) {
     return y ? y : x;
@@ -388,10 +350,6 @@
   module.log = function (x) {
     console.log('Logging: ', x);
   }.autoCurry();
-  
-//  for (var prop in module) {
-//    module[prop] = autoCurry.call(module[prop], module[prop]); 
-//  }
   
   return module;
 }));
