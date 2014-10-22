@@ -275,15 +275,32 @@
     return result;
   }.autoCurry();
 
-  // module.reduce = function (f, acc, x) {
-  //   var i = x.length;
-  //   while (i--) {
-  //     if (i in x) {
-  //       acc = f(x[i], i, x);
-  //     }
+  // _.reduce = _.foldl = _.inject = function(obj, iteratee, memo, context) {
+  //   if (obj == null) obj = [];
+  //   iteratee = createCallback(iteratee, context, 4);
+  //   var keys = obj.length !== +obj.length && _.keys(obj),
+  //       length = (keys || obj).length,
+  //       index = 0, currentKey;
+  //   if (arguments.length < 3) {
+  //     if (!length) throw new TypeError(reduceError);
+  //     memo = obj[keys ? keys[index++] : index++];
   //   }
-  //   return acc;
-  // }.autoCurry();
+  //   for (; index < length; index++) {
+  //     currentKey = keys ? keys[index] : index;
+  //     memo = iteratee(memo, obj[currentKey], currentKey, obj);
+  //   }
+  //   return memo;
+  // };
+
+  module.reduce = function (f, acc, x) {
+    var i = x.length;
+    while (i--) {
+      if (i in x) {
+        acc = f(acc, x[i], i, x);
+      }
+    }
+    return acc;
+  }.autoCurry();
 
   // function mapper (f, x) {
   //   return reduce(function (val, i, arr) {
