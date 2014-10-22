@@ -4,11 +4,16 @@
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as a named module.
         define(name, [], factory);
-    } else if (typeof exports === 'object') {
+    } else if (typeof exports !== 'undefined') {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
         // like Node.
-        module.exports = factory();
+
+        // module.exports = factory();
+        if (typeof module !== 'undefined' && module.exports) {
+          exports = module.exports = factory();
+        }
+        exports[name] = factory();
     } else {
         // Browser globals (root is window)
         root[name] = factory();
@@ -59,12 +64,12 @@
   curry = function (f) {
     var args = slice.call(arguments, 1); 
     return function () {
-      return f.apply(this, args.concat(slice.call(arguments))); 
+      return f.apply(this, args.concat(slice.call(arguments, 0))); 
     }; 
   }; 
 
   //+ autoCurry :: Function -> Number -> Function
-  autoCurry = function (f, length) { 
+  autoCurry = module.autoCurry = function (f, length) { 
     length = length || f.length;
     var newFunction = function () {
       if (arguments.length < length) {
@@ -82,38 +87,20 @@
   Function.prototype.autoCurry = function(n) {
     return autoCurry(this, n);
   };
-  
+
   //+ compose :: Function, ... -> Function
   compose = module.compose = function () {
     var fs = arguments;
     return function () {
-      var args = arguments,
-          length = fs.length;
+      var args = arguments
+        , i    = fs.length;
 
-      while (length--) {
-        args = [fs[length].apply(this, args)];
+      while (i--) {
+        args = [fs[i].apply(this, args)];
       }
       return args[0];
     };
   };
-  
-  //+ whatTypeIs :: a -> String
-  // module.whatTypeIs = function (x) {
-  //   var value  = toString.call(x), 
-  //       test   = value.substring(0, 8), 
-  //       result = value.substring(8, value.length-1).toLowerCase();
-    
-  //   if (result !== 'object') {
-  //     return result;
-  //   } else {
-  //     value = x.toString();
-  //     if (value.substring(0, 8) === '[object ') { 
-  //       return result; 
-  //     } else {
-  //       return value ? value : 'undefined';
-  //     }
-  //   }
-  // };
   
   //+ isTypeOf :: String -> a -> Boolean
   isTypeOf = module.isTypeOf = function (type, x) { 
@@ -136,14 +123,16 @@
   
   //+ isBoolean :: a -> Boolean
   isBoolean = module.isBoolean = function (x) {
-    return x === true || x === false || isTypeOf('Boolean', x);
+    return x === true || x === false;
   };
   
   //+ isDate :: a -> Boolean
   isDate = module.isDate = isTypeOf('Date');
   
   //+ isFinite :: a -> Boolean
-  isFinite = module.isFinite = function (x) { return isFinite(x) && !isNaN(parseFloat(x)); };
+  isFinite = module.isFinite = function (x) {
+    return isFinite(x) && !isNaN(parseFloat(x));
+  };
   
   //+ isFunction :: a -> Boolean
   isFunction = module.isFunction = (function () {
@@ -162,7 +151,6 @@
   };
   
   //+ isNull :: a -> Boolean
-//  isNull = module.isNull = isTypeOf('Null');
   isNull = module.isNull = function (x) {
     return x === null || isTypeOf('Null', x);
   };
@@ -178,11 +166,10 @@
       return isTypeOf('Object', x);
     }
   };
-  isTypeOf('Object');
-  // isObject = module.isObject = isTypeOf('Object');
-//  isObject = module.isObject = function (x) {
-//    return typeof x === 'function' || typeof x === 'object' && !!x;
-//  };
+
+  // isObject = module.isObject = function (x) {
+  //   return typeof x === 'function' || typeof x === 'object' && !!x;
+  // };
   
   //+ isPromise :: a -> Boolean
   isPromise = module.isPromise = isTypeOf('Promise');
@@ -197,42 +184,56 @@
   isUndefined = module.isUndefined = function (x) {
     return x === void 0 || isTypeOf('Undefined', x);
   };
+
+  //+ exists :: a -> Boolean
+  module.exists = function (x) {
+    return x !== null && x !== void 0;
+  };
   
   //+ toArray :: a -> [b]
   toArray = function(x) {
     return slice.call(x);
   };
   
+  // //+ objectMap :: Function -> Object -> a
+  // objectMap = function (f, x) {
+  //   var result = {}, prop;
+    
+  //   if (x.forEach) {
+  //     x.forEach(function (val, i, obj) {
+  //       result[i] = f(val);
+  //     });
+  //   } else {
+  //     for (prop in x) {
+  //       if (x.hasOwnProperty(prop)) {
+  //         result[prop] = f(x[prop], prop, x);
+  //       }
+  //     }
+  //   }
+    
+  //   return result;
+  // };
+
   //+ objectMap :: Function -> Object -> a
   objectMap = function (f, x) {
     var result = {}, prop;
     
-    if (x.forEach) {
-      x.forEach(function (val, i, obj) {
-        result[i] = f(val);
-      });
-    } else {
-      for (prop in x) {
-        if (x.hasOwnProperty(prop)) {
-          result[prop] = f(x[prop], prop, x);
-        }
+    for (prop in x) {
+      if (x.hasOwnProperty(prop)) {
+        result[prop] = f(x[prop], prop, x);
       }
     }
     
     return result;
   };
-  
+
   //+ arrayMap :: Function -> Array -> a
   arrayMap = function (f, x) {
-    var result = [], i, length;
-    
-    if (x.forEach) {
-      x.forEach(function (val, i, array) {
-        result[i] = f(val, i, array);
-      });
-    } else {
-      i = x.length;
-      while (i--) {
+    var result = []
+      , i      = x.length;
+
+    while (i--) {
+      if (i in x) {
         result[i] = f(x[i], i, x);
       }
     }
@@ -241,13 +242,13 @@
   };
   
   //+ promiseMap :: Function -> Promise -> a
-  promiseMap = function (f, x) {
-    return x.then(function (data) {
-      return f(data);
-    }, function (error) {
-      throw error;
-    });
-  };
+  // promiseMap = function (f, x) {
+  //   return x.then(function (data) {
+  //     return f(data);
+  //   }, function (error) {
+  //     throw error;
+  //   });
+  // };
   
   //+ map :: Function -> a -> b
   map = module.map = function (f, x) {
@@ -264,9 +265,12 @@
     }
   }.autoCurry();
   
-  //+ reduce :: Function -> a -> a
+  //+ reduce :: Function -> a -> a -> a
   module.reduce = function (f, acc, x) {
-    map(function (val, i, obj) { acc = f(acc, val, i, obj); }, x);
+    map(function (val, i, obj) {
+      acc = f(acc, val, i, obj);
+    }, x);
+
     return acc;
   }.autoCurry();
   
@@ -286,20 +290,29 @@
       }
       return result;
     }
+  }.autoCurry();
 
-    // map(function (val, i, obj) {
-    //   tmp = f(val, i, obj);
-      
-    //   if (tmp) {
-    //     module.push(val, result);
-    //   }
-    // }, x);
+  module.indexOf = function (search, i, x) {
+    var length;
 
-    length = x.length;
-    for (i = 0; i < length; i++) {
-      result[i] = f(x[i], i, x);
+    if (x.indexOf) {
+      return x.indexOf(search, i);
+    } else {
+      length = x.length;
+
+      if (length === 0 || i >= length) {
+        return -1;
+      }
+
+      while(length > i){
+        if (i in x && x[i] === search) {
+          return i;
+        }
+        i++;
+      }
+
+      return -1;
     }
-    return result;
   }.autoCurry();
   
   module.either = function (x, y) {
@@ -313,23 +326,43 @@
   //     return x;
   //   }
   // }.autoCurry();
+
+  module.trampoline = function (f) {
+    var result = f;
+    while (result instanceof Function) {
+      result = result();
+    }
+    return result;
+  };
   
   //+ pluck :: String|Number -> a -> a
-  module.pluck = function (prop, x) { return x[prop]; }.autoCurry(); 
+  module.pluck = function (prop, x) {
+    return x[prop];
+  }.autoCurry();
   
-  module.push = function (val, x) { x.push(val); }.autoCurry();
+  module.push = function (val, x) {
+    x.push(val);
+  }.autoCurry();
   
   //+ replace :: String -> String -> String -> String
-  module.replace = function (s1, s2, s) { return s.replace(s1, s2); }.autoCurry(); 
+  module.replace = function (s1, s2, s) {
+    return s.replace(s1, s2);
+  }.autoCurry();
   
   //+ split :: String -> String -> Array
-  module.split = function (s1, s) { return s.split(s1); }.autoCurry(); 
+  module.split = function (s1, s) {
+    return s.split(s1);
+  }.autoCurry();
   
   //+ join :: String -> String -> String
-  module.join = function (s1, s2) { return s1.concat(s2); }.autoCurry(); 
+  module.join = function (s1, s2) {
+    return s1.concat(s2);
+  }.autoCurry();
   
   //+ log :: a -> undefined
-  module.log = function (x) { console.log('Logging: ', x); }.autoCurry();
+  module.log = function (x) {
+    console.log('Logging: ', x);
+  }.autoCurry();
   
 //  for (var prop in module) {
 //    module[prop] = autoCurry.call(module[prop], module[prop]); 

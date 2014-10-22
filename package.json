@@ -4,7 +4,8 @@
   "description": "A set of utility functions for functional programming in JavaScript",
   "main": "dist/backwards.min.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "cmd": "node tests/_tests.min.js"
   },
   "repository": {
     "type": "git",

@@ -20,6 +20,7 @@ var tape         = require( './_tape.mock.js' )
 	, isUndefined  = require( './isUndefined.test.js' )( test, backwards )
 	
 	, compose      = require( './compose.test.js' )( test, backwards )
+	, reduce       = require( './reduce.test.js' )( test, backwards )
 	, map          = require( './map.test.js' )( test, backwards )
 
 	, test_results = tape.getResults()
@@ -46,18 +47,20 @@ for ( i = 0; i < x.length; i++ ) {
 	}
 }
 
-window.global_test_results = {
-	passed: test_results.passed,
-	failed: test_results.failed,
-	total: test_results.total,
-	tests: failed_tests
-};
+if (typeof window !== 'undefined') {
+	window.global_test_results = {
+		passed: test_results.passed,
+		failed: test_results.failed,
+		total: test_results.total,
+		tests: failed_tests
+	};
 
-var $summary = window.document.getElementById( 'summary' );
-$summary.innerHTML = htmlbuilder.summary( test_results );
+	var $summary = window.document.getElementById( 'summary' );
+	$summary.innerHTML = htmlbuilder.summary( test_results );
 
-var $failed_tests = window.document.getElementById( 'failed-tests' );
-$failed_tests.innerHTML = htmlbuilder.passedTests( failed_tests );
+	var $failed_tests = window.document.getElementById( 'failed-tests' );
+	$failed_tests.innerHTML = htmlbuilder.passedTests( failed_tests );
 
-var $passed_tests = window.document.getElementById( 'passed-tests' );
-$passed_tests.innerHTML = htmlbuilder.passedTests( passed_tests );
+	var $passed_tests = window.document.getElementById( 'passed-tests' );
+	$passed_tests.innerHTML = htmlbuilder.passedTests( passed_tests );
+}
