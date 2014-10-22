@@ -214,46 +214,48 @@
   //   return result;
   // };
 
-  //+ objectMap :: Function -> Object -> a
-  objectMap = function (f, x) {
-    var result = {}, prop;
+  // //+ objectMap :: Function -> Object -> a
+  // objectMap = function (f, x) {
+  //   var result = {}, prop;
     
-    for (prop in x) {
-      if (x.hasOwnProperty(prop)) {
-        result[prop] = f(x[prop], prop, x);
-      }
-    }
+  //   for (prop in x) {
+  //     if (x.hasOwnProperty(prop)) {
+  //       result[prop] = f(x[prop], prop, x);
+  //     }
+  //   }
     
-    return result;
-  };
+  //   return result;
+  // };
+
+  // //+ arrayMap :: Function -> Array -> a
+  // arrayMap = function (f, x) {
+  //   var result = []
+  //     , i      = x.length;
+
+  //   while (i--) {
+  //     if (i in x) {
+  //       result[i] = f(x[i], i, x);
+  //     }
+  //   }
+    
+  //   return result;
+  // };
 
   //+ arrayMap :: Function -> Array -> a
-  arrayMap = function (f, x) {
-    var result = []
-      , i      = x.length;
-
-    while (i--) {
-      if (i in x) {
-        result[i] = f(x[i], i, x);
-      }
-    }
-    
-    return result;
-  };
-
   arrayMap = function (f, x) {
     return module.reduce(function (acc, val, i, arr) {
       acc[i] = f(val, i, arr);
       return acc;
     }, [], x);
-  }.autoCurry();
+  };
 
+  //+ objectMap :: Function -> Object -> a
   objectMap = function (f, x) {
     return module.reduce(function (acc, val, i, arr) {
       acc[i] = f(val, i, arr);
       return acc;
     }, {}, x);
-  }.autoCurry();
+  };
   
   //+ promiseMap :: Function -> Promise -> a
   // promiseMap = function (f, x) {
@@ -266,18 +268,6 @@
   
   //+ map :: Function -> a -> b
   map = module.map = function (f, x) {
-    // if (isPromise(x)) {
-    //   return promiseMap(f, x);
-    // } else if (x.map) {
-    //   return x.map(f);
-    // } else if (isArray(x) || isArguments(x)) {
-    //   return arrayMap(f, x);
-    // } else if (isObject(x)) {
-    //   return objectMap(f, x);
-    // } else {
-    //   return f(x);
-    // }
-
     if (isArray(x) || isArguments(x)) {
       return arrayMap(f, x);
     } else if (isObject(x)) {
@@ -286,19 +276,8 @@
       return f(x);
     }
   }.autoCurry();
-  
-  //+ reduce :: Function -> a -> a -> a
-  module.reduce = function (f, acc, x) {
-    var i = x.length;
-    while (i--) {
-      if (i in x) {
-        acc = f(acc, x[i], i, x);
-      }
-    }
-    return acc;
-  }.autoCurry();
 
-  //+ reduce :: Function -> a -> a -> a
+  //+ reduce :: ( Function -> a -> a ) -> a
   module.reduce = function (f, acc, x) {
     var i;
 
