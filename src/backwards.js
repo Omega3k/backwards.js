@@ -28,8 +28,6 @@
 
    * Make special-methods for: 
       - hasNativeMethod(x.map, function(){}) If the native method exists then return x.map(f), else return polyfill(f, x)
-      - either
-      - maybe
       - min
       - max
       - sort
@@ -262,6 +260,7 @@
   // };
   
   //+ filter :: Function -> Array -> Array
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
   function filter (f, x) {
     return reduce(function (acc, val, i, arr) {
       if ( f(val, i, arr) ) {
@@ -273,51 +272,69 @@
 
   module.filter = autoCurry(filter);
 
+  //+ filter :: ( a -> Number -> Array ) -> Number
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
   function indexOf (search, i, x) {
-    var len;
+    var len = x.length;
 
-    // if (x.indexOf) {
-    //   return x.indexOf(search, i);
-    // }
-
-      len = x.length;
-
-      if (len === 0 || i >= len) {
-        return -1;
-      } else if (i < 0) {
-        // console.log('Modified variable BEFORE: ' + i);
-        i = len + i;
-        // console.log('Modified variable AFTER: ' + i);
-
-        if (i < 0) {
-          i = 0;
-          // console.log('Reset variable TO: ' + i);
-        }
-      }
-
-      while(len > i){
-        if (i in x && x[i] === search) {
-          return i;
-        }
-        i++;
-      }
-
+    if (len === 0 || i >= len) {
       return -1;
+    } else if (i < 0) {
+      i = len + i;
+      if (i < 0) { i = 0; }
+    }
+
+    while(i < len){
+      if (i in x && x[i] === search) {
+        return i;
+      }
+      i++;
+    }
+
+    return -1;
   }
 
   module.indexOf = autoCurry(indexOf);
-  
-  module.either = function (x, y) {
-    return y ? y : x;
-  }.autoCurry();
 
-  // module.either = function (x, y) {
-  //   if (y && y !== null && y !== undefined && y !== '') {
-  //     return y;
-  //   } else {
-  //     return x;
-  //   }
-  // }.autoCurry();
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+  function every (f, x) {
+    var i = 0, len = x.length;
+    while (i < len) {
+      if (i in x && !f(x[i], i, x)) {
+        return false;
+      }
+      i++;
+    }
+    return true;
+  }
+
+  module.every = autoCurry(every);
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+  function some (f, x) {
+    var i = 0, len = x.length;
+    while (i < len) {
+      if (i in x && f(x[i], i, x)) {
+        return true;
+      }
+      i++;
+    }
+    return false;
+  }
+
+  module.some = autoCurry(some);
+
+  function either (x, y) {
+    return y ? y : x;
+  }
+
+  module.either = autoCurry(either);
+
+  function maybe (f, x) {
+    return x ? f(x) : void 0;
+  }
+
+  module.maybe = autoCurry(maybe);
 
   module.trampoline = function (f) {
     var result = f;
@@ -326,35 +343,40 @@
     }
     return result;
   };
-  
+
   //+ pluck :: String|Number -> a -> a
-  module.pluck = function (prop, x) {
-    return x[prop];
-  }.autoCurry();
-  
-  module.push = function (val, x) {
+  function pluck (key, x) {
+    return x[key];
+  }
+
+  module.pluck = autoCurry(pluck);
+
+  function push (val, x) {
     x.push(val);
-  }.autoCurry();
+  }
+
+  module.push = autoCurry(push);
   
   //+ replace :: String -> String -> String -> String
-  module.replace = function (s1, s2, s) {
-    return s.replace(s1, s2);
-  }.autoCurry();
+  function replace (reg, s, x) {
+    return x.replace(reg, s);
+  }
+
+  module.replace = autoCurry(replace);
   
   //+ split :: String -> String -> Array
-  module.split = function (s1, s) {
-    return s.split(s1);
-  }.autoCurry();
-  
-  //+ join :: String -> String -> String
-  module.join = function (s1, s2) {
-    return s1.concat(s2);
-  }.autoCurry();
-  
-  //+ log :: a -> undefined
-  module.log = function (x) {
-    console.log('Logging: ', x);
-  }.autoCurry();
+  function split (s, x) {
+    return x.split(s);
+  }
+
+  module.split = autoCurry(split);
+
+  //+ join :: a -> a -> a
+  function concat (y, x) {
+    return x.concat(y);
+  }
+
+  module.concat = autoCurry(concat);
   
   return module;
 }));

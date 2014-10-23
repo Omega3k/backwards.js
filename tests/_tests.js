@@ -24,6 +24,11 @@ var tape         = require( './_tape.mock.js' )
 	, map          = require( './map.test.js' )( test, backwards )
 	, filter       = require( './filter.test.js' )( test, backwards )
 	, indexOf      = require( './indexOf.test.js' )( test, backwards )
+	, every        = require( './every.test.js' )( test, backwards )
+	, some         = require( './some.test.js' )( test, backwards )
+
+	, either       = require( './either.test.js' )( test, backwards )
+	, maybe        = require( './maybe.test.js' )( test, backwards )
 
 	, test_results = tape.getResults()
 	, passed_tests = []

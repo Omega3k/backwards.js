@@ -1,29 +1,29 @@
 module.exports = function (test, backwards) {
-	var reduce = backwards.reduce;
+	var reduce = backwards.reduce
+		, txt    = 'backwards.reduce should ';
+
+	function add (x, y) {
+		return x + y;
+	}
+
+	function concat (x, y) {
+		return x.concat(y);
+	}
+
+	var sum     = reduce( add, 0 )
+		, flatten = reduce( concat, [] );
 	
-	test('backwards.reduce should be a function', function (t) {
+	test(txt + 'be a function', function (t) {
 		t.equal(typeof reduce, 'function');
 		t.end();
 	});
 
-	test('backwards.reduce should reduce Arrays down to a single value', function (t) {
-		function add (x, y) {
-			return x + y;
-		}
-
-		var sum = reduce( add, 0 );
-
+	test(txt + 'reduce Arrays down to a single value', function (t) {
 		t.equal( sum( [0, 1, 2, 3] ), 6 );
 		t.end();
 	});
 
-	test('backwards.reduce should reduce Arrays in the \'proper\' order', function (t) {
-		function concat (x, y) {
-			return x.concat(y);
-		}
-
-		var flatten = reduce( concat, [] );
-
+	test(txt + 'reduce Arrays in the \'proper\' order', function (t) {
 		t.equal( flatten( [[0, 1], [2, 3], [4, 5]] ).toString(), [0, 1, 2, 3, 4, 5].toString() );
 		t.end();
 	});
