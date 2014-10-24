@@ -1,10 +1,11 @@
 # backwards.js
 
-Licensed under [MIT](https://github.com/Omega3k/backwards.js/blob/master/LICENSE)
-
 ## What is backward.js?
 
 A set of utility functions for functional programming in JavaScript.
+backwards.js is licensed under the [MIT license](https://github.com/Omega3k/backwards.js/blob/master/LICENSE)
+
+## Build Status
 
 [![Build Status](https://travis-ci.org/Omega3k/backwards.js.svg?branch=master)](https://travis-ci.org/Omega3k/backwards.js)
 [![Sauce Test Status](https://saucelabs.com/buildstatus/Omega3k)](https://saucelabs.com/u/Omega3k)
