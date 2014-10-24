@@ -24,140 +24,66 @@ function addBrowser (platform, name, version) {
 // IOS iPhone / iPad
 // =================
 
-// browsers.push({
-// 	browserName: 'iphone',
-// 	platform   : 'OS X 10.9'
-// });
-
-// browsers.push({
-// 	browserName: 'ipad',
-// 	platform   : 'OS X 10.9'
-// });
-
 addBrowser( 'OS X 10.9', 'iphone' );
 addBrowser( 'OS X 10.9', 'ipad' );
+
 
 // Android
 // =======
 
-browsers.push({
-	browserName: 'android',
-	version    : '4.4',
-	platform   : 'Linux'
-});
+// addBrowser( 'Linux', 'android', '4.4' );
+
 
 // Windows 8.1
 // ===========
 
-browsers.push({
-	browserName: 'firefox',
-	platform   : 'Windows 8.1'
-});
+addBrowser( 'Windows 8.1', 'firefox' );
+addBrowser( 'Windows 8.1', 'chrome' );
+addBrowser( 'Windows 8.1', 'internet explorer', '11' );
 
-browsers.push({
-	browserName: 'chrome',
-	platform   : 'Windows 8.1'
-});
-
-browsers.push({
-	browserName: 'internet explorer',
-	version    : '11',
-	platform   : 'Windows 8.1'
-});
 
 // Windows 8
 // =========
 
-browsers.push({
-	browserName: 'internet explorer',
-	version    : '10',
-	platform   : 'Windows 8'
-});
+addBrowser( 'Windows 8', 'internet explorer', '10' );
+
 
 // Windows 7
 // =========
 
-browsers.push({
-	browserName: 'internet explorer',
-	version    : '9',
-	platform   : 'Windows 7'
-});
+addBrowser( 'Windows 7', 'internet explorer', '9' );
+
 
 // Windows XP
 // ==========
 
-browsers.push({
-	browserName: 'firefox',
-	platform   : 'Windows XP'
-});
+addBrowser( 'Windows XP', 'firefox' );
+addBrowser( 'Windows XP', 'chrome' );
+addBrowser( 'Windows XP', 'opera' );
+addBrowser( 'Windows XP', 'internet explorer', '8' );
+addBrowser( 'Windows XP', 'internet explorer', '7' );
+addBrowser( 'Windows XP', 'internet explorer', '6' );
 
-browsers.push({
-	browserName: 'chrome',
-	platform   : 'Windows XP'
-});
-
-browsers.push({
-	browserName: 'opera',
-	platform   : 'Windows XP'
-});
-
-browsers.push({
-	browserName: 'internet explorer',
-	version    : '8',
-	platform   : 'Windows XP'
-});
-
-browsers.push({
-	browserName: 'internet explorer',
-	version    : '7',
-	platform   : 'Windows XP'
-});
-
-browsers.push({
-	browserName: 'internet explorer',
-	version    : '6',
-	platform   : 'Windows XP'
-});
 
 // OS X 10.6 Snow Leopard
 // ======================
 
-browsers.push({
-	browserName: 'safari',
-	platform   : 'OS X 10.6'
-});
+// addBrowser( 'OS X 10.6', 'safari' );
+
 
 // OS X 10.9 Mavericks
 // ===================
 
-browsers.push({
-	browserName: 'firefox',
-	platform   : 'OS X 10.9'
-});
-
-browsers.push({
-	browserName: 'chrome',
-	platform   : 'OS X 10.9'
-});
+addBrowser( 'OS X 10.9', 'firefox' );
+addBrowser( 'OS X 10.9', 'chrome' );
 
 
 // Linux
 // =====
 
-browsers.push({
-	browserName: 'firefox',
-	platform   : 'Linux'
-});
-
-browsers.push({
-	browserName: 'chrome',
-	platform   : 'Linux'
-});
-
-browsers.push({
-	browserName: 'opera',
-	platform   : 'Linux'
-});
+addBrowser( 'Linux', 'firefox' );
+addBrowser( 'Linux', 'chrome' );
+addBrowser( 'Linux', 'opera' );
 
 
 // Connect-server
