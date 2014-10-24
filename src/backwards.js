@@ -1,5 +1,3 @@
-/* global module */
-
 (function (root, name, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as a named module.
@@ -22,6 +20,11 @@
   'use strict';
   
   /* TODOs
+
+   * Ideas For Improvements / Extensions
+     - Make an event system inspired by: 
+       - https://github.com/postaljs/postal.js
+     - etc ...
 
    * Test Results: 
       - Linux, Chrome - Promise is not defined
@@ -272,7 +275,7 @@
 
   module.filter = autoCurry(filter);
 
-  //+ filter :: ( a -> Number -> Array ) -> Number
+  //+ indexOf :: ( a -> Number -> Array ) -> Number
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
   function indexOf (search, i, x) {
     var len = x.length;
@@ -295,6 +298,32 @@
   }
 
   module.indexOf = autoCurry(indexOf);
+
+  //+ contains :: ( a -> Number -> Array ) -> Number
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/contains
+  function contains (search, i, x) {
+    var len = x.length
+      , val;
+
+    if (len === 0 || i >= len) {
+      return -1;
+    } else if (i < 0) {
+      i = len + i;
+      if (i < 0) { i = 0; }
+    }
+
+    while(i < len){
+      val = x[i];
+      if (i in x && val === search || isNaN(search) && isNaN(val)) {
+        return true;
+      }
+      i++;
+    }
+
+    return false;
+  }
+
+  module.contains = autoCurry(contains);
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every
   function every (f, x) {

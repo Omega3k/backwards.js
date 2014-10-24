@@ -24,6 +24,7 @@ var tape         = require( './_tape.mock.js' )
 	, map          = require( './map.test.js' )( test, backwards )
 	, filter       = require( './filter.test.js' )( test, backwards )
 	, indexOf      = require( './indexOf.test.js' )( test, backwards )
+	, contains     = require( './contains.test.js' )( test, backwards )
 	, every        = require( './every.test.js' )( test, backwards )
 	, some         = require( './some.test.js' )( test, backwards )
 

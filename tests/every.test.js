@@ -2,7 +2,8 @@ module.exports = function (test, backwards) {
 	var every  = backwards.every
 		, txt    = 'backwards.every should '
 		, passed = every( isBigEnough )( [12, 54, 18, 130, 44] )
-		, failed = every( isBigEnough )( [12, 5, 8, 130, 44] );
+		, failed = every( isBigEnough )( [12, 5, 8, 130, 44] )
+		, empty  = every( isBigEnough )( [] );
 
 	function isBigEnough (x, i, arr) {
 		return x > 10;
@@ -24,7 +25,7 @@ module.exports = function (test, backwards) {
 	});
 
 	test('return true if given an empty Array', function (t) {
-		t.equal( every(isBigEnough, []), true );
+		t.equal( empty, true );
 		t.end();
 	});
 };
