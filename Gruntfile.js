@@ -6,6 +6,16 @@ var   browsers = []
 	, initConfig = {}
 ;
 
+function addBrowser (platform, name, version) {
+	var obj         = {};
+	obj.platform    = platform;
+	obj.browserName = name;
+	if (version) {
+		obj.version = version;
+	}
+	browsers.push(obj);
+}
+
 // https://saucelabs.com/platforms/webdriver
 // https://docs.saucelabs.com/reference/rest-api/#jsunit
 
@@ -14,15 +24,18 @@ var   browsers = []
 // IOS iPhone / iPad
 // =================
 
-browsers.push({
-	browserName: 'iphone',
-	platform   : 'OS X 10.9'
-});
+// browsers.push({
+// 	browserName: 'iphone',
+// 	platform   : 'OS X 10.9'
+// });
 
-browsers.push({
-	browserName: 'ipad',
-	platform   : 'OS X 10.9'
-});
+// browsers.push({
+// 	browserName: 'ipad',
+// 	platform   : 'OS X 10.9'
+// });
+
+addBrowser( 'OS X 10.9', 'iphone' );
+addBrowser( 'OS X 10.9', 'ipad' );
 
 // Android
 // =======
