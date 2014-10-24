@@ -2,8 +2,9 @@
 
 ## What is backward.js?
 
-A set of utility functions for functional programming in JavaScript.
-backwards.js is licensed under the [MIT license](https://github.com/Omega3k/backwards.js/blob/master/LICENSE)
+A set of utility functions for functional programming in JavaScript. 
+
+backwards.js is licensed under the [MIT license](https://github.com/Omega3k/backwards.js/blob/master/LICENSE). 
 
 ## Build Status
 
