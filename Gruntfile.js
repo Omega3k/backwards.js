@@ -32,13 +32,13 @@ addBrowser( 'OS X 10.9', 'ipad' );
 // =======
 
 // addBrowser( 'Linux', 'android', '4.4' );
-browsers.push({
-	platformName   : 'android',
-	platformVersion: '4.4',
-	browserName    : 'browser',
-	deviceName     : 'Android',
-	appiumVersion  : '1.3.1'
-});
+// browsers.push({
+// 	platformName   : 'android',
+// 	platformVersion: '4.4',
+// 	browserName    : 'browser',
+// 	deviceName     : 'Android',
+// 	appiumVersion  : '1.3.1'
+// });
 
 
 // Windows 8.1
