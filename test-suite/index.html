@@ -6,72 +6,100 @@
 
   <!-- <link rel="shortcut icon" type="image/png" href="lib/jasmine-2.0.3/jasmine_favicon.png">
   <link rel="stylesheet" type="text/css" href="lib/jasmine-2.0.3/jasmine.css"> -->
-
-  <!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
-  <!-- <script src="almond.js"></script>
-  <script src="require-tape.js"></script>
-  <script src="../src/backwards.js"></script>
-  <script src="isArguments.unit.test.js"></script> -->
-  
-  <link rel="stylesheet" type="text/css" href="style.css" />
-  <!--
-  <script type="text/javascript" src="almond.js"></script>
-  <script type="text/javascript" src="../src/backwards.js"></script>
-  <script type="text/javascript">
-    define('../src/backwards', [], function () {
-      return require('backwards');
-    });
-  </script>
-  -->
   
   <!-- https://kuler.adobe.com/Tangy-Pop-color-theme-221639/ -->
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <!-- The almond AMD loader, and a shim for a subset of the TAPE version 13 protocol used to collect the data from the tests. -->
+  <script type="text/javascript" src="almond.js"></script>
+  <script type="text/javascript" src="tape.js"></script>
+
+  <!-- The library we are interested in -->
+  <script type="text/javascript" src="../src/backwards.js"></script>
+
+  <!-- Defining an alias of the backwards.js library so that our tests can be executed in the terminal (uses relative paths) -->
+  <script type="text/javascript">
+    define('../src/backwards', ['backwards'], function (backwards) {
+      return backwards;
+    });
+  </script>
 </head>
 
 <body>
-  <div id="test" class="container"></div>
+  <div id="debug" class="container"></div>
   
   <div id="container">
-    <div id="summary" class="container">
-      <h1>Test-suite Summary</h1>
-      <span class="total">Total: 99</span>
-      <span class="passed">Passed: 98</span>
-      <span class="failed">Failed: 1</span>
-    </div>
-
-    <div id="failed-tests" class="container">
-      <ul>
-        <li>
-          <span class="number">135</span>
-          <span>
-            backwards.isArray should return true if passed an Array
-          </span>
-        </li>
-
-        <li>
-          <span class="number">134</span>
-          <span>
-            backwards.isArray should return false if passed a String
-          </span>
-        </li>
-      </ul>
-    </div>
-
-    <div id="passed-tests" class="container">
-      <ul>
-        <li>
-          <span class="number">010</span>
-          <span>
-            backwards.isArray should return false if passed an Object
-          </span>
-        </li>
-      </ul>
-    </div>
+    <div id="summary"></div>
+    <div class="container" id="failed-tests"></div>
+    <div class="container" id="passed-tests"></div>
   </div>
 
-  <script src="../tests/_tests.min.js"></script>
-	
-  <script>
-	// 	window.global_test_results = require('tape').getResults();
-	</script>
+<!--
+  <script type="text/template" id="template/summary">
+    <h1>{{ title }}</h1>
+    <span class="total">Total: {{ total }}</span>
+    <span class="passed">Passed: {{ passed }}</span>
+    <span class="failed">Failed: {{ failed }}</span>
+  </script>
+
+  <script type="text/template" id="template/tests">
+    <ul>
+      <li>
+        <h2>{{ name }}</h2>
+        <ul>
+          {{ tests }}
+        </ul>
+      </li>
+    </ul>
+  </script>
+
+  <script type="text/template" id="template/test">
+    <li>
+      <span class="number">{{ id }}</span>
+      {{ actual || 'undefined' }} === {{ expected || 'undefined' }}
+    </li>
+  </script>
+-->
+
+  <!-- <script src="../tests/_tests.min.js"></script> -->
+
+  <!-- Methods for interacting with several types of primitives (Array, Object, String ...) -->
+  <script src="../tests/forEach.unit.test.js"></script>
+  <script src="../tests/keys.unit.test.js"></script>
+  <script src="../tests/map.unit.test.js"></script>
+
+  <!-- Methods for interacting with Arrays -->
+  <script src="../tests/contains.unit.test.js">// Array, String</script>
+  <script src="../tests/every.unit.test.js"></script>
+  <script src="../tests/filter.unit.test.js"></script>
+  <script src="../tests/indexOf.unit.test.js"></script>
+  <script src="../tests/reduce.unit.test.js"></script>
+  <script src="../tests/some.unit.test.js"></script>
+
+  <!-- Methods for interacting with Objects -->
+
+  <!-- Utility Methods for testing if the given object is of type x -->
+  <script src="../tests/isArguments.unit.test.js"></script>
+  <script src="../tests/isArray.unit.test.js"></script>
+  <script src="../tests/isBoolean.unit.test.js"></script>
+  <script src="../tests/isFunction.unit.test.js"></script>
+  <script src="../tests/isNull.unit.test.js"></script>
+  <script src="../tests/isNumber.unit.test.js"></script>
+  <script src="../tests/isObject.unit.test.js"></script>
+  <script src="../tests/isString.unit.test.js"></script>
+  <script src="../tests/isUndefined.unit.test.js"></script>
+
+  <!-- Misc Utility Methods -->
+  <script src="../tests/compose.unit.test.js"></script>
+  <script src="../tests/either.unit.test.js"></script>
+  <script src="../tests/maybe.unit.test.js"></script>
+
+  <!--
+  Functionality for building the visual user interface, and setting up the correct information for Sauce Labs reporting. 
+
+  All tests should be placed above this file reference. 
+  -->
+  <script type="text/javascript" src="interface.js"></script>
+
 </body>
 </html>

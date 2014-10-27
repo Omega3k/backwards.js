@@ -8,6 +8,7 @@ var tape         = require( './_tape.mock.js' )
 	, htmlbuilder  = require( '../test-suite/htmlbuilder.js' )
 	
 	, backwards    = require( '../src/backwards.js' )
+	, backwards_   = require( '../src/backwards.events.js' )
 	
 	, isArguments  = require( './isArguments.test.js' )( test, backwards )
 	, isArray      = require( './isArray.test.js' )( test, backwards )

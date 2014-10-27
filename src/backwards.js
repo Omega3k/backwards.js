@@ -1,25 +1,28 @@
 (function (root, name, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as a named module.
-        define(name, [], factory);
-    } else if (typeof exports !== 'undefined') {
-        // Node. Does not work with strict CommonJS, but
-        // only CommonJS-like environments that support module.exports,
-        // like Node.
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as a named module.
+    define(name, [], factory);
+  } else if (typeof exports !== 'undefined') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
 
-        // module.exports = factory();
-        if (typeof module !== 'undefined' && module.exports) {
-          exports = module.exports = factory();
-        }
-        exports[name] = factory();
-    } else {
-        // Browser globals (root is window)
-        root[name] = factory();
+    // module.exports = factory();
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = factory();
+    }
+    exports[name] = factory();
+  } else {
+    // Browser globals (root is window)
+    root[name] = factory();
   }
 }(this, 'backwards', function () {
   'use strict';
   
   /* TODOs
+
+   * Misc
+     - http://opensource.org/osd-annotated
 
    * Ideas For Improvements / Extensions
      - Make an event system inspired by: 
@@ -406,6 +409,12 @@
   }
 
   module.concat = autoCurry(concat);
+
+  function splice (i, howMany, x) {
+    return x.splice(i, howMany);
+  }
+
+  module.splice = autoCurry(splice);
   
   return module;
 }));
