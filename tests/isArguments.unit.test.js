@@ -25,7 +25,6 @@ test(txt + 'return false if given anything else', function (t) {
 	t.equal( isArguments( new Array() ), false );
 
 	t.equal( isArguments( true ), false );
-	t.equal( isArguments( new Boolean() ), false );
 
 	t.equal( isArguments( new Date() ), false );
 
