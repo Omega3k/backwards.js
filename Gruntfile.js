@@ -147,23 +147,9 @@ initConfig.browserify = {
 	dist: {
 		files: {
 			// 'build/backwards.min.js': ['src/backwards.js'],
-			'tests/_tests.min.js': [
-				// 'tests/**/*.js',
-				// '!tests/**/*.unit.test.js',
-				// '!tests/_tests.min.js',
-				// '!tests/window.require-tape.js',
-				// '!tests/require-tape.js'
-				'tests/_tests.js'
-			]
-
-			// , 'tests/require-tape.js': [
-			// 	// './node_modules/tape/index.js',
-			// 	// 'tests/almond.js',
-			// 	'tests/_tape.mock.js'
-			// 	// 'tests/window.require-tape.js'
+			// 'tests/_tests.min.js': [
+			// 	'tests/_tests.js'
 			// ]
-
-			// , 'tests/tests.bundle.js': ['tests/**/*.unit.test.js']
 		}
 	}
 };
