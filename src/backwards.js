@@ -127,7 +127,7 @@
   
   //+ isBoolean :: a -> Boolean
   isBoolean = module.isBoolean = function (x) {
-    return x === true || x === false;
+    return x === true || x === false || isTypeOf('Boolean', x);
   };
   
   //+ isDate :: a -> Boolean
@@ -151,6 +151,7 @@
   
   //+ isNaN :: a -> Boolean
   isNaN = module.isNaN = function (x) {
+    // return isNumber(x) && x !== +x;
     return isNumber(x) && x !== +x;
   };
   

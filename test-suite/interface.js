@@ -37,20 +37,16 @@ function every (f, x) {
   return true;
 }
 
+function pluck (key) {
+  return function (x) {
+    return x[key];
+  }
+}
+
 function forEachTemplate (template, x) {
   return reduce(function (str, x) {
     return str += template( x );
   }, '', x);
-}
-
-function summaryTemplate (x) {
-  return [
-    // '<h1>', x.title, '</h1>'
-    '<span class="title">', x.title, '</span>'
-  , '<span class="total">Total: ', x.total, '</span>'
-  , '<span class="passed">Passed: ', x.passed, '</span>'
-  , '<span class="failed">Failed: ', x.failed, '</span>'
-  ].join('');
 }
 
 function summaryTemplate (x) {
@@ -96,17 +92,18 @@ function testsTemplate (x) {
 
 function filterPassedAndFailedTests (list) {
   return reduce(function (acc, test) {
-    every(function (t) {
-      return t.passed;
-    }, test.tests) ? acc.passed.push(test) : acc.failed.push(test);
+    every( pluck('passed') , test.tests) ? 
+      acc.passed.push(test) : 
+      acc.failed.push(test);
     return acc;
   }, { passed: [], failed: [] }, list);
 }
 
 var results   = require('tape').results;
 results.tests = filterPassedAndFailedTests( results.tests );
-// var list    = filterPassedAndFailedTests( results.tests );
 
+
+// Declare Sauce Labs Test Results Object
 window.global_test_results = {
   passed: results.passed,
   failed: results.failed,
