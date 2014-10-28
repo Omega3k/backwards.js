@@ -30,15 +30,10 @@ test(txt + 'return false if given anything else', function (t) {
 	t.equal( isArguments( new Date() ), false );
 
 	t.equal( isArguments( new Error() ), false );
+	t.equal( isArguments( new TypeError() ), false );
 
 	t.equal( isArguments( function () {} ), false );
 	t.equal( isArguments( new Function() ), false );
-
-	t.equal( isArguments( Infinity ), false );
-
-	t.equal( isArguments( NaN ), false );
-
-	t.equal( isArguments( null ), false );
 
 	t.equal( isArguments( 1234 ), false );
 	t.equal( isArguments( new Number() ), false );
@@ -52,6 +47,9 @@ test(txt + 'return false if given anything else', function (t) {
 	t.equal( isArguments( 'string' ), false );
 	t.equal( isArguments( new String() ), false );
 
+	t.equal( isArguments( Infinity ), false );
+	t.equal( isArguments( NaN ), false );
+	t.equal( isArguments( null ), false );
 	t.equal( isArguments( void 0 ), false );
 	t.end();
 });
