@@ -111,6 +111,11 @@ initConfig.watch = {
   tests: {
     files: ['tests/**/*.test.js', 'src/**/*.js'],
     tasks: ['browserify', 'nodeTests']
+  },
+
+  docs: {
+    files: ['src/backwards.js'],
+    tasks: ['yuidoc']
   }
 };
 
@@ -140,6 +145,36 @@ initConfig.browserify = {
     }
   }
 };
+
+initConfig.yuidoc = {
+  compile: {
+    name       : 'backwards.js',
+    description: 'A set of utility functions for functional programming in JavaScript',
+    version    : '0.0.0',
+    url        : 'https://github.com/Omega3k/backwards.js',
+    options: {
+      paths : 'src',
+      outdir: 'docs'
+    }
+  }
+};
+
+// grunt.initConfig({
+//   pkg: grunt.file.readJSON('package.json'),
+//   yuidoc: {
+//     compile: {
+//       name: '<%= pkg.name %>',
+//       description: '<%= pkg.description %>',
+//       version: '<%= pkg.version %>',
+//       url: '<%= pkg.homepage %>',
+//       options: {
+//         paths: 'path/to/source/code/',
+//         themedir: 'path/to/custom/theme/',
+//         outdir: 'where/to/save/docs/'
+//       }
+//     }
+//   }
+// });
 
 // var myTerminal = require("child_process").exec,
 //     commandToBeExecuted = "sh myCommand.sh";
@@ -194,7 +229,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', 'dev');
   grunt.registerTask('dev', ['browserify:dist', 'connect', 'watch']);
   grunt.registerTask('test', ['browserify:dist', 'connect', 'saucelabs-custom']);
-  grunt.registerTask('build', ['browserify:dist']);
+  grunt.registerTask('build', ['browserify:dist', 'yuidoc']);
   grunt.registerTask('nodeTests', 'Run the tests in the command-line using node', function () {
     // grunt.util.spawn({
     //  cmd: ['npm run-script cmd']
