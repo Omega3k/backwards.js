@@ -153,8 +153,9 @@ initConfig.yuidoc = {
     version    : '0.0.0',
     url        : 'https://github.com/Omega3k/backwards.js',
     options: {
-      paths : 'src',
-      outdir: 'docs'
+      paths      : 'src',
+      outdir     : 'docs',
+      linkNatives: true
     }
   }
 };
