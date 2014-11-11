@@ -233,7 +233,7 @@
   }
 
   function forEach (f, x) {
-    if ( isArray(x) || isArguments(x) || isObject(x) ) {
+    if ( isArray(x) || isObject(x) || isArguments(x) ) {
       return __reducingFunction( f, x, x );
     } else {
       return f(x);
