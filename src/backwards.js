@@ -74,14 +74,16 @@
     , objectMap, arrayMap, promiseMap, map
   ;
   
+
   /**
   This function is an internal function that is used by 'autoCurry' to create curried functions from functions that take more than one parameter. 
 
   @method curry
-  @param function {Function} The function to be curried. 
+  @param f {Function} The function to be curried. 
   @return {Function} A curried function. 
   @private
   */
+
   //+ curry :: Function -> Function
   function curry (f) {
     var args = slice.call(arguments, 1);
@@ -95,7 +97,7 @@
   Create a curried function from a function that normally takes multiple parameters. 
 
   @method autoCurry
-  @param function {Function} The function to be curried. 
+  @param f {Function} The function to be curried. 
   @param [length] {Number} An optional parameter defining how many parameters the given function has. 
   @return {Function} A curried function. 
   @public
@@ -171,9 +173,15 @@
   };
   
   //+ isTypeOf :: String -> a -> Boolean
-  isTypeOf = module.isTypeOf = function (type, x) { 
-    return toString.call(x) === '[object ' + type + ']'; 
-  }.autoCurry();
+  // isTypeOf = module.isTypeOf = function (type, x) { 
+  //   return toString.call(x) === '[object ' + type + ']'; 
+  // }.autoCurry();
+
+  function isTypeOf ( type, x ) {
+    return toString.call( x ) === '[object ' + type + ']';
+  }
+
+  module.isTypeOf = isTypeOf = autoCurry( isTypeOf );
   
   //+ isArguments :: a -> Boolean
   isArguments = module.isArguments = (function () {
