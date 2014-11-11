@@ -114,7 +114,7 @@
   */
 
   //+ autoCurry :: Function -> Number -> Function
-  autoCurry = module.autoCurry = function (f, length) { 
+  function autoCurry (f, length) { 
     length = length || f.length;
     var newFunction = function () {
       if (arguments.length < length) {
@@ -127,13 +127,13 @@
     newFunction.toString = function () { return f.toString(); } ;
     newFunction.curried = true; 
     return newFunction; 
-  };
+  }
 
   module.autoCurry = autoCurry;
   
-  Function.prototype.autoCurry = function(n) {
-    return autoCurry(this, n);
-  };
+  // Function.prototype.autoCurry = function(n) {
+  //   return autoCurry(this, n);
+  // };
 
 
   /**
@@ -159,7 +159,7 @@
   */
 
   //+ compose :: Function, ... -> Function
-  compose = module.compose = function () {
+  function compose () {
     var fs = arguments;
     return function () {
       var args = arguments
@@ -170,13 +170,27 @@
       }
       return args[0];
     };
-  };
+  }
+
+  module.compose = compose;
+
+
+  /** 
+  Check if an Object is of a particular type. 
+
+  @method isTypeOf
+  @param type {String} The String representation of the Object. 
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value representing whether x is a type. 
+  @public
+  @example
+      var isBoolean = isTypeOf( 'Boolean' )
+        , true      = isBoolean( true )
+        , false     = isBoolean( {} )
+      ;
+  */
   
   //+ isTypeOf :: String -> a -> Boolean
-  // isTypeOf = module.isTypeOf = function (type, x) { 
-  //   return toString.call(x) === '[object ' + type + ']'; 
-  // }.autoCurry();
-
   function isTypeOf ( type, x ) {
     return toString.call( x ) === '[object ' + type + ']';
   }
