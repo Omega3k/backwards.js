@@ -51,6 +51,16 @@
       - replace?
       - etc ...
    */
+
+
+  /**
+  A set of utility functions for functional programming in JavaScript. 
+
+  @module backwards
+  @main backwards
+  @class backwards
+  @static
+  */
   
   var module      = {}
     , arrayProto  = Array.prototype
@@ -64,13 +74,42 @@
     , objectMap, arrayMap, promiseMap, map
   ;
   
+  /**
+  This function is an internal function that is used by 'autoCurry' to create curried functions from functions that take more than one parameter. 
+
+  @method curry
+  @param function {Function} The function to be curried. 
+  @return {Function} A curried function. 
+  @private
+  */
   //+ curry :: Function -> Function
-  curry = function (f) {
-    var args = slice.call(arguments, 1); 
+  function curry (f) {
+    var args = slice.call(arguments, 1);
     return function () {
-      return f.apply(this, args.concat(slice.call(arguments, 0))); 
-    }; 
-  }; 
+      return f.apply(this, args.concat(slice.call(arguments, 0)));
+    }
+  }
+
+
+  /**
+  Create a curried function from a function that normally takes multiple parameters. 
+
+  @method autoCurry
+  @param function {Function} The function to be curried. 
+  @param [length] {Number} An optional parameter defining how many parameters the given function has. 
+  @return {Function} A curried function. 
+  @public
+  @example
+      function concat ( a, b ) {
+        return a.concat( b );
+      }
+
+      var curriedConcat  = autoCurry( concat )      // A curried function
+        , OneAndTwo      = curriedConcat( [1, 2] )  // A curried function
+        , OneTwoAndThree = OneTwo( [3] )            // [1, 2, 3]
+        , OneTwoAndFour  = OneTwo( [4] )            // [1, 2, 4]
+      ;
+  */
 
   //+ autoCurry :: Function -> Number -> Function
   autoCurry = module.autoCurry = function (f, length) { 
@@ -86,11 +125,36 @@
     newFunction.toString = function () { return f.toString(); } ;
     newFunction.curried = true; 
     return newFunction; 
-  }; 
+  };
+
+  module.autoCurry = autoCurry;
   
   Function.prototype.autoCurry = function(n) {
     return autoCurry(this, n);
   };
+
+
+  /**
+  Compose your functions to a single function. 
+
+  @method compose
+  @param function* {Function} One or more functions that should be composed. 
+  @return {Function} The result of composing all the argument functions. 
+  @public
+  @example
+      function addOne ( x ) {
+        return x + 1;
+      }
+
+      function timesTwo ( x ) {
+        return x * 2;
+      }
+
+      var timesTwoPlusOne = compose( addOne, timesTwo ) // A composed function
+        , five            = timesTwoPlusOne( 2 )        // 5
+        , nine            = timesTwoPlusOne( 4 )        // 9
+      ;
+  */
 
   //+ compose :: Function, ... -> Function
   compose = module.compose = function () {

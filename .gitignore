@@ -33,3 +33,6 @@ node_modules
 tmp
 _tmp
 .tmp
+
+# Documentation / YUIDOCs
+docs
