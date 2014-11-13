@@ -1,6 +1,13 @@
 // Instructions for setting up saucelabs with Jasmine Testing Framework and Travis CI. 
 // https://saucelabs.com/javascript/jasmine-js
 // http://docs.travis-ci.com/user/encrypting-files/#Manual-Encryption
+// https://saucelabs.com/platforms/webdriver
+// https://docs.saucelabs.com/reference/rest-api/#jsunit
+
+// https://github.com/gruntjs/grunt-contrib-yuidoc
+// http://yui.github.io/yuidoc/syntax
+
+// http://www.thomasboyt.com/2013/09/01/maintainable-grunt.html
 
 var   browsers = []
   , initConfig = {}
@@ -18,10 +25,6 @@ function addBrowser (platform, name, version) {
   browsers.push(obj);
 }
 
-// https://saucelabs.com/platforms/webdriver
-// https://docs.saucelabs.com/reference/rest-api/#jsunit
-
-// http://www.thomasboyt.com/2013/09/01/maintainable-grunt.html
 
 // IOS iPhone / iPad
 // =================
@@ -155,47 +158,12 @@ initConfig.yuidoc = {
     options: {
       paths      : 'src',
       outdir     : 'docs',
+      // themedir   : 'path/to/custom/theme',
       linkNatives: true
     }
   }
 };
 
-// grunt.initConfig({
-//   pkg: grunt.file.readJSON('package.json'),
-//   yuidoc: {
-//     compile: {
-//       name: '<%= pkg.name %>',
-//       description: '<%= pkg.description %>',
-//       version: '<%= pkg.version %>',
-//       url: '<%= pkg.homepage %>',
-//       options: {
-//         paths: 'path/to/source/code/',
-//         themedir: 'path/to/custom/theme/',
-//         outdir: 'where/to/save/docs/'
-//       }
-//     }
-//   }
-// });
-
-// var myTerminal = require("child_process").exec,
-//     commandToBeExecuted = "sh myCommand.sh";
-
-// myTerminal(commandToBeExecuted, function(error, stdout, stderr) {
-//     if (!error) {
-//          //do something
-//     }
-// });
-
-// grunt.util.spawn({
-//   cmd: ['rm'],
-//   args: ['-rf', '/tmp'],
-// }, function done() {
-//   grunt.log.ok('/tmp deleted');
-// });
-
-// grunt.registerTask('jquery', "download jquery bundle", function() {
-//   shell.exec('wget http://jqueryui.com/download/jquery-ui-1.7.3.custom.zip');
-// });
 
 module.exports = function (grunt) {
   var exec         = require('child_process').exec
@@ -228,7 +196,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('default', 'dev');
-  grunt.registerTask('dev', ['browserify:dist', 'connect', 'watch']);
+  grunt.registerTask('dev', ['build', 'connect', 'watch']);
   grunt.registerTask('test', ['browserify:dist', 'connect', 'saucelabs-custom']);
   grunt.registerTask('build', ['browserify:dist', 'yuidoc']);
   grunt.registerTask('nodeTests', 'Run the tests in the command-line using node', function () {
