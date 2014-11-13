@@ -74,14 +74,16 @@
     , objectMap, arrayMap, promiseMap, map
   ;
   
+
   /**
   This function is an internal function that is used by 'autoCurry' to create curried functions from functions that take more than one parameter. 
 
   @method curry
-  @param function {Function} The function to be curried. 
+  @param f {Function} The function to be curried. 
   @return {Function} A curried function. 
   @private
   */
+
   //+ curry :: Function -> Function
   function curry (f) {
     var args = slice.call(arguments, 1);
@@ -95,7 +97,7 @@
   Create a curried function from a function that normally takes multiple parameters. 
 
   @method autoCurry
-  @param function {Function} The function to be curried. 
+  @param f {Function} The function to be curried. 
   @param [length] {Number} An optional parameter defining how many parameters the given function has. 
   @return {Function} A curried function. 
   @public
@@ -112,7 +114,7 @@
   */
 
   //+ autoCurry :: Function -> Number -> Function
-  autoCurry = module.autoCurry = function (f, length) { 
+  function autoCurry (f, length) { 
     length = length || f.length;
     var newFunction = function () {
       if (arguments.length < length) {
@@ -125,13 +127,13 @@
     newFunction.toString = function () { return f.toString(); } ;
     newFunction.curried = true; 
     return newFunction; 
-  };
+  }
 
   module.autoCurry = autoCurry;
   
-  Function.prototype.autoCurry = function(n) {
-    return autoCurry(this, n);
-  };
+  // Function.prototype.autoCurry = function(n) {
+  //   return autoCurry(this, n);
+  // };
 
 
   /**
@@ -157,7 +159,7 @@
   */
 
   //+ compose :: Function, ... -> Function
-  compose = module.compose = function () {
+  function compose () {
     var fs = arguments;
     return function () {
       var args = arguments
@@ -168,12 +170,32 @@
       }
       return args[0];
     };
-  };
+  }
+
+  module.compose = compose;
+
+
+  /** 
+  Check if an Object is of a particular type. 
+
+  @method isTypeOf
+  @param type {String} The String representation of the Object. 
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value representing whether x is a type. 
+  @public
+  @example
+      var isBoolean = isTypeOf( 'Boolean' )
+        , true      = isBoolean( true )
+        , false     = isBoolean( {} )
+      ;
+  */
   
   //+ isTypeOf :: String -> a -> Boolean
-  isTypeOf = module.isTypeOf = function (type, x) { 
-    return toString.call(x) === '[object ' + type + ']'; 
-  }.autoCurry();
+  function isTypeOf ( type, x ) {
+    return toString.call( x ) === '[object ' + type + ']';
+  }
+
+  module.isTypeOf = isTypeOf = autoCurry( isTypeOf );
   
   //+ isArguments :: a -> Boolean
   isArguments = module.isArguments = (function () {
@@ -297,7 +319,7 @@
   }
 
   function forEach (f, x) {
-    if ( isArray(x) || isArguments(x) || isObject(x) ) {
+    if ( isArray(x) || isObject(x) || isArguments(x) ) {
       return __reducingFunction( f, x, x );
     } else {
       return f(x);
