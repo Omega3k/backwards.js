@@ -9,9 +9,12 @@
 
 // http://www.thomasboyt.com/2013/09/01/maintainable-grunt.html
 
-var   browsers = []
+var grunt      = require('grunt')
+  , browsers   = []
   , initConfig = {}
+  , license    = grunt.file.read('LICENSE')
 ;
+
 
 function addBrowser (platform, name, version) {
   var obj         = {};
@@ -164,6 +167,33 @@ initConfig.yuidoc = {
   }
 };
 
+// initConfig.compress = {
+//   backwards: {
+//     options: {
+//       mode: 'gzip'
+//     },
+//     expand: true,
+//     cwd   : 'src/',
+//     src   : ['**/*'],
+//     dest  : 'public/'
+//   }
+// };
+
+initConfig.uglify = {
+  options: {
+    banner: '/*\n' + license + '*/\n\n',
+    mangle: {
+      except: ['jQuery', 'Backbone']
+    }
+  },
+
+  backwards: {
+    files: {
+      'build/backwards.min.js': ['src/backwards.js']
+    }
+  }
+};
+
 
 module.exports = function (grunt) {
   var exec         = require('child_process').exec
@@ -198,7 +228,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', 'dev');
   grunt.registerTask('dev', ['build', 'connect', 'watch']);
   grunt.registerTask('test', ['browserify:dist', 'connect', 'saucelabs-custom']);
-  grunt.registerTask('build', ['browserify:dist', 'yuidoc']);
+  grunt.registerTask('build', ['browserify:dist', 'yuidoc', 'uglify']);
   grunt.registerTask('nodeTests', 'Run the tests in the command-line using node', function () {
     // grunt.util.spawn({
     //  cmd: ['npm run-script cmd']
