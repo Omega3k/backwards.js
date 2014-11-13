@@ -184,21 +184,35 @@
   @return {Boolean} A Boolean value representing whether x is a type. 
   @public
   @example
-      var isBoolean = isTypeOf( 'Boolean' )
-        , true      = isBoolean( true )
-        , false     = isBoolean( {} )
+      var isBoolean = isTypeOf( 'Boolean' ) // A composed function
+        , true      = isBoolean( true )     // True
+        , false     = isBoolean( {} )       // False
       ;
   */
   
   //+ isTypeOf :: String -> a -> Boolean
-  function isTypeOf ( type, x ) {
-    return toString.call( x ) === '[object ' + type + ']';
+  function isTypeOf (type, x) {
+    return toString.call(x) === '[object ' + type + ']';
   }
 
-  module.isTypeOf = isTypeOf = autoCurry( isTypeOf );
+  isTypeOf = module.isTypeOf = autoCurry(isTypeOf);
+
+
+  /** 
+  Check if an Object is an Arguments object. 
+
+  @method isArguments
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var true  = isArguments( arguments )  // True
+        , false = isArguments( false )      // False
+      ;
+  */
   
   //+ isArguments :: a -> Boolean
-  isArguments = module.isArguments = (function () {
+  var isArguments = module.isArguments = (function () {
     if (isTypeOf('Arguments', arguments)) {
       return isTypeOf('Arguments');
     } else {
@@ -207,25 +221,67 @@
       };
     }
   }()); 
+
+
+  /** 
+  Check if an Object is an Array. 
+
+  @method isArray
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var true  = isArray( [1, 2, 3] )  // True
+        , false = isArray( false )      // False
+      ;
+  */
   
   //+ isArray :: a -> Boolean
-  isArray = module.isArray = Array.isArray || isTypeOf('Array');
+  var isArray = module.isArray = Array.isArray || isTypeOf('Array');
+
+
+  /** 
+  Check if an Object is a Boolean. 
+
+  @method isBoolean
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var true  = isBoolean( true )  // True
+        , false = isBoolean( 0 )     // False
+      ;
+  */
   
   //+ isBoolean :: a -> Boolean
-  isBoolean = module.isBoolean = function (x) {
+  var isBoolean = module.isBoolean = function (x) {
     return x === true || x === false || isTypeOf('Boolean', x);
   };
   
   //+ isDate :: a -> Boolean
-  isDate = module.isDate = isTypeOf('Date');
+  var isDate = module.isDate = isTypeOf('Date');
   
   //+ isFinite :: a -> Boolean
-  isFinite = module.isFinite = function (x) {
+  var isFinite = module.isFinite = function (x) {
     return isFinite(x) && !isNaN(parseFloat(x));
   };
+
+
+  /** 
+  Check if an Object is a Function. 
+
+  @method isFunction
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var true  = isFunction( function () {} )  // True
+        , false = isFunction( false )           // False
+      ;
+  */
   
   //+ isFunction :: a -> Boolean
-  isFunction = module.isFunction = (function () {
+  var isFunction = module.isFunction = (function () {
     if (typeof /./ !== 'function') {
       return function (x) {
         return typeof x === 'function';
@@ -236,54 +292,115 @@
   }());
   
   //+ isNaN :: a -> Boolean
-  isNaN = module.isNaN = function (x) {
+  var isNaN = module.isNaN = function (x) {
     // return isNumber(x) && x !== +x;
     return isNumber(x) && x !== +x;
   };
+
+
+  /** 
+  Check if an Object is a Null object. 
+
+  @method isNull
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var true  = isNull( null )    // True
+        , false = isNull( false )   // False
+      ;
+  */
   
   //+ isNull :: a -> Boolean
-  isNull = module.isNull = function (x) {
+  var isNull = module.isNull = function (x) {
     return x === null || isTypeOf('Null', x);
   };
+
+
+  /** 
+  Check if an Object is a Number. 
+
+  @method isNumber
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var true  = isNumber( 123 )     // True
+        , false = isNumber( false )   // False
+      ;
+  */
   
   //+ isNumber :: a -> Boolean
-  isNumber = module.isNumber = isTypeOf('Number');
+  var isNumber = module.isNumber = isTypeOf('Number');
+
+
+  /** 
+  Check if an Object is an Object. 
+
+  @method isObject
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var true  = isObject( {} )      // True
+        , false = isObject( false )   // False
+      ;
+  */
   
   //+ isObject :: a -> Boolean
-  isObject = module.isObject = function (x) {
+  var isObject = module.isObject = function (x) {
     if (x === null || x === void 0 || isArguments(x)) {
       return false;
     } else {
       return isTypeOf('Object', x);
     }
   };
-
-  // isObject = module.isObject = function (x) {
-  //   return typeof x === 'function' || typeof x === 'object' && !!x;
-  // };
   
   //+ isPromise :: a -> Boolean
-  isPromise = module.isPromise = isTypeOf('Promise');
+  var isPromise = module.isPromise = isTypeOf('Promise');
   
   //+ isRegExp :: a -> Boolean
-  isRegExp = module.isRegExp = isTypeOf('RegExp');
+  var isRegExp = module.isRegExp = isTypeOf('RegExp');
+
+
+  /** 
+  Check if an Object is a String. 
+
+  @method isString
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var true  = isString( 'string' )  // True
+        , false = isString( false )     // False
+      ;
+  */
   
   //+ isString :: a -> Boolean
-  isString = module.isString = isTypeOf('String');
+  var isString = module.isString = isTypeOf('String');
+
+
+  /** 
+  Check if an Object is undefined. 
+
+  @method isUndefined
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var true  = isUndefined( void 0 )   // True
+        , false = isUndefined( false )    // False
+      ;
+  */
   
   //+ isUndefined :: a -> Boolean
-  isUndefined = module.isUndefined = function (x) {
+  var isUndefined = module.isUndefined = function (x) {
     return x === void 0 || isTypeOf('Undefined', x);
   };
 
   //+ exists :: a -> Boolean
   module.exists = function (x) {
     return x !== null && x !== void 0;
-  };
-  
-  //+ toArray :: a -> [b]
-  toArray = function(x) {
-    return slice.call(x);
   };
 
   //+ reduce :: ( Function -> a -> a ) -> a
