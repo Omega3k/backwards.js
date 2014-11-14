@@ -67,11 +67,6 @@
     , objectProto = Object.prototype
     , slice       = arrayProto.slice
     , toString    = objectProto.toString
-    
-    , curry, autoCurry, compose
-    , isTypeOf, isArguments, isArray, isBoolean, isDate, isFunction, isNaN, isNumber, isObject, isPromise, isRegExp, isString, isNull, isUndefined
-    , toArray
-    , objectMap, arrayMap, promiseMap, map
   ;
   
 
@@ -89,7 +84,7 @@
     var args = slice.call(arguments, 1);
     return function () {
       return f.apply(this, args.concat(slice.call(arguments, 0)));
-    }
+    };
   }
 
 
@@ -191,11 +186,11 @@
   */
   
   //+ isTypeOf :: String -> a -> Boolean
-  function isTypeOf (type, x) {
+  var isTypeOf = autoCurry(function (type, x) {
     return toString.call(x) === '[object ' + type + ']';
-  }
+  });
 
-  isTypeOf = module.isTypeOf = autoCurry(isTypeOf);
+  module.isTypeOf = isTypeOf;
 
 
   /** 
