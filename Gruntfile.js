@@ -121,7 +121,7 @@ initConfig.watch = {
 
   docs: {
     files: ['src/backwards.js'],
-    tasks: ['yuidoc']
+    tasks: ['jshint:backwards_dev', 'yuidoc']
   },
 
   gruntfile: {

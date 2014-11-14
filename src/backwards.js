@@ -207,7 +207,7 @@
   */
   
   //+ isArguments :: a -> Boolean
-  var isArguments = module.isArguments = (function () {
+  var isArguments = (function () {
     if (isTypeOf('Arguments', arguments)) {
       return isTypeOf('Arguments');
     } else {
@@ -216,6 +216,8 @@
       };
     }
   }()); 
+
+  module.isArguments = isArguments;
 
 
   /** 
@@ -232,7 +234,8 @@
   */
   
   //+ isArray :: a -> Boolean
-  var isArray = module.isArray = Array.isArray || isTypeOf('Array');
+  var isArray    = Array.isArray || isTypeOf('Array');
+  module.isArray = isArray;
 
 
   /** 
@@ -249,17 +252,24 @@
   */
   
   //+ isBoolean :: a -> Boolean
-  var isBoolean = module.isBoolean = function (x) {
+  function isBoolean (x) {
     return x === true || x === false || isTypeOf('Boolean', x);
-  };
+  }
+
+  module.isBoolean = isBoolean;
   
+
   //+ isDate :: a -> Boolean
-  var isDate = module.isDate = isTypeOf('Date');
+  var isDate    = isTypeOf('Date');
+  module.isDate = isDate;
+
   
   //+ isFinite :: a -> Boolean
-  var isFinite = module.isFinite = function (x) {
+  function isFinite (x) {
     return isFinite(x) && !isNaN(parseFloat(x));
-  };
+  }
+
+  module.isFinite = isFinite;
 
 
   /** 
@@ -276,7 +286,7 @@
   */
   
   //+ isFunction :: a -> Boolean
-  var isFunction = module.isFunction = (function () {
+  var isFunction = (function () {
     if (typeof /./ !== 'function') {
       return function (x) {
         return typeof x === 'function';
@@ -285,12 +295,16 @@
       return isTypeOf('Function');
     }
   }());
+
+  module.isFunction = isFunction;
+
   
   //+ isNaN :: a -> Boolean
-  var isNaN = module.isNaN = function (x) {
-    // return isNumber(x) && x !== +x;
+  function isNaN (x) {
     return isNumber(x) && x !== +x;
-  };
+  }
+
+  module.isNaN = isNaN;
 
 
   /** 
@@ -307,9 +321,11 @@
   */
   
   //+ isNull :: a -> Boolean
-  var isNull = module.isNull = function (x) {
+  function isNull (x) {
     return x === null || isTypeOf('Null', x);
-  };
+  }
+
+  module.isNull = isNull;
 
 
   /** 
@@ -326,7 +342,8 @@
   */
   
   //+ isNumber :: a -> Boolean
-  var isNumber = module.isNumber = isTypeOf('Number');
+  var isNumber    = isTypeOf('Number');
+  module.isNumber = isNumber;
 
 
   /** 
@@ -343,19 +360,25 @@
   */
   
   //+ isObject :: a -> Boolean
-  var isObject = module.isObject = function (x) {
+  function isObject (x) {
     if (x === null || x === void 0 || isArguments(x)) {
       return false;
     } else {
       return isTypeOf('Object', x);
     }
-  };
+  }
+
+  module.isObject = isObject;
+
   
   //+ isPromise :: a -> Boolean
-  var isPromise = module.isPromise = isTypeOf('Promise');
+  var isPromise    = isTypeOf('Promise');
+  module.isPromise = isPromise;
+
   
   //+ isRegExp :: a -> Boolean
-  var isRegExp = module.isRegExp = isTypeOf('RegExp');
+  var isRegExp    = isTypeOf('RegExp');
+  module.isRegExp = isRegExp;
 
 
   /** 
@@ -372,7 +395,8 @@
   */
   
   //+ isString :: a -> Boolean
-  var isString = module.isString = isTypeOf('String');
+  var isString    = isTypeOf('String');
+  module.isString = isString;
 
 
   /** 
@@ -389,14 +413,20 @@
   */
   
   //+ isUndefined :: a -> Boolean
-  var isUndefined = module.isUndefined = function (x) {
+  function isUndefined (x) {
     return x === void 0 || isTypeOf('Undefined', x);
-  };
+  }
+
+  module.isUndefined = isUndefined;
+
 
   //+ exists :: a -> Boolean
-  module.exists = function (x) {
+  function exists (x) {
     return x !== null && x !== void 0;
-  };
+  }
+
+  module.exists = exists;
+
 
   //+ reduce :: ( Function -> a -> a ) -> a
   function reduce (f, acc, x) {
@@ -422,6 +452,7 @@
 
   module.reduce = autoCurry(reduce);
 
+
   // Internal function used with .forEach & .map
   function __reducingFunction (f, acc, x) {
     return reduce(function (acc, val, key, obj) {
@@ -429,6 +460,7 @@
       return acc;
     }, acc, x);
   }
+
 
   function forEach (f, x) {
     if ( isArray(x) || isObject(x) || isArguments(x) ) {
@@ -439,6 +471,7 @@
   }
 
   module.forEach = autoCurry(forEach);
+
   
   //+ map :: Function -> a -> b
   function map (f, x) {
@@ -477,6 +510,7 @@
 
   module.filter = autoCurry(filter);
 
+
   //+ indexOf :: ( a -> Number -> Array ) -> Number
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
   function indexOf (search, i, x) {
@@ -500,6 +534,27 @@
   }
 
   module.indexOf = autoCurry(indexOf);
+
+
+  /** 
+  The function determines whether an array contains a certain element, returning true or false as appropriate.
+
+  @method contains
+  @param search {Number|NaN} The value you wish to check if exists.
+  @param i {Number} The index of where the begin searching the Array.
+  @param x {Array} The Array you wish to search.
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var array = [1, 2, 3, NaN];
+
+      contains( 2, 0 )( array )   // True
+      contains( 4, 0 )( array )   // False
+      contains( 3, 3 )( array )   // False
+      contains( 3, -2 )( array )  // False
+      contains( NaN, 0 )( array ) // True
+      contains( 2, -8 )( array )  // True
+  */
 
   //+ contains :: ( a -> Number -> Array ) -> Number
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/contains
