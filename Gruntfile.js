@@ -122,6 +122,11 @@ initConfig.watch = {
   docs: {
     files: ['src/backwards.js'],
     tasks: ['yuidoc']
+  },
+
+  gruntfile: {
+    files: ['Gruntfile.js'],
+    tasks: ['jshint:gruntfile']
   }
 };
 
@@ -194,6 +199,18 @@ initConfig.uglify = {
   }
 };
 
+initConfig.jshint = {
+  options: {
+    laxcomma: true,
+    globals: {
+      jQuery: true
+    }
+  },
+  backwards_dev  : ['src/backwards.js'],
+  // backwards_build: ['build/backwards.min.js'],
+  gruntfile      : ['Gruntfile.js']
+};
+
 
 module.exports = function (grunt) {
   var exec         = require('child_process').exec
@@ -228,7 +245,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', 'dev');
   grunt.registerTask('dev', ['build', 'connect', 'watch']);
   grunt.registerTask('test', ['browserify:dist', 'connect', 'saucelabs-custom']);
-  grunt.registerTask('build', ['browserify:dist', 'yuidoc', 'uglify']);
+  grunt.registerTask('build', ['browserify:dist', 'jshint', 'yuidoc', 'uglify']);
   grunt.registerTask('nodeTests', 'Run the tests in the command-line using node', function () {
     // grunt.util.spawn({
     //  cmd: ['npm run-script cmd']
