@@ -102,9 +102,9 @@
       }
 
       var curriedConcat  = autoCurry( concat )      // A curried function
-        , OneAndTwo      = curriedConcat( [1, 2] )  // A curried function
-        , OneTwoAndThree = OneTwo( [3] )            // [1, 2, 3]
-        , OneTwoAndFour  = OneTwo( [4] )            // [1, 2, 4]
+        , oneAndTwo      = curriedConcat( [1, 2] )  // A curried function
+        , oneTwoAndThree = oneAndTwo( [3] )         // [1, 2, 3]
+        , oneTwoAndFour  = oneAndTwo( [4] )         // [1, 2, 4]
       ;
   */
 
@@ -135,7 +135,7 @@
   Compose your functions to a single function. 
 
   @method compose
-  @param function* {Function} One or more functions that should be composed. 
+  @param function* {Function} Two or more functions that should be composed together. 
   @return {Function} The result of composing all the argument functions. 
   @public
   @example
@@ -180,8 +180,8 @@
   @public
   @example
       var isBoolean = isTypeOf( 'Boolean' ) // A composed function
-        , true      = isBoolean( true )     // True
-        , false     = isBoolean( {} )       // False
+        , passed    = isBoolean( true )     // True
+        , failed    = isBoolean( {} )       // False
       ;
   */
   
@@ -201,8 +201,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var true  = isArguments( arguments )  // True
-        , false = isArguments( false )      // False
+      var passed = isArguments( arguments )  // True
+        , failed = isArguments( false )      // False
       ;
   */
   
@@ -228,8 +228,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var true  = isArray( [1, 2, 3] )  // True
-        , false = isArray( false )      // False
+      var passed = isArray( [1, 2, 3] )  // True
+        , failed = isArray( false )      // False
       ;
   */
   
@@ -246,8 +246,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var true  = isBoolean( true )  // True
-        , false = isBoolean( 0 )     // False
+      var passed = isBoolean( true )  // True
+        , failed = isBoolean( 0 )     // False
       ;
   */
   
@@ -280,8 +280,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var true  = isFunction( function () {} )  // True
-        , false = isFunction( false )           // False
+      var passed = isFunction( function () {} )  // True
+        , failed = isFunction( false )           // False
       ;
   */
   
@@ -315,8 +315,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var true  = isNull( null )    // True
-        , false = isNull( false )   // False
+      var passed = isNull( null )    // True
+        , failed = isNull( false )   // False
       ;
   */
   
@@ -336,8 +336,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var true  = isNumber( 123 )     // True
-        , false = isNumber( false )   // False
+      var passed = isNumber( 123 )     // True
+        , failed = isNumber( false )   // False
       ;
   */
   
@@ -354,8 +354,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var true  = isObject( {} )      // True
-        , false = isObject( false )   // False
+      var passed = isObject( {} )      // True
+        , failed = isObject( false )   // False
       ;
   */
   
@@ -389,8 +389,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var true  = isString( 'string' )  // True
-        , false = isString( false )     // False
+      var passed = isString( 'string' )  // True
+        , failed = isString( false )     // False
       ;
   */
   
@@ -407,8 +407,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var true  = isUndefined( void 0 )   // True
-        , false = isUndefined( false )    // False
+      var passed = isUndefined( void 0 )   // True
+        , failed = isUndefined( false )    // False
       ;
   */
   
@@ -529,6 +529,27 @@
   module.filter = autoCurry(filter);
 
 
+  /** 
+  The indexOf function returns the first index at which a given element can be found in the array, or -1 if it is not present.
+
+  If the index is greater than or equal to the array's length, -1 is returned, which means the array will not be searched. If the provided index value is a negative number, it is taken as the offset from the end of the array. Note: if the provided index is negative, the array is still searched from front to back. If the calculated index is less than 0, then the whole array will be searched. 
+
+  @method indexOf
+  @param search {"mixed"} The element to locate in the array.
+  @param i {Number} The index to start the search at. 
+  @param x {Array} The Array you wish to search in. 
+  @return {Number} The first index at which a given element can be found in the Array, or -1 if not found. 
+  @public
+  @example
+      var array = [2, 5, 9];
+
+      indexOf( 2, 0, array );   //  0
+      indexOf( 7, 0, array );   // -1
+      indexOf( 9, 2, array );   //  2
+      indexOf( 2, -1, array );  // -1
+      indexOf( 2, -3, array );  //  0
+  */
+
   //+ indexOf :: ( a -> Number -> Array ) -> Number
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
   function indexOf (search, i, x) {
@@ -558,7 +579,7 @@
   The function determines whether an array contains a certain element, returning true or false as appropriate.
 
   @method contains
-  @param search {Number|NaN} The value you wish to check if exists.
+  @param search {"mixed"} The value you wish to check if exists.
   @param i {Number} The index of where the begin searching the Array.
   @param x {Array} The Array you wish to search.
   @return {Boolean} A Boolean value. 
@@ -566,12 +587,12 @@
   @example
       var array = [1, 2, 3, NaN];
 
-      contains( 2, 0 )( array )   // True
-      contains( 4, 0 )( array )   // False
-      contains( 3, 3 )( array )   // False
-      contains( 3, -2 )( array )  // False
-      contains( NaN, 0 )( array ) // True
-      contains( 2, -8 )( array )  // True
+      contains( 2, 0, array )   // True
+      contains( 4, 0, array )   // False
+      contains( 3, 3, array )   // False
+      contains( 3, -2, array )  // False
+      contains( NaN, 0, array ) // True
+      contains( 2, -8, array )  // True
   */
 
   //+ contains :: ( a -> Number -> Array ) -> Number
@@ -599,6 +620,30 @@
   }
 
   module.contains = autoCurry(contains);
+
+
+  /** 
+  The function tests whether all elements in the array pass the test implemented by the provided function.
+
+  The function executes the provided callback function once for each element present in the array until it finds one where callback returns a falsy value (a value that becomes false when converted to a Boolean). If such an element is found, the every method immediately returns false. Otherwise, if callback returned a true value for all elements, every will return true. callback is invoked only for indexes of the array which have assigned values; it is not invoked for indexes which have been deleted or which have never been assigned values.
+
+  @method every
+  @param f {Function} The function to test for each element, taking three arguments. 
+  @param f.value {"any"} The value of the current index of the array. 
+  @param f.index {Number} The current index of the array. 
+  @param f.array {Array} The array itself. 
+  @param x {Array} The Array you wish to search.
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      function isBiggerThanTen(value, index, array) {
+        return value > 10;
+      }
+
+      var failed = every( isBiggerThanTen, [12, 5, 8, 130, 44] )    // False
+        , passed = every( isBiggerThanTen, [12, 54, 18, 130, 44] )  // True
+      ;
+  */
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every
   function every (f, x) {
