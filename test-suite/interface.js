@@ -7,14 +7,6 @@ var assignStringToID = (function () {
   };
 }());
 
-function add (a, b) {
-  return a + b;
-}
-
-function append (a, b) {
-  return a += b;
-}
-
 function reduce (f, acc, x) {
   var i = 0, len = x.length;
   while (i < len) {
@@ -43,6 +35,30 @@ function pluck (key) {
   }
 }
 
+function valueToString (x) {
+  if (x) {
+    return x.toString();
+  } else if (x === false) {
+    return 'false';
+  } else if (x === 0) {
+    return '0';
+  } else {
+    return 'undefined';
+  }
+}
+
+function testIdToString (x) {
+  if (x < 10) {
+    return '000' + x;
+  } else if (x < 100) {
+    return '00' + x;
+  } else if (x < 1000) {
+    return '0' + x;
+  } else {
+    return x;
+  }
+}
+
 function forEachTemplate (template, x) {
   return reduce(function (str, x) {
     return str += template( x );
@@ -65,8 +81,8 @@ function summaryTemplate (x) {
 function assertionsTemplate (x) {
   return [
     '<li>'
-    , '<span class="number">', x.id, '</span>'
-    , x.actual || 'undefined', ' === ', x.expected || 'undefined'
+    , '<span class="number">', testIdToString( x.id ), '</span>'
+    , valueToString( x.actual ), ' === ', valueToString( x.expected )
   , '</li>'
   ].join('');
 }
@@ -92,18 +108,23 @@ function testsTemplate (x) {
 
 function filterPassedAndFailedTests (list) {
   return reduce(function (acc, test) {
-    every( pluck('passed') , test.tests) ? 
-      acc.passed.push(test) : 
-      acc.failed.push(test);
+    every( pluck('passed') , test.tests ) ? 
+      acc.passed.push( test ) : 
+      acc.failed.push( test );
     return acc;
   }, { passed: [], failed: [] }, list);
 }
 
-var results   = require('tape').results;
+var results   = require( 'tape' ).results;
 results.tests = filterPassedAndFailedTests( results.tests );
 
 
 // Declare Sauce Labs Test Results Object
+// ======================================
+// Make sure that window.global_test_results.tests only contains the failed 
+// tests since they have a low buffer-size restriction that will cause the 
+// "job" to fail or return undefined if overridden. 
+
 window.global_test_results = {
   passed: results.passed,
   failed: results.failed,
@@ -118,7 +139,7 @@ assignStringToID('summary', summaryTemplate({
   failed: results.failed
 }));
 
-if (results.tests.failed.length) {
+if ( results.tests.failed.length ) {
   assignStringToID('failed-tests', testsTemplate({
     title: 'Failed Tests',
     tests: results.tests.failed
