@@ -427,6 +427,24 @@
 
   module.exists = exists;
 
+  // Simply for checking if an Object is empty.
+  function isObjectEmpty (x) {
+    var key;
+    for (key in x) {
+      return false;
+    }
+    return true;
+  }
+
+  // Simply for checking if an Array or Arguments object is empty.
+  function isArrayEmpty (x) {
+    if (x.length) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
 
   //+ reduce :: ( Function -> a -> a ) -> a
   function reduce (f, acc, x) {
