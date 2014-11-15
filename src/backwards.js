@@ -587,12 +587,12 @@
   @example
       var array = [1, 2, 3, NaN];
 
-      contains( 2, 0, array )   // True
-      contains( 4, 0, array )   // False
-      contains( 3, 3, array )   // False
-      contains( 3, -2, array )  // False
-      contains( NaN, 0, array ) // True
-      contains( 2, -8, array )  // True
+      contains( 2,   0, array )   // True
+      contains( 4,   0, array )   // False
+      contains( 3,   3, array )   // False
+      contains( 3,  -2, array )   // False
+      contains( NaN, 0, array )   // True
+      contains( 2,  -8, array )   // True
   */
 
   //+ contains :: ( a -> Number -> Array ) -> Number
