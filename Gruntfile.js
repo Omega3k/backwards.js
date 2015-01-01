@@ -137,7 +137,7 @@ initConfig.watch = {
 
   backwards_dev: {
     // files: ['src/backwards.*.coffee', 'src/EventStream.coffee'],
-    files: ['src/backwards.*.coffee'],
+    files: ['src/backwards.coffee'],
     tasks: ['coffee', 'jshint:backwards_build']
   }
 };
