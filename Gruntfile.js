@@ -106,7 +106,8 @@ initConfig.connect = {
   server: {
     options: {
       base: '',
-      hostname: 'localhost',
+      // hostname: 'localhost',
+      hostname: '0.0.0.0',
       port: 9999
     }
   }
@@ -119,6 +120,11 @@ initConfig.watch = {
     tasks: ['browserify', 'nodeTests']
   },
 
+  test_suite_coffee: {
+    files: ['test-suite/**/*.coffee'],
+    tasks: ['coffee']
+  },
+
   docs: {
     files: ['src/backwards.js'],
     tasks: ['jshint:backwards_dev', 'yuidoc']
@@ -127,6 +133,12 @@ initConfig.watch = {
   gruntfile: {
     files: ['Gruntfile.js'],
     tasks: ['jshint:gruntfile']
+  }, 
+
+  backwards_dev: {
+    // files: ['src/backwards.*.coffee', 'src/EventStream.coffee'],
+    files: ['src/backwards.*.coffee'],
+    tasks: ['coffee', 'jshint:backwards_build']
   }
 };
 
@@ -201,14 +213,41 @@ initConfig.uglify = {
 
 initConfig.jshint = {
   options: {
+    // '-W015' : true,
+    '-W030' : true,
+    eqeqeq  : true,
+    eqnull  : true,
     laxcomma: true,
+    undef   : true,
+    node    : true,
     globals: {
-      jQuery: true
+      jQuery  : true,
+      'window': true,
+      module  : true,
+      exports : true,
+      define  : true,
+      require : true
     }
   },
   backwards_dev  : ['src/backwards.js'],
-  // backwards_build: ['build/backwards.min.js'],
-  gruntfile      : ['Gruntfile.js']
+  backwards_build: ['build/backwards.*.min.js'],
+  gruntfile      : ['Gruntfile.js'],
+  // build          : ['build/**/*.js']
+};
+
+initConfig.coffee = {
+  backwards_dev: {
+    options: {
+      join     : true,
+      sourceMap: true
+    },
+    files: {
+      'build/backwards.coffee.min.js': ['src/backwards.coffee'],
+      // 'build/backwards.EventStream.min.js': ['src/backwards.EventStream.coffee'],
+      // 'build/EventStream.min.js': ['src/EventStream.coffee'],
+      'test-suite/ux.js': ['test-suite/ux.coffee']
+    }
+  }
 };
 
 
@@ -245,7 +284,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', 'dev');
   grunt.registerTask('dev', ['build', 'connect', 'watch']);
   grunt.registerTask('test', ['browserify:dist', 'connect', 'saucelabs-custom']);
-  grunt.registerTask('build', ['browserify:dist', 'jshint', 'yuidoc', 'uglify']);
+  grunt.registerTask('build', ['coffee', 'browserify:dist', 'jshint', 'yuidoc', 'uglify']);
   grunt.registerTask('nodeTests', 'Run the tests in the command-line using node', function () {
     // grunt.util.spawn({
     //  cmd: ['npm run-script cmd']

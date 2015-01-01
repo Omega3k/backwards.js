@@ -1,24 +1,53 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Test-Suite</title>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport"           content="width=device-width, initial-scale=1.0">
+  <meta name="author"             content="Svein Olav Risdal">
+  <meta name="description"        content="">
+  <meta name="keywords"           content="">
 
-  <!-- <link rel="shortcut icon" type="image/png" href=""> -->
+  <meta name="apple-mobile-web-app-title" content="sendwithus">
+  <link rel="apple-touch-icon" sizes="57x57"   href="https://d16dj8pvh3duka.cloudfront.net/apple-touch-icon-57x57.png?v=1419032134">
+  <link rel="apple-touch-icon" sizes="114x114" href="https://d16dj8pvh3duka.cloudfront.net/apple-touch-icon-114x114.png?v=1419032134">
+  <link rel="apple-touch-icon" sizes="72x72"   href="https://d16dj8pvh3duka.cloudfront.net/apple-touch-icon-72x72.png?v=1419032134">
+  <link rel="apple-touch-icon" sizes="144x144" href="https://d16dj8pvh3duka.cloudfront.net/apple-touch-icon-144x144.png?v=1419032134">
+  <link rel="apple-touch-icon" sizes="60x60"   href="https://d16dj8pvh3duka.cloudfront.net/apple-touch-icon-60x60.png?v=1419032134">
+  <link rel="apple-touch-icon" sizes="120x120" href="https://d16dj8pvh3duka.cloudfront.net/apple-touch-icon-120x120.png?v=1419032134">
+  <link rel="apple-touch-icon" sizes="76x76"   href="https://d16dj8pvh3duka.cloudfront.net/apple-touch-icon-76x76.png?v=1419032134">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://d16dj8pvh3duka.cloudfront.net/apple-touch-icon-152x152.png?v=1419032134">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://d16dj8pvh3duka.cloudfront.net/apple-touch-icon-180x180.png?v=1419032134">
+  
+  <link rel="icon" href="https://d16dj8pvh3duka.cloudfront.net/favicon.png?v=1419032134">
+  <link rel="icon" type="image/png" href="https://d16dj8pvh3duka.cloudfront.net/favicon-192x192.png?v=1419032134" sizes="192x192">
+  <link rel="icon" type="image/png" href="https://d16dj8pvh3duka.cloudfront.net/favicon-160x160.png?v=1419032134" sizes="160x160">
+  <link rel="icon" type="image/png" href="https://d16dj8pvh3duka.cloudfront.net/favicon-96x96.png?v=1419032134"   sizes="96x96">
+  <link rel="icon" type="image/png" href="https://d16dj8pvh3duka.cloudfront.net/favicon-16x16.png?v=1419032134"   sizes="16x16">
+  <link rel="icon" type="image/png" href="https://d16dj8pvh3duka.cloudfront.net/favicon-32x32.png?v=1419032134"   sizes="32x32">
+  
+  <meta name="msapplication-TileColor" content="#FFFFFF">
+  <meta name="msapplication-TileImage" content="https://d16dj8pvh3duka.cloudfront.net/mstile-144x144.png?v=1419032134">
+  <meta name="application-name"        content="sendwithus">
+  
+  <title>Test-Suite</title>
   
   <!-- https://kuler.adobe.com/Tangy-Pop-color-theme-221639/ -->
   <link rel="stylesheet" type="text/css" href="style.css" />
   <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700">
+  <!-- <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro|Source+Serif+Pro:700' rel='stylesheet' type='text/css'> -->
 
-  <!-- The almond AMD loader, and a shim for a subset of the TAPE version 13 protocol used to collect the data from the tests. -->
+  <!-- The almond AMD loader, and a shim for a subset of the TAPE version 13 
+  protocol used to collect the data from the tests. -->
   <script type="text/javascript" src="almond.js"></script>
   <script type="text/javascript" src="tape.js"></script>
 
   <!-- The library we are interested in -->
-  <!-- <script type="text/javascript" src="../src/backwards.js"></script> -->
-  <script type="text/javascript" src="../build/backwards.min.js"></script>
+  <script type="text/javascript" src="../build/backwards.coffee.min.js"></script>
+  <script type="text/javascript" src="../build/EventStream.min.js"></script>
 
-  <!-- Defining an alias of the backwards.js library so that our tests can be executed in the terminal (uses relative paths) -->
+  <!-- Defining an alias of the backwards.js library so that our tests can 
+  be executed in the terminal (uses relative paths) -->
   <script type="text/javascript">
     define('../src/backwards', ['backwards'], function (backwards) {
       return backwards;
@@ -27,44 +56,20 @@
 </head>
 
 <body>
-  <div id="debug" class="container"></div>
-  
-  <div id="container">
-    <div id="summary"></div>
-    <div class="container" id="failed-tests"></div>
-    <div class="container" id="passed-tests"></div>
+  <div id="summary"></div>
+
+  <div class="container">
+    <div id="message"></div>
   </div>
+  
+  <div class="container" id="failed-tests"></div>
+  <div class="container" id="passed-tests"></div>
+  <!-- <div class="container" id="modal"></div> -->
+  <span class="" id="modal"></span>
 
-<!--
-  <script type="text/template" id="template/summary">
-    <h1>{{ title }}</h1>
-    <span class="total">Total: {{ total }}</span>
-    <span class="passed">Passed: {{ passed }}</span>
-    <span class="failed">Failed: {{ failed }}</span>
-  </script>
 
-  <script type="text/template" id="template/tests">
-    <ul>
-      <li>
-        <h2>{{ name }}</h2>
-        <ul>
-          {{ tests }}
-        </ul>
-      </li>
-    </ul>
-  </script>
-
-  <script type="text/template" id="template/test">
-    <li>
-      <span class="number">{{ id }}</span>
-      {{ actual || 'undefined' }} === {{ expected || 'undefined' }}
-    </li>
-  </script>
--->
-
-  <!-- <script src="../tests/_tests.min.js"></script> -->
-
-  <!-- Methods for interacting with several types of primitives (Array, Object, String ...) -->
+  <!-- Methods for interacting with several types of primitives 
+  (Array, Object, String ...) -->
   <script src="../tests/forEach.unit.test.js"></script>
   <script src="../tests/keys.unit.test.js"></script>
   <script src="../tests/map.unit.test.js"></script>
@@ -95,12 +100,12 @@
   <script src="../tests/either.unit.test.js"></script>
   <script src="../tests/maybe.unit.test.js"></script>
 
-  <!--
-  Functionality for building the visual user interface, and setting up the correct information for Sauce Labs reporting. 
+  <!-- Functionality for building the visual user interface, and setting 
+  up the correct information for Sauce Labs reporting. 
 
-  All tests should be placed above this file reference. 
-  -->
-  <script type="text/javascript" src="interface.js"></script>
+  PS: All tests should be placed above this file reference. -->
+  <script type="text/javascript" src="ux.js"></script>
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 
 </body>
 </html>
