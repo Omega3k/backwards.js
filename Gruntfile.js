@@ -206,7 +206,8 @@ initConfig.uglify = {
 
   backwards: {
     files: {
-      'build/backwards.min.js': ['src/backwards.js']
+      // 'build/backwards.min.js': ['src/backwards.js']
+      'build/backwards.min.js': ['build/backwards.dev.js']
     }
   }
 };
@@ -230,7 +231,7 @@ initConfig.jshint = {
     }
   },
   backwards_dev  : ['src/backwards.js'],
-  backwards_build: ['build/backwards.*.min.js'],
+  backwards_build: ['build/backwards.min.js'],
   gruntfile      : ['Gruntfile.js'],
   // build          : ['build/**/*.js']
 };
@@ -242,7 +243,7 @@ initConfig.coffee = {
       sourceMap: true
     },
     files: {
-      'build/backwards.coffee.min.js': ['src/backwards.coffee'],
+      'build/backwards.dev.js': ['src/backwards.coffee'],
       // 'build/backwards.EventStream.min.js': ['src/backwards.EventStream.coffee'],
       // 'build/EventStream.min.js': ['src/EventStream.coffee'],
       'test-suite/ux.js': ['test-suite/ux.coffee']
