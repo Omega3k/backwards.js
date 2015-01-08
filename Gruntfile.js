@@ -116,7 +116,8 @@ initConfig.connect = {
 // Watch-task
 initConfig.watch = {
   tests: {
-    files: ['tests/**/*.test.js', 'src/**/*.js'],
+    // files: ['tests/**/*.test.js', 'src/**/*.js'],
+    files: ['tests/**/*.test.js'],
     tasks: ['browserify', 'nodeTests']
   },
 
@@ -126,7 +127,7 @@ initConfig.watch = {
   },
 
   docs: {
-    files: ['src/backwards.js'],
+    files: ['build/backwards.dev.js'],
     tasks: ['jshint:backwards_dev', 'yuidoc']
   },
 
@@ -138,7 +139,7 @@ initConfig.watch = {
   backwards_dev: {
     // files: ['src/backwards.*.coffee', 'src/EventStream.coffee'],
     files: ['src/backwards.coffee'],
-    tasks: ['coffee', 'jshint:backwards_build']
+    tasks: ['coffee', 'jshint:backwards_dev']
   }
 };
 
@@ -230,8 +231,8 @@ initConfig.jshint = {
       require : true
     }
   },
-  backwards_dev  : ['src/backwards.js'],
-  backwards_build: ['build/backwards.min.js'],
+  backwards_dev  : ['build/backwards.dev.js'],
+  // backwards_build: ['build/backwards.min.js'],
   gruntfile      : ['Gruntfile.js'],
   // build          : ['build/**/*.js']
 };

@@ -16,6 +16,10 @@ objectProto = Object.prototype
 slice       = arrayProto.slice
 toString    = objectProto.toString
 
+identity    = (x) -> x
+add         = (a, b) -> a + b
+append      = (a, b) -> a += b
+
 
 ###*
 This function is an internal function that is used by 'autoCurry' to create curried functions from functions that take more than one parameter. 
@@ -317,17 +321,27 @@ backwards.exists = exists
 
 
 # isObjectEmpty :: Object -> Boolean
-isObjectEmpty = (x) ->
-  return false for own prop of x
-  true
+# isObjectEmpty = (x) ->
+#   return false for own prop of x
+#   true
 
 
 # isArrayEmpty :: Array -> Boolean
-isArrayEmpty = (x) -> if x.length then false else true
+# isArrayEmpty = (x) -> if x.length then false else true
 
-backwards.isEmpty = (x) ->
-  if isArray x then isArrayEmpty x
-  else if isObject x then isObjectEmpty x
+# isEmpty :: Array|Object -> Boolean
+isEmpty = (x) ->
+  if isObject x 
+    return false for own key of x
+  else if isArray x
+    return false if x.length
+  true
+
+backwards.isEmpty = isEmpty
+
+# backwards.isEmpty = (x) ->
+#   if isArray x then isArrayEmpty x
+#   else if isObject x then isObjectEmpty x
 
 
 # arrayReduce :: (a -> b) -> a -> [a] -> [b]
@@ -352,9 +366,11 @@ reduce = (f, acc, x) ->
 
 backwards.reduce = autoCurry reduce
 
-backwards.forEach = autoCurry (f, xs) ->
+forEach = (f, xs) ->
   reduce ((acc, x, i, xs) -> f x, i, xs), xs, xs
   undefined
+
+backwards.forEach = autoCurry forEach
 
 
 arrayFilter = (f, xs) -> x for x in xs when f x
@@ -380,6 +396,14 @@ map = (f, xs) ->
   else f xs
 
 backwards.map = autoCurry map
+
+
+# copy = (x) ->
+#   map identity, x
+
+copy = backwards.map identity
+
+# backwards.copy = copy
 
 
 ###*
@@ -500,6 +524,14 @@ drop = (int, x) ->
   else throw new Error 'drop() only works on Arrays and Strings'
 
 backwards.drop = autoCurry drop
+
+# toString = (x) ->
+#   # if x then x.toString()
+#   if isArray x then "[#{ x.toString() }]"
+#   else if isObject x then "{#{ reduce toString, '', x }}"
+#   else if x is false then "false"
+#   else if x is 0 then "0"
+#   else "undefined"
 
 
 # Export backwards object

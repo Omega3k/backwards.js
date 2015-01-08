@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var arrayContains, arrayEvery, arrayFilter, arrayIndexOf, arrayMap, arrayProto, arrayReduce, arraySome, autoCurry, backwards, compose, contains, curry, drop, either, every, exists, filter, filterOne, indexOf, isArguments, isArray, isArrayEmpty, isBoolean, isDate, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isObjectEmpty, isPromise, isRegExp, isString, isTypeOf, isUndefined, map, maybe, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
+  var add, append, arrayContains, arrayEvery, arrayFilter, arrayIndexOf, arrayMap, arrayProto, arrayReduce, arraySome, autoCurry, backwards, compose, contains, copy, curry, drop, either, every, exists, filter, filterOne, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, map, maybe, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -22,6 +22,18 @@
   slice = arrayProto.slice;
 
   toString = objectProto.toString;
+
+  identity = function(x) {
+    return x;
+  };
+
+  add = function(a, b) {
+    return a + b;
+  };
+
+  append = function(a, b) {
+    return a += b;
+  };
 
 
   /**
@@ -370,30 +382,22 @@
 
   backwards.exists = exists;
 
-  isObjectEmpty = function(x) {
-    var prop;
-    for (prop in x) {
-      if (!__hasProp.call(x, prop)) continue;
-      return false;
+  isEmpty = function(x) {
+    var key;
+    if (isObject(x)) {
+      for (key in x) {
+        if (!__hasProp.call(x, key)) continue;
+        return false;
+      }
+    } else if (isArray(x)) {
+      if (x.length) {
+        return false;
+      }
     }
     return true;
   };
 
-  isArrayEmpty = function(x) {
-    if (x.length) {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  backwards.isEmpty = function(x) {
-    if (isArray(x)) {
-      return isArrayEmpty(x);
-    } else if (isObject(x)) {
-      return isObjectEmpty(x);
-    }
-  };
+  backwards.isEmpty = isEmpty;
 
   arrayReduce = function(f, acc, xs) {
     var i, val, _i, _len;
@@ -427,12 +431,14 @@
 
   backwards.reduce = autoCurry(reduce);
 
-  backwards.forEach = autoCurry(function(f, xs) {
+  forEach = function(f, xs) {
     reduce((function(acc, x, i, xs) {
       return f(x, i, xs);
     }), xs, xs);
     return void 0;
-  });
+  };
+
+  backwards.forEach = autoCurry(forEach);
 
   arrayFilter = function(f, xs) {
     var x, _i, _len, _results;
@@ -496,6 +502,8 @@
   };
 
   backwards.map = autoCurry(map);
+
+  copy = backwards.map(identity);
 
 
   /**
