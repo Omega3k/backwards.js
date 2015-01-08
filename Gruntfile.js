@@ -200,7 +200,7 @@ initConfig.yuidoc = {
 
 initConfig.uglify = {
   options: {
-    banner: '/*\n' + license + '*/\n\n',
+    banner: '/*\n' + license + '\n\n' + 'Source-Code: https://github.com/Omega3k/backwards.js\n*/\n\n\n',
     mangle: {
       except: ['jQuery', 'Backbone']
     }
