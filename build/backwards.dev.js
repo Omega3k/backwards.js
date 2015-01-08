@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, arrayContains, arrayEvery, arrayFilter, arrayIndexOf, arrayMap, arrayProto, arrayReduce, arraySome, autoCurry, backwards, compose, contains, copy, curry, drop, either, every, exists, filter, filterOne, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, map, maybe, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
+  var add, append, arrayContains, arrayEvery, arrayFilter, arrayIndexOf, arrayMap, arrayProto, arrayReduce, arraySome, autoCurry, backwards, compose, contains, copy, curry, drop, either, every, exists, filter, filterOne, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeError, isTypeOf, isUndefined, map, maybe, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -32,7 +32,11 @@
   };
 
   append = function(a, b) {
-    return a += b;
+    if (a.concat) {
+      return a.concat(b);
+    } else {
+      return a += b;
+    }
   };
 
 
@@ -229,6 +233,14 @@
   isDate = isTypeOf('Date');
 
   backwards.isDate = isDate;
+
+  isError = isTypeOf('Error');
+
+  isTypeError = isTypeOf('TypeError');
+
+  backwards.isError = function(x) {
+    return isError(x || isTypeError(x));
+  };
 
   isFinite = function(x) {
     return isFinite(x) && !isNaN(parseFloat(x));
@@ -504,6 +516,12 @@
   backwards.map = autoCurry(map);
 
   copy = backwards.map(identity);
+
+  backwards.copy = copy;
+
+  flatten = backwards.reduce(append, []);
+
+  backwards.flatten = flatten;
 
 
   /**

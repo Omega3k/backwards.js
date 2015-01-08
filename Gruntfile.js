@@ -117,8 +117,9 @@ initConfig.connect = {
 initConfig.watch = {
   tests: {
     // files: ['tests/**/*.test.js', 'src/**/*.js'],
-    files: ['tests/**/*.test.js'],
-    tasks: ['browserify', 'nodeTests']
+    files: ['src/specs/**/*.coffee'],
+    // tasks: ['browserify', 'nodeTests']
+    tasks: ['coffee:tests']
   },
 
   test_suite_coffee: {
@@ -139,7 +140,7 @@ initConfig.watch = {
   backwards_dev: {
     // files: ['src/backwards.*.coffee', 'src/EventStream.coffee'],
     files: ['src/backwards.coffee'],
-    tasks: ['coffee', 'jshint:backwards_dev']
+    tasks: ['coffee:backwards_dev', 'jshint:backwards_dev']
   }
 };
 
@@ -248,6 +249,15 @@ initConfig.coffee = {
       // 'build/backwards.EventStream.min.js': ['src/backwards.EventStream.coffee'],
       // 'build/EventStream.min.js': ['src/EventStream.coffee'],
       'test-suite/ux.js': ['test-suite/ux.coffee']
+    }
+  },
+
+  tests: {
+    options: {
+      join: true
+    },
+    files: {
+      '_tmp/tests.js': ['src/specs/**/*.coffee']
     }
   }
 };

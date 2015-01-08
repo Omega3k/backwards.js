@@ -18,7 +18,7 @@ toString    = objectProto.toString
 
 identity    = (x) -> x
 add         = (a, b) -> a + b
-append      = (a, b) -> a += b
+append      = (a, b) -> if a.concat then a.concat b else a += b
 
 
 ###*
@@ -180,6 +180,12 @@ backwards.isBoolean = isBoolean
 # isDate :: a -> Boolean
 isDate           = isTypeOf 'Date'
 backwards.isDate = isDate
+
+
+# isError :: a -> Boolean
+isError           = isTypeOf 'Error'
+isTypeError       = isTypeOf 'TypeError'
+backwards.isError = (x) -> isError x or isTypeError x
 
 
 # isFinite :: a -> Boolean
@@ -401,9 +407,11 @@ backwards.map = autoCurry map
 # copy = (x) ->
 #   map identity, x
 
-copy = backwards.map identity
+copy           = backwards.map identity
+backwards.copy = copy
 
-# backwards.copy = copy
+flatten           = backwards.reduce append, []
+backwards.flatten = flatten
 
 
 ###*
