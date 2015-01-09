@@ -37,14 +37,25 @@
   <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700">
   <!-- <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro|Source+Serif+Pro:700' rel='stylesheet' type='text/css'> -->
 
-  <!-- The almond AMD loader, and a shim for a subset of the TAPE version 13 
-  protocol used to collect the data from the tests. -->
+
+  <!--
+  almond & TAPE
+  =============
+
+  Loads the almond AMD loader, and a shim for a subset of the TAPE version 13 protocol used to collect the data from the tests. 
+  -->
+
   <script type="text/javascript" src="almond.js"></script>
   <script type="text/javascript" src="tape.js"></script>
 
+
   <!--
-  Load the library we are interested in testing, and defining an alias so that our tests can be executed in the Node.js REPL using relative paths
+  backwards
+  =========
+
+  Loads the library we are interested in testing, and defines an alias so that our tests can be executed in the Node.js REPL using relative paths. 
   -->
+
   <script type="text/javascript" src="../build/backwards.min.js"></script>
   <script type="text/javascript">
     define("../../build/backwards.dev", ["backwards"], function (backwards) {
@@ -66,49 +77,16 @@
   <span class="" id="modal"></span>
 
 
-  <!-- Methods for interacting with several types of primitives 
-  (Array, Object, String ...)
-  <script src="../tests/forEach.unit.test.js"></script>
-  <script src="../tests/keys.unit.test.js"></script>
-  <script src="../tests/map.unit.test.js"></script>
-  -->
-
-  <!-- Methods for interacting with Arrays
-  <script src="../tests/contains.unit.test.js">// Array, String</script>
-  <script src="../tests/every.unit.test.js"></script>
-  <script src="../tests/filter.unit.test.js"></script>
-  <script src="../tests/indexOf.unit.test.js"></script>
-  <script src="../tests/reduce.unit.test.js"></script>
-  <script src="../tests/some.unit.test.js"></script>
-  -->
-
-  <!-- Methods for interacting with Objects -->
-
-  <!-- Utility Methods for testing if the given object is of type x
-  <script src="../tests/isArguments.unit.test.js"></script>
-  <script src="../tests/isArray.unit.test.js"></script>
-  <script src="../tests/isBoolean.unit.test.js"></script>
-  <script src="../tests/isFunction.unit.test.js"></script>
-  <script src="../tests/isNull.unit.test.js"></script>
-  <script src="../tests/isNumber.unit.test.js"></script>
-  <script src="../tests/isObject.unit.test.js"></script>
-  <script src="../tests/isString.unit.test.js"></script>
-  <script src="../tests/isUndefined.unit.test.js"></script>
-  -->
-
-  <!-- Misc Utility Methods
-  <script src="../tests/compose.unit.test.js"></script>
-  <script src="../tests/either.unit.test.js"></script>
-  <script src="../tests/maybe.unit.test.js"></script>
-  -->
-
   <!--
-  Functionality for building the visual user interface, and setting 
-  up the correct information for Sauce Labs reporting. 
+  Tests, User Interface & User Experience
+  =======================================
 
-  PS: All tests should be placed above this file reference.
+  Contains all the tests, functionality for building the visual user interface, and assigns the relevant data to a global variable used by Sauce Labs for automated testing. 
   -->
+
   <script type="text/javascript" src="ux.js"></script>
+
+  
   <!-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> -->
 
 </body>
