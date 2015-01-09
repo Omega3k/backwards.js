@@ -6,7 +6,7 @@ test "#{ txt } be a function", (t) ->
   t.equal typeof indexOf, "function"
   t.end()
 
-test "#{ txt } indexOf functions correctly", (t) ->
+test "#{ txt } function correctly ...", (t) ->
   array = [2, 5, 9]
 
   t.equal indexOf( 2,  0, array ),  0
