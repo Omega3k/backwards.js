@@ -245,10 +245,17 @@ initConfig.coffee = {
       sourceMap: true
     },
     files: {
-      'build/backwards.dev.js': ['src/backwards.coffee'],
-      // 'build/backwards.EventStream.min.js': ['src/backwards.EventStream.coffee'],
-      // 'build/EventStream.min.js': ['src/EventStream.coffee'],
-      'test-suite/ux.js': ['test-suite/ux.coffee']
+      'build/backwards.dev.js': ['src/backwards.coffee']
+      // 'test-suite/ux.js'      : ['src/specs/**/*.coffee', 'test-suite/ux.coffee']
+    }
+  },
+
+  "test-suite": {
+    options: {
+      join: true
+    },
+    files: {
+      'test-suite/ux.js': ['src/specs/**/*.coffee', 'test-suite/ux.coffee']
     }
   },
 
