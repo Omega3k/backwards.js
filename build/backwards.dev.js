@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, arrayContains, arrayEvery, arrayFilter, arrayIndexOf, arrayMap, arrayProto, arrayReduce, arraySome, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, filterOne, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeError, isTypeOf, isUndefined, map, maybe, noop, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
+  var add, append, arrayEvery, arrayFilter, arrayIndexOf, arrayMap, arrayProto, arrayReduce, arraySome, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, filterOne, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeError, isTypeOf, isUndefined, map, maybe, noop, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -559,7 +559,7 @@
       }
     }
     while (i < len) {
-      if (x[i] === search) {
+      if (x[i] === search || isNaN(search) && isNaN(x[i])) {
         return i;
       }
       i++;
@@ -571,27 +571,9 @@
 
   backwards.indexOf = autoCurry(indexOf);
 
-  arrayContains = function(search, i, x) {
-    var len;
-    len = x.length;
-    if (len === 0 || i >= len) {
-      return false;
-    } else if (i < 0) {
-      i = len + i;
-      if (i < 0) {
-        i = 0;
-      }
-    }
-    while (i < len) {
-      if (x[i] === search || isNaN(search) && isNaN(x[i])) {
-        return true;
-      }
-      i++;
-    }
-    return false;
+  contains = function(search, i, x) {
+    return indexOf(search, i, x > -1);
   };
-
-  contains = arrayContains;
 
   backwards.contains = autoCurry(contains);
 

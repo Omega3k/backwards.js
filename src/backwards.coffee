@@ -446,7 +446,8 @@ arrayIndexOf = (search, i, x) ->
       i = 0
 
   while i < len
-    return i if x[i] is search
+    # return i if x[i] is search
+    return i if x[i] is search or isNaN( search ) and isNaN( x[i] )
     i++
   -1
 
@@ -454,23 +455,7 @@ indexOf           = arrayIndexOf
 backwards.indexOf = autoCurry indexOf
 
 
-arrayContains = (search, i, x) ->
-  len = x.length
-
-  if len is 0 or i >= len
-    return false
-  else if i < 0
-    i = len + i
-    if i < 0
-      i = 0
-
-  while i < len
-    if x[i] is search or isNaN( search ) and isNaN( x[i] )
-      return true
-    i++
-  false
-
-contains           = arrayContains
+contains           = (search, i, x) -> indexOf search, i, x > -1
 backwards.contains = autoCurry contains
 
 arraySome = (f, xs) ->
