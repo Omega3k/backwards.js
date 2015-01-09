@@ -42,14 +42,12 @@
   <script type="text/javascript" src="almond.js"></script>
   <script type="text/javascript" src="tape.js"></script>
 
-  <!-- The library we are interested in -->
-  <script type="text/javascript" src="../build/backwards.coffee.min.js"></script>
-  <script type="text/javascript" src="../build/EventStream.min.js"></script>
-
-  <!-- Defining an alias of the backwards.js library so that our tests can 
-  be executed in the terminal (uses relative paths) -->
+  <!--
+  Load the library we are interested in testing, and defining an alias so that our tests can be executed in the Node.js REPL using relative paths
+  -->
+  <script type="text/javascript" src="../build/backwards.min.js"></script>
   <script type="text/javascript">
-    define('../src/backwards', ['backwards'], function (backwards) {
+    define("../../build/backwards.dev", ["backwards"], function (backwards) {
       return backwards;
     });
   </script>
@@ -69,22 +67,24 @@
 
 
   <!-- Methods for interacting with several types of primitives 
-  (Array, Object, String ...) -->
+  (Array, Object, String ...)
   <script src="../tests/forEach.unit.test.js"></script>
   <script src="../tests/keys.unit.test.js"></script>
   <script src="../tests/map.unit.test.js"></script>
+  -->
 
-  <!-- Methods for interacting with Arrays -->
+  <!-- Methods for interacting with Arrays
   <script src="../tests/contains.unit.test.js">// Array, String</script>
   <script src="../tests/every.unit.test.js"></script>
   <script src="../tests/filter.unit.test.js"></script>
   <script src="../tests/indexOf.unit.test.js"></script>
   <script src="../tests/reduce.unit.test.js"></script>
   <script src="../tests/some.unit.test.js"></script>
+  -->
 
   <!-- Methods for interacting with Objects -->
 
-  <!-- Utility Methods for testing if the given object is of type x -->
+  <!-- Utility Methods for testing if the given object is of type x
   <script src="../tests/isArguments.unit.test.js"></script>
   <script src="../tests/isArray.unit.test.js"></script>
   <script src="../tests/isBoolean.unit.test.js"></script>
@@ -94,18 +94,22 @@
   <script src="../tests/isObject.unit.test.js"></script>
   <script src="../tests/isString.unit.test.js"></script>
   <script src="../tests/isUndefined.unit.test.js"></script>
+  -->
 
-  <!-- Misc Utility Methods -->
+  <!-- Misc Utility Methods
   <script src="../tests/compose.unit.test.js"></script>
   <script src="../tests/either.unit.test.js"></script>
   <script src="../tests/maybe.unit.test.js"></script>
+  -->
 
-  <!-- Functionality for building the visual user interface, and setting 
+  <!--
+  Functionality for building the visual user interface, and setting 
   up the correct information for Sauce Labs reporting. 
 
-  PS: All tests should be placed above this file reference. -->
+  PS: All tests should be placed above this file reference.
+  -->
   <script type="text/javascript" src="ux.js"></script>
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <!-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> -->
 
 </body>
 </html>
