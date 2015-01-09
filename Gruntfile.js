@@ -178,7 +178,7 @@ initConfig.yuidoc = {
     version    : '0.0.0',
     url        : 'https://github.com/Omega3k/backwards.js',
     options: {
-      paths      : 'src',
+      paths      : 'build',
       outdir     : 'docs',
       // themedir   : 'path/to/custom/theme',
       linkNatives: true
