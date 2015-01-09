@@ -95,9 +95,13 @@ $failedtests     = doc.getElementById "failed-tests"
 $passedtests     = doc.getElementById "passed-tests"
 $modal           = doc.getElementById "modal"
 
-$modal.innerHTML = "Mouse Cursor here"
-message_failed   = "Hmmm... Seems you have some more work to do before you can celebrate..."
-message_passed   = "Congratulations! All your tests have been successfully completed!"
+# $modal.innerHTML = "Mouse Cursor here"
+
+message_failed = "
+  Hmmm... Seems you have some more work to do before you can celebrate..."
+
+message_passed = "
+  Congratulations! All your tests have been successfully completed!"
 
 ###
 Declare Sauce Labs Test Results Object
