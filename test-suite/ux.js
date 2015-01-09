@@ -1,5 +1,5 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, doc, either, every, filter, filterPassedAndFailedTests, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFunction, isNull, isNumber, isObject, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
+  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, doc, drop, either, every, filter, filterPassedAndFailedTests, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFunction, isNull, isNumber, isObject, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
 
   test = require("tape");
 
@@ -49,6 +49,27 @@
     t.equal(contains(3, -2, array), true);
     t.equal(contains(NaN, 0, array), true);
     t.equal(contains(2, -8, array), true);
+    return t.end();
+  });
+
+  test = require("tape");
+
+  drop = require("../../build/backwards.dev").drop;
+
+  txt = "backwards.drop should";
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof drop, "function");
+    return t.end();
+  });
+
+  test("" + txt + " work on Arrays", function(t) {
+    t.equal(drop(3, [1, 2, 3, 4, 5]).toString(), [4, 5].toString());
+    return t.end();
+  });
+
+  test("" + txt + " work on Strings", function(t) {
+    t.equal(drop(6, "Hello World!"), "World!");
     return t.end();
   });
 
@@ -138,7 +159,7 @@
     return t.end();
   });
 
-  test("" + txt + " indexOf functions correctly", function(t) {
+  test("" + txt + " function correctly ...", function(t) {
     var array;
     array = [2, 5, 9];
     t.equal(indexOf(2, 0, array), 0);
@@ -846,6 +867,27 @@
 
   test("" + txt + " return false if given an empty Array", function(t) {
     t.equal(some(predicate, []), false);
+    return t.end();
+  });
+
+  test = require("tape");
+
+  take = require("../../build/backwards.dev").take;
+
+  txt = "backwards.take should";
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof take, "function");
+    return t.end();
+  });
+
+  test("" + txt + " work on Arrays", function(t) {
+    t.equal(take(3, [1, 2, 3, 4, 5]).toString(), [1, 2, 3].toString());
+    return t.end();
+  });
+
+  test("" + txt + " work on Strings", function(t) {
+    t.equal(take(5, "Hello World!"), "Hello");
     return t.end();
   });
 

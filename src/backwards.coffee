@@ -30,6 +30,7 @@ This function is an internal function that is used by 'autoCurry' to create curr
 @return {Function} A curried function. 
 @private
 ###
+
 # curry :: Function -> Function
 curry = (f, args...) ->
   (params...) ->
@@ -55,6 +56,7 @@ Create a curried function from a function that normally takes multiple parameter
       , oneTwoAndFour  = oneAndTwo( [4] )         // [1, 2, 4]
     ;
 ###
+
 # autoCurry :: Function -> Number -> Function
 autoCurry = (f, length = f.length) ->
   newFunction = (args...) ->
@@ -89,6 +91,7 @@ Compose your functions to a single function.
       , nine            = timesTwoPlusOne( 4 )        // 9
     ;
 ###
+
 # compose :: Function, ... -> Function
 compose = (fs...) ->
   (args...) ->
@@ -109,10 +112,11 @@ Check if an Object is of a particular type.
 @public
 @example
     var isBoolean = isTypeOf( 'Boolean' ) // A composed function
-      , passed    = isBoolean( true )     // True
-      , failed    = isBoolean( {} )       // False
+      , passed    = isBoolean( true )     // true
+      , failed    = isBoolean( {} )       // false
     ;
 ###
+
 # isTypeOf :: String -> a -> Boolean
 isTypeOf = autoCurry (type, x) ->
   str = "[object #{ type }]"
@@ -129,10 +133,11 @@ Check if an Object is an Arguments object.
 @return {Boolean} A Boolean value. 
 @public
 @example
-    var passed = isArguments( arguments )  // True
-      , failed = isArguments( false )      // False
+    var passed = isArguments( arguments )  // true
+      , failed = isArguments( false )      // false
     ;
 ###
+
 # isArguments :: a -> Boolean
 isArguments = do () ->
   if isTypeOf 'Arguments', arguments then isTypeOf 'Arguments'
@@ -150,10 +155,11 @@ Check if an Object is an Array.
 @return {Boolean} A Boolean value. 
 @public
 @example
-    var passed = isArray( [1, 2, 3] )  // True
-      , failed = isArray( false )      // False
+    var passed = isArray( [1, 2, 3] )  // true
+      , failed = isArray( false )      // false
     ;
 ###
+
 # isArray :: a -> Boolean
 isArray           = Array.isArray or isTypeOf 'Array'
 backwards.isArray = isArray
@@ -167,10 +173,11 @@ Check if an Object is a Boolean.
 @return {Boolean} A Boolean value. 
 @public
 @example
-    var passed = isBoolean( true )  // True
-      , failed = isBoolean( 0 )     // False
+    var passed = isBoolean( true )  // true
+      , failed = isBoolean( 0 )     // false
     ;
 ###
+
 # isBoolean :: a -> Boolean
 isBoolean = (x) ->
   x is true or x is false or isTypeOf 'Boolean', x
@@ -204,10 +211,12 @@ Check if an Object is a Function.
 @return {Boolean} A Boolean value. 
 @public
 @example
-    var passed = isFunction( function () {} )  // True
-      , failed = isFunction( false )           // False
+    var noop   = function () {}
+      , passed = isFunction( noop )   // true
+      , failed = isFunction( false )  // false
     ;
 ###
+
 # isFunction :: a -> Boolean
 isFunction = do () ->
   if typeof /./ isnt 'function'
@@ -218,7 +227,9 @@ backwards.isFunction = isFunction
 
 
 # isNaN :: a -> Boolean
-isNaN           = (x) -> isNumber(x) and x isnt +x
+isNaN = isNaN or (x) ->
+  isNumber(x) and x isnt +x
+
 backwards.isNaN = isNaN
 
 
@@ -230,12 +241,15 @@ Check if an Object is a Null object.
 @return {Boolean} A Boolean value. 
 @public
 @example
-    var passed = isNull( null )    // True
-      , failed = isNull( false )   // False
+    var passed = isNull( null )    // true
+      , failed = isNull( false )   // false
     ;
 ###
+
 # isNull :: a -> Boolean
-isNull           = (x) -> x is null or isTypeOf 'Null', x
+isNull = (x) ->
+  x is null or isTypeOf 'Null', x
+
 backwards.isNull = isNull
 
 
@@ -247,10 +261,11 @@ Check if an Object is a Number.
 @return {Boolean} A Boolean value. 
 @public
 @example
-    var passed = isNumber( 123 )     // True
-      , failed = isNumber( false )   // False
+    var passed = isNumber( 123 )     // true
+      , failed = isNumber( false )   // false
     ;
 ###
+
 # isNumber :: a -> Boolean
 isNumber           = isTypeOf 'Number'
 backwards.isNumber = isNumber
@@ -264,10 +279,11 @@ Check if an Object is an Object.
 @return {Boolean} A Boolean value. 
 @public
 @example
-    var passed = isObject( {} )      // True
-      , failed = isObject( false )   // False
+    var passed = isObject( {} )      // true
+      , failed = isObject( false )   // false
     ;
 ###
+
 # isObject :: a -> Boolean
 isObject = (x) ->
   if not x? or isArguments x then false
@@ -294,10 +310,11 @@ Check if an Object is a String.
 @return {Boolean} A Boolean value. 
 @public
 @example
-    var passed = isString( 'string' )  // True
-      , failed = isString( false )     // False
+    var passed = isString( 'string' )  // true
+      , failed = isString( false )     // false
     ;
 ###
+
 # isString :: a -> Boolean
 isString           = isTypeOf 'String'
 backwards.isString = isString
@@ -311,10 +328,11 @@ Check if an Object is undefined.
 @return {Boolean} A Boolean value. 
 @public
 @example
-    var passed = isUndefined( void 0 )   // True
-      , failed = isUndefined( false )    // False
+    var passed = isUndefined( void 0 )   // true
+      , failed = isUndefined( false )    // false
     ;
 ###
+
 # isUndefined :: a -> Boolean
 isUndefined = (x) ->
   x is undefined or isTypeOf 'Undefined', x
@@ -373,6 +391,7 @@ reduce = (f, acc, x) ->
 
 backwards.reduce = autoCurry reduce
 
+
 forEach = (f, xs) ->
   reduce ((acc, x, i, xs) -> f x, i, xs), xs, xs
   undefined
@@ -388,6 +407,7 @@ filter = (f, x) ->
   else filterOne f, x
 
 backwards.filter = autoCurry filter
+
 
 arrayMap = ( f, xs ) -> f x for x in xs
 
@@ -405,11 +425,9 @@ map = (f, xs) ->
 backwards.map = autoCurry map
 
 
-# copy = (x) ->
-#   map identity, x
-
 copy           = backwards.map identity
 backwards.copy = copy
+
 
 flatten           = backwards.reduce append, []
 backwards.flatten = flatten
@@ -429,13 +447,14 @@ If the index is greater than or equal to the array's length, -1 is returned, whi
 @example
     var array = [2, 5, 9];
 
-    indexOf( 2, 0, array );   //  0
-    indexOf( 7, 0, array );   // -1
-    indexOf( 9, 2, array );   //  2
+    indexOf( 2,  0, array );  //  0
+    indexOf( 7,  0, array );  // -1
+    indexOf( 9,  2, array );  //  2
     indexOf( 2, -1, array );  // -1
     indexOf( 2, -3, array );  //  0
 ###
-arrayIndexOf = (search, i, x) ->
+
+indexOf = (search, i, x) ->
   len = x.length
 
   if len is 0 or i >= len
@@ -451,41 +470,69 @@ arrayIndexOf = (search, i, x) ->
     i++
   -1
 
-indexOf           = arrayIndexOf
 backwards.indexOf = autoCurry indexOf
 
 
-contains           = (search, i, x) -> indexOf search, i, x > -1
+###*
+The contains function returns true if a given element can be found in the array, or false if it is not present.
+
+If the index is greater than or equal to the array's length, false is returned, which means the array will not be searched. If the provided index value is a negative number, it is taken as the offset from the end of the array. Note: if the provided index is negative, the array is still searched from front to back. If the calculated index is less than 0, then the whole array will be searched. 
+
+@method contains
+@param search {"mixed"} The element to locate in the array.
+@param i {Number} The index to start the search at. 
+@param x {Array} The Array you wish to search in. 
+@return {Boolean} Returns true if *search* is found in the *Array*, or false if it is not found. 
+@public
+@example
+    var array = [1, 2, 3, NaN];
+
+    contains( 2,   0, array );  // true
+    contains( 4,   0, array );  // false
+    contains( 3,   3, array );  // false
+    contains( 3,  -2, array );  // true
+    contains( NaN, 0, array );  // true
+###
+
+contains = (search, i, x) ->
+  ( indexOf search, i, x ) > -1
+
 backwards.contains = autoCurry contains
 
-arraySome = (f, xs) ->
+
+some = (f, xs) ->
   return true for x in xs when f x
   false
 
-some           = arraySome
 backwards.some = autoCurry some
 
-arrayEvery = (f, xs) ->
+
+every = (f, xs) ->
   return false for x in xs when not f x
   true
 
-every           = arrayEvery
 backwards.every = autoCurry every
 
-either           = (a, b) -> if b then b else a
+
+either = (a, b) ->
+  if b then b else a
+
 backwards.either = autoCurry either
 
-maybe           = (f, x) -> if x then f x else undefined
+
+maybe = (f, x) ->
+  if x then f x else undefined
+
 backwards.maybe = autoCurry maybe
 
 
 ###*
-Extracts a subset of the given object, from the beginning to *int*. 
+Extracts a subset of the given object, from the beginning to *i*. 
 
 @method take
-@param int {Number} The number of indexes you wish to extract
+@param i {Number} The number of indexes you wish to extract
 @param x {Array|String} An Array or a String
-@return {Array|String} A subset of *x* from the beginning to *int*
+@return {Array|String} A subset of *x* from the beginning to *i*
 @public
 @example
     var firstThree  = take( 3 )
@@ -493,29 +540,43 @@ Extracts a subset of the given object, from the beginning to *int*.
       , hello       = take( 5, 'Hello World!' )     // 'Hello'
     ;
 ###
-take = (int, x) ->
-  if isArray x  or isString x then x[0...int]
-  else throw new Error 'take() only works on Arrays and Strings'
+
+# take = (int, x) ->
+#   if isArray x  or isString x then x[0...int]
+#   else throw new Error 'take() only works on Arrays and Strings'
+
+take = (i, x) ->
+  try
+    x[0...i]
+  catch error
+    error
 
 backwards.take = autoCurry take
 
 
 ###*
-Drops a subset of the given object, from the beginning to *int*, and returns the rest of the object. 
+Drops a subset of the given object, from the beginning to *i*, and returns the rest of the object. 
 
 @method drop
-@param int {Number} The number of indexes you wish to extract
+@param i {Number} The number of indexes you wish to extract
 @param x {Array|String} An Array or a String
-@return {Array|String} A subset of *x* from index *int* to the end
+@return {Array|String} A subset of *x* from index *i* to the end
 @public
 @example
     var firstThree = drop( 3 )
       , fourFive   = firstThree( [1, 2, 3, 4, 5] )  // [4, 5]
       , world      = drop( 6, 'Hello World!' )      // 'World!'
 ###
-drop = (int, x) ->
-  if isArray x  or isString x then x[int...x.length]
-  else throw new Error 'drop() only works on Arrays and Strings'
+
+# drop = (int, x) ->
+#   if isArray x  or isString x then x[int...x.length]
+#   else throw new Error 'drop() only works on Arrays and Strings'
+
+drop = (i, x) ->
+  try
+    x[i...x.length]
+  catch error
+    error
 
 backwards.drop = autoCurry drop
 
@@ -567,15 +628,21 @@ backwards.log = (x) ->
 
 (( root, name, f ) ->
   # Register as a named AMD module
-  if define? and define.amd then define name, [], f
+  if define? and define.amd
+    define name, [], f
+
   # Register as a CommonJS-like module
   else if exports?
-    if module? and module.exports then module.exports = f()
-    else exports[name] = f()
+    if module? and module.exports
+      module.exports = f()
+    else
+      exports[name] = f()
+
   # Register as a global object on the window
-  else window[name] = f()
-  # else root[name] = f()
-  return
+  else
+    root[name] = f()
+  
+  undefined
 )( this, 'backwards', () -> backwards )
 
 ### 

@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, arrayEvery, arrayFilter, arrayIndexOf, arrayMap, arrayProto, arrayReduce, arraySome, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, filterOne, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeError, isTypeOf, isUndefined, map, maybe, noop, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
+  var add, append, arrayFilter, arrayMap, arrayProto, arrayReduce, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, filterOne, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeError, isTypeOf, isUndefined, map, maybe, noop, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -155,8 +155,8 @@
   @public
   @example
       var isBoolean = isTypeOf( 'Boolean' ) // A composed function
-        , passed    = isBoolean( true )     // True
-        , failed    = isBoolean( {} )       // False
+        , passed    = isBoolean( true )     // true
+        , failed    = isBoolean( {} )       // false
       ;
    */
 
@@ -177,8 +177,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var passed = isArguments( arguments )  // True
-        , failed = isArguments( false )      // False
+      var passed = isArguments( arguments )  // true
+        , failed = isArguments( false )      // false
       ;
    */
 
@@ -203,8 +203,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var passed = isArray( [1, 2, 3] )  // True
-        , failed = isArray( false )      // False
+      var passed = isArray( [1, 2, 3] )  // true
+        , failed = isArray( false )      // false
       ;
    */
 
@@ -221,8 +221,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var passed = isBoolean( true )  // True
-        , failed = isBoolean( 0 )     // False
+      var passed = isBoolean( true )  // true
+        , failed = isBoolean( 0 )     // false
       ;
    */
 
@@ -259,8 +259,9 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var passed = isFunction( function () {} )  // True
-        , failed = isFunction( false )           // False
+      var noop   = function () {}
+        , passed = isFunction( noop )   // true
+        , failed = isFunction( false )  // false
       ;
    */
 
@@ -276,7 +277,7 @@
 
   backwards.isFunction = isFunction;
 
-  isNaN = function(x) {
+  isNaN = isNaN || function(x) {
     return isNumber(x) && x !== +x;
   };
 
@@ -291,8 +292,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var passed = isNull( null )    // True
-        , failed = isNull( false )   // False
+      var passed = isNull( null )    // true
+        , failed = isNull( false )   // false
       ;
    */
 
@@ -311,8 +312,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var passed = isNumber( 123 )     // True
-        , failed = isNumber( false )   // False
+      var passed = isNumber( 123 )     // true
+        , failed = isNumber( false )   // false
       ;
    */
 
@@ -329,8 +330,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var passed = isObject( {} )      // True
-        , failed = isObject( false )   // False
+      var passed = isObject( {} )      // true
+        , failed = isObject( false )   // false
       ;
    */
 
@@ -361,8 +362,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var passed = isString( 'string' )  // True
-        , failed = isString( false )     // False
+      var passed = isString( 'string' )  // true
+        , failed = isString( false )     // false
       ;
    */
 
@@ -379,8 +380,8 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var passed = isUndefined( void 0 )   // True
-        , failed = isUndefined( false )    // False
+      var passed = isUndefined( void 0 )   // true
+        , failed = isUndefined( false )    // false
       ;
    */
 
@@ -540,14 +541,14 @@
   @example
       var array = [2, 5, 9];
   
-      indexOf( 2, 0, array );   //  0
-      indexOf( 7, 0, array );   // -1
-      indexOf( 9, 2, array );   //  2
+      indexOf( 2,  0, array );  //  0
+      indexOf( 7,  0, array );  // -1
+      indexOf( 9,  2, array );  //  2
       indexOf( 2, -1, array );  // -1
       indexOf( 2, -3, array );  //  0
    */
 
-  arrayIndexOf = function(search, i, x) {
+  indexOf = function(search, i, x) {
     var len;
     len = x.length;
     if (len === 0 || i >= len) {
@@ -567,17 +568,37 @@
     return -1;
   };
 
-  indexOf = arrayIndexOf;
-
   backwards.indexOf = autoCurry(indexOf);
 
+
+  /**
+  The contains function returns true if a given element can be found in the array, or false if it is not present.
+  
+  If the index is greater than or equal to the array's length, false is returned, which means the array will not be searched. If the provided index value is a negative number, it is taken as the offset from the end of the array. Note: if the provided index is negative, the array is still searched from front to back. If the calculated index is less than 0, then the whole array will be searched. 
+  
+  @method contains
+  @param search {"mixed"} The element to locate in the array.
+  @param i {Number} The index to start the search at. 
+  @param x {Array} The Array you wish to search in. 
+  @return {Boolean} Returns true if *search* is found in the *Array*, or false if it is not found. 
+  @public
+  @example
+      var array = [1, 2, 3, NaN];
+  
+      contains( 2,   0, array );  // true
+      contains( 4,   0, array );  // false
+      contains( 3,   3, array );  // false
+      contains( 3,  -2, array );  // true
+      contains( NaN, 0, array );  // true
+   */
+
   contains = function(search, i, x) {
-    return indexOf(search, i, x > -1);
+    return (indexOf(search, i, x)) > -1;
   };
 
   backwards.contains = autoCurry(contains);
 
-  arraySome = function(f, xs) {
+  some = function(f, xs) {
     var x, _i, _len;
     for (_i = 0, _len = xs.length; _i < _len; _i++) {
       x = xs[_i];
@@ -588,11 +609,9 @@
     return false;
   };
 
-  some = arraySome;
-
   backwards.some = autoCurry(some);
 
-  arrayEvery = function(f, xs) {
+  every = function(f, xs) {
     var x, _i, _len;
     for (_i = 0, _len = xs.length; _i < _len; _i++) {
       x = xs[_i];
@@ -602,8 +621,6 @@
     }
     return true;
   };
-
-  every = arrayEvery;
 
   backwards.every = autoCurry(every);
 
@@ -629,12 +646,12 @@
 
 
   /**
-  Extracts a subset of the given object, from the beginning to *int*. 
+  Extracts a subset of the given object, from the beginning to *i*. 
   
   @method take
-  @param int {Number} The number of indexes you wish to extract
+  @param i {Number} The number of indexes you wish to extract
   @param x {Array|String} An Array or a String
-  @return {Array|String} A subset of *x* from the beginning to *int*
+  @return {Array|String} A subset of *x* from the beginning to *i*
   @public
   @example
       var firstThree  = take( 3 )
@@ -643,11 +660,13 @@
       ;
    */
 
-  take = function(int, x) {
-    if (isArray(x || isString(x))) {
-      return x.slice(0, int);
-    } else {
-      throw new Error('take() only works on Arrays and Strings');
+  take = function(i, x) {
+    var error;
+    try {
+      return x.slice(0, i);
+    } catch (_error) {
+      error = _error;
+      return error;
     }
   };
 
@@ -655,12 +674,12 @@
 
 
   /**
-  Drops a subset of the given object, from the beginning to *int*, and returns the rest of the object. 
+  Drops a subset of the given object, from the beginning to *i*, and returns the rest of the object. 
   
   @method drop
-  @param int {Number} The number of indexes you wish to extract
+  @param i {Number} The number of indexes you wish to extract
   @param x {Array|String} An Array or a String
-  @return {Array|String} A subset of *x* from index *int* to the end
+  @return {Array|String} A subset of *x* from index *i* to the end
   @public
   @example
       var firstThree = drop( 3 )
@@ -668,11 +687,13 @@
         , world      = drop( 6, 'Hello World!' )      // 'World!'
    */
 
-  drop = function(int, x) {
-    if (isArray(x || isString(x))) {
-      return x.slice(int, x.length);
-    } else {
-      throw new Error('drop() only works on Arrays and Strings');
+  drop = function(i, x) {
+    var error;
+    try {
+      return x.slice(i, x.length);
+    } catch (_error) {
+      error = _error;
+      return error;
     }
   };
 
@@ -702,8 +723,9 @@
         exports[name] = f();
       }
     } else {
-      window[name] = f();
+      root[name] = f();
     }
+    return void 0;
   })(this, 'backwards', function() {
     return backwards;
   });
