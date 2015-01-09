@@ -32,10 +32,25 @@ test "#{ txt } map over Objects and not cause side-effects", (t) ->
 
 test "#{ txt } map over Booleans and not cause side-effects", (t) ->
   bool       = true
-  mappedBool = map addOne, bool
 
   t.equal map( addOne, bool ), 2
   t.equal bool, true
+  t.end()
+
+test "#{ txt } map over Dates and not cause side-effects", (t) ->
+  date   = new Date()
+  actual = date.toString()
+
+  t.equal map( addOne, date ), "#{ date.toString() }1"
+  t.equal date.toString(), actual
+  t.end()
+
+test "#{ txt } map over Errors and not cause side-effects", (t) ->
+  error   = new Error "This is an error message"
+  actual = error.toString()
+
+  t.equal map( addOne, error ), "#{ error.toString() }1"
+  t.equal error.toString(), actual
   t.end()
 
 test "#{ txt } map over Numbers and not cause side-effects", (t) ->

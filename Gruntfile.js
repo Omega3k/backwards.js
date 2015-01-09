@@ -119,7 +119,7 @@ initConfig.watch = {
     // files: ['tests/**/*.test.js', 'src/**/*.js'],
     files: ['src/specs/**/*.coffee'],
     // tasks: ['browserify', 'nodeTests']
-    tasks: ['coffee:tests']
+    tasks: ['coffee:tests', 'coffee:test-suite']
   },
 
   test_suite_coffee: {

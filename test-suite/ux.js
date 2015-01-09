@@ -719,11 +719,28 @@
   });
 
   test("" + txt + " map over Booleans and not cause side-effects", function(t) {
-    var bool, mappedBool;
+    var bool;
     bool = true;
-    mappedBool = map(addOne, bool);
     t.equal(map(addOne, bool), 2);
     t.equal(bool, true);
+    return t.end();
+  });
+
+  test("" + txt + " map over Dates and not cause side-effects", function(t) {
+    var actual, date;
+    date = new Date();
+    actual = date.toString();
+    t.equal(map(addOne, date), "" + (date.toString()) + "1");
+    t.equal(date.toString(), actual);
+    return t.end();
+  });
+
+  test("" + txt + " map over Errors and not cause side-effects", function(t) {
+    var actual, error;
+    error = new Error("This is an error message");
+    actual = error.toString();
+    t.equal(map(addOne, error), "" + (error.toString()) + "1");
+    t.equal(error.toString(), actual);
     return t.end();
   });
 
