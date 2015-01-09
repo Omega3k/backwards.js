@@ -16,6 +16,7 @@ objectProto = Object.prototype
 slice       = arrayProto.slice
 toString    = objectProto.toString
 
+noop        = () ->
 identity    = (x) -> x
 add         = (a, b) -> a + b
 append      = (a, b) -> if a.concat then a.concat b else a += b
@@ -540,6 +541,40 @@ backwards.drop = autoCurry drop
 #   else if x is false then "false"
 #   else if x is 0 then "0"
 #   else "undefined"
+
+# console = ( window.console = window.console or {} )
+console = console or {}
+forEach (method) ->
+  console[ method ] = noop if not console[ method ]
+  undefined
+, [
+  "assert"
+  "clear"
+  "count"
+  "debug"
+  "dir"
+  "dirxml"
+  "error"
+  "exception"
+  "group"
+  "groupCollapsed"
+  "groupEnd"
+  "info"
+  "log"
+  "markTimeline"
+  "profile"
+  "profileEnd"
+  "table"
+  "time"
+  "timeEnd"
+  "timeStamp"
+  "trace"
+  "warn"
+]
+
+backwards.log = (x) ->
+  console.log x
+  x
 
 
 # Export backwards object

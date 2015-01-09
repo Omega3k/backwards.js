@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, arrayContains, arrayEvery, arrayFilter, arrayIndexOf, arrayMap, arrayProto, arrayReduce, arraySome, autoCurry, backwards, compose, contains, copy, curry, drop, either, every, exists, filter, filterOne, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeError, isTypeOf, isUndefined, map, maybe, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
+  var add, append, arrayContains, arrayEvery, arrayFilter, arrayIndexOf, arrayMap, arrayProto, arrayReduce, arraySome, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, filterOne, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeError, isTypeOf, isUndefined, map, maybe, noop, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -22,6 +22,8 @@
   slice = arrayProto.slice;
 
   toString = objectProto.toString;
+
+  noop = function() {};
 
   identity = function(x) {
     return x;
@@ -693,6 +695,20 @@
   };
 
   backwards.drop = autoCurry(drop);
+
+  console = console || {};
+
+  forEach(function(method) {
+    if (!console[method]) {
+      console[method] = noop;
+    }
+    return void 0;
+  }, ["assert", "clear", "count", "debug", "dir", "dirxml", "error", "exception", "group", "groupCollapsed", "groupEnd", "info", "log", "markTimeline", "profile", "profileEnd", "table", "time", "timeEnd", "timeStamp", "trace", "warn"]);
+
+  backwards.log = function(x) {
+    console.log(x);
+    return x;
+  };
 
   (function(root, name, f) {
     if ((typeof define !== "undefined" && define !== null) && define.amd) {
