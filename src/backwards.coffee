@@ -528,12 +528,44 @@ contains = (search, i, x) ->
 backwards.contains = autoCurry contains
 
 
+###*
+It takes a predicate function and an array and returns true if some of the values in the array conforms with the predicate function, or false if not. It returns false if given an empty array. 
+
+@method some
+@param f {Function} A predicate function. 
+@param xs {Array} The array you wish to check. 
+@return {Boolean} Returns true if some of the values in the array conforms with the predicate function, or false if not. It returns false if given an empty array. 
+@public
+@example
+    var predicate = function (x) { return x > 10 };
+
+    some( predicate, [12, 5, 8, 1, 4] );  // true
+    some( predicate, [2, 5, 8, 1, 4] );   // false
+    some( predicate, [] );                // false
+###
+
 some = (f, xs) ->
   return true for x in xs when f x
   false
 
 backwards.some = autoCurry some
 
+
+###*
+It takes a predicate function and an array and returns true if every value in the array conforms with the predicate function, or false if not. It returns true if given an empty array. 
+
+@method every
+@param f {Function} A predicate function. 
+@param xs {Array} The array you wish to check. 
+@return {Boolean} Returns true if every value in the array conforms with the predicate function, or false if not. It returns true if given an empty array. 
+@public
+@example
+    var predicate = function (x) { return x > 10 };
+
+    every( predicate, [12, 54, 18, 130, 44] );  // true
+    every( predicate, [12, 5, 8, 130, 44] );    // false
+    every( predicate, [] );                     // true
+###
 
 every = (f, xs) ->
   return false for x in xs when not f x
