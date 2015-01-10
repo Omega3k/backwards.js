@@ -431,6 +431,20 @@ copy           = backwards.map identity
 backwards.copy = copy
 
 
+###*
+The flatten function takes an Array of Arrays and flattens 
+the Array one level. 
+
+@method flatten
+@param x {Array} The Array you wish to flatten. 
+@return {Array} A flattened Array. 
+@public
+@example
+    var array = [[1, 2], [3, 4], [5, 6]];
+
+    flatten( array ); // [1, 2, 3, 4, 5, 6]
+###
+
 flatten           = backwards.reduce append, []
 backwards.flatten = flatten
 
