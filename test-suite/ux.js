@@ -1,5 +1,5 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, doc, drop, either, every, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFunction, isNull, isNumber, isObject, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
+  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, drop, either, every, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFunction, isNull, isNumber, isObject, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
 
   test = require("tape");
 
@@ -49,6 +49,92 @@
     t.equal(contains(3, -2, array), true);
     t.equal(contains(NaN, 0, array), true);
     t.equal(contains(2, -8, array), true);
+    return t.end();
+  });
+
+  test = require("tape");
+
+  copy = require("../../build/backwards.dev").copy;
+
+  txt = "backwards.copy should";
+
+  stringify = function(x) {
+    return "{ id: " + x.id + ", name: " + x.name + " }";
+  };
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof copy, "function");
+    return t.end();
+  });
+
+  test("" + txt + " copy Arrays and not cause side-effects", function(t) {
+    var actual, array, copiedArray, expected;
+    array = [1, 2, 3];
+    actual = array.toString();
+    expected = "" + actual + "1";
+    copiedArray = copy(array).toString() + "1";
+    t.equal(copiedArray, expected);
+    t.equal(array.toString(), actual);
+    return t.end();
+  });
+
+  test("" + txt + " copy Objects and not cause side-effects", function(t) {
+    var actual, copiedObj, expected, obj;
+    obj = {
+      id: 1,
+      name: "Some String"
+    };
+    actual = stringify(obj);
+    expected = "" + actual + "1";
+    copiedObj = stringify(copy(obj)) + "1";
+    t.equal(copiedObj, expected);
+    t.equal(stringify(obj), actual);
+    return t.end();
+  });
+
+  test("" + txt + " copy Booleans and not cause side-effects", function(t) {
+    var bool;
+    bool = true;
+    t.equal(copy(bool) + 1, 2);
+    t.equal(bool, true);
+    return t.end();
+  });
+
+  test("" + txt + " copy Dates and not cause side-effects", function(t) {
+    var actual, copiedDate, date, expected;
+    date = new Date();
+    actual = date.toString();
+    expected = "" + actual + "1";
+    copiedDate = copy(date) + "1";
+    t.equal(copiedDate, expected);
+    t.equal(date.toString(), actual);
+    return t.end();
+  });
+
+  test("" + txt + " copy Errors and not cause side-effects", function(t) {
+    var actual, copiedError, error, expected;
+    error = new Error("This is an error message");
+    actual = error.toString();
+    expected = "" + actual + "1";
+    copiedError = copy(error) + "1";
+    t.equal(copiedError, expected);
+    t.equal(error.toString(), actual);
+    return t.end();
+  });
+
+  test("" + txt + " copy Numbers and not cause side-effects", function(t) {
+    var num;
+    num = 1;
+    t.equal(copy(num) + 1, 2);
+    t.equal(num, 1);
+    return t.end();
+  });
+
+  test("" + txt + " copy Strings and not cause side-effects", function(t) {
+    var string;
+    string = "string";
+    t.equal(copy(string) + "1", "string1");
+    t.equal(string, "string");
     return t.end();
   });
 
