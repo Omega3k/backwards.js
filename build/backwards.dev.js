@@ -1,5 +1,5 @@
 (function() {
-  'use strict';
+  "use strict";
 
   /**
   A set of utility functions for functional programming in Javascript.
@@ -9,17 +9,21 @@
   @class backwards
   @static
    */
-  var add, append, arrayFilter, arrayMap, arrayProto, arrayReduce, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, filterOne, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeError, isTypeOf, isUndefined, map, maybe, noop, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
+  var add, append, array, arrayFilter, arrayMap, arrayProto, arrayReduce, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, filterOne, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, map, maybe, noop, object, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
   backwards = {};
 
-  arrayProto = Array.prototype;
+  array = Array;
 
-  objectProto = Object.prototype;
+  arrayProto = array.prototype;
 
   slice = arrayProto.slice;
+
+  object = Object;
+
+  objectProto = object.prototype;
 
   toString = objectProto.toString;
 
@@ -183,11 +187,11 @@
    */
 
   isArguments = (function() {
-    if (isTypeOf('Arguments', arguments)) {
-      return isTypeOf('Arguments');
+    if (isTypeOf("Arguments", arguments)) {
+      return isTypeOf("Arguments");
     } else {
       return function(x) {
-        return (x != null) && x.hasOwnProperty('callee');
+        return (x != null) && x.hasOwnProperty("callee");
       };
     }
   })();
@@ -208,7 +212,7 @@
       ;
    */
 
-  isArray = Array.isArray || isTypeOf('Array');
+  isArray = Array.isArray || isTypeOf("Array");
 
   backwards.isArray = isArray;
 
@@ -227,22 +231,18 @@
    */
 
   isBoolean = function(x) {
-    return x === true || x === false || isTypeOf('Boolean', x);
+    return x === true || x === false || isTypeOf("Boolean", x);
   };
 
   backwards.isBoolean = isBoolean;
 
-  isDate = isTypeOf('Date');
+  isDate = isTypeOf("Date");
 
   backwards.isDate = isDate;
 
-  isError = isTypeOf('Error');
+  isError = isTypeOf("Error" || isTypeOf("TypeError"));
 
-  isTypeError = isTypeOf('TypeError');
-
-  backwards.isError = function(x) {
-    return isError(x || isTypeError(x));
-  };
+  backwards.isError = isError;
 
   isFinite = function(x) {
     return isFinite(x) && !isNaN(parseFloat(x));
@@ -266,12 +266,12 @@
    */
 
   isFunction = (function() {
-    if (typeof /./ !== 'function') {
+    if (typeof /./ !== "function") {
       return function(x) {
-        return typeof x === 'function';
+        return typeof x === "function";
       };
     } else {
-      return isTypeOf('Function');
+      return isTypeOf("Function");
     }
   })();
 
@@ -298,7 +298,7 @@
    */
 
   isNull = function(x) {
-    return x === null || isTypeOf('Null', x);
+    return x === null || isTypeOf("Null", x);
   };
 
   backwards.isNull = isNull;
@@ -317,7 +317,7 @@
       ;
    */
 
-  isNumber = isTypeOf('Number');
+  isNumber = isTypeOf("Number");
 
   backwards.isNumber = isNumber;
 
@@ -339,17 +339,17 @@
     if ((x == null) || isArguments(x)) {
       return false;
     } else {
-      return isTypeOf('Object', x);
+      return isTypeOf("Object", x);
     }
   };
 
   backwards.isObject = isObject;
 
-  isPromise = isTypeOf('Promise');
+  isPromise = isTypeOf("Promise");
 
   backwards.isPromise = isPromise;
 
-  isRegExp = isTypeOf('RegExp');
+  isRegExp = isTypeOf("RegExp");
 
   backwards.isRegExp = isRegExp;
 
@@ -367,7 +367,7 @@
       ;
    */
 
-  isString = isTypeOf('String');
+  isString = isTypeOf("String");
 
   backwards.isString = isString;
 
@@ -386,7 +386,7 @@
    */
 
   isUndefined = function(x) {
-    return x === void 0 || isTypeOf('Undefined', x);
+    return x === void 0 || isTypeOf("Undefined", x);
   };
 
   backwards.isUndefined = isUndefined;
@@ -726,7 +726,7 @@
       root[name] = f();
     }
     return void 0;
-  })(this, 'backwards', function() {
+  })(this, "backwards", function() {
     return backwards;
   });
 

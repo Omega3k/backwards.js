@@ -1,4 +1,4 @@
-'use strict'
+"use strict"
 
 
 ###*
@@ -11,9 +11,12 @@ A set of utility functions for functional programming in Javascript.
 ###
 backwards   = {}
 
-arrayProto  = Array.prototype
-objectProto = Object.prototype
+array       = Array
+arrayProto  = array.prototype
 slice       = arrayProto.slice
+
+object      = Object
+objectProto = object.prototype
 toString    = objectProto.toString
 
 noop        = () ->
@@ -140,9 +143,9 @@ Check if an Object is an Arguments object.
 
 # isArguments :: a -> Boolean
 isArguments = do () ->
-  if isTypeOf 'Arguments', arguments then isTypeOf 'Arguments'
+  if isTypeOf "Arguments", arguments then isTypeOf "Arguments"
   else (x) ->
-    x? and x.hasOwnProperty 'callee'
+    x? and x.hasOwnProperty "callee"
 
 backwards.isArguments = isArguments
 
@@ -161,7 +164,7 @@ Check if an Object is an Array.
 ###
 
 # isArray :: a -> Boolean
-isArray           = Array.isArray or isTypeOf 'Array'
+isArray           = Array.isArray or isTypeOf "Array"
 backwards.isArray = isArray
 
 
@@ -180,20 +183,19 @@ Check if an Object is a Boolean.
 
 # isBoolean :: a -> Boolean
 isBoolean = (x) ->
-  x is true or x is false or isTypeOf 'Boolean', x
+  x is true or x is false or isTypeOf "Boolean", x
 
 backwards.isBoolean = isBoolean
 
 
 # isDate :: a -> Boolean
-isDate           = isTypeOf 'Date'
+isDate           = isTypeOf "Date"
 backwards.isDate = isDate
 
 
 # isError :: a -> Boolean
-isError           = isTypeOf 'Error'
-isTypeError       = isTypeOf 'TypeError'
-backwards.isError = (x) -> isError x or isTypeError x
+isError           = isTypeOf "Error" or isTypeOf "TypeError"
+backwards.isError = isError
 
 
 # isFinite :: a -> Boolean
@@ -219,9 +221,9 @@ Check if an Object is a Function.
 
 # isFunction :: a -> Boolean
 isFunction = do () ->
-  if typeof /./ isnt 'function'
-    (x) -> typeof x is 'function'
-  else isTypeOf 'Function'
+  if typeof /./ isnt "function"
+    (x) -> typeof x is "function"
+  else isTypeOf "Function"
 
 backwards.isFunction = isFunction
 
@@ -248,7 +250,7 @@ Check if an Object is a Null object.
 
 # isNull :: a -> Boolean
 isNull = (x) ->
-  x is null or isTypeOf 'Null', x
+  x is null or isTypeOf "Null", x
 
 backwards.isNull = isNull
 
@@ -267,7 +269,7 @@ Check if an Object is a Number.
 ###
 
 # isNumber :: a -> Boolean
-isNumber           = isTypeOf 'Number'
+isNumber           = isTypeOf "Number"
 backwards.isNumber = isNumber
 
 
@@ -287,18 +289,18 @@ Check if an Object is an Object.
 # isObject :: a -> Boolean
 isObject = (x) ->
   if not x? or isArguments x then false
-  else isTypeOf 'Object', x
+  else isTypeOf "Object", x
 
 backwards.isObject = isObject
 
 
 # isPromise :: a -> Boolean
-isPromise           = isTypeOf 'Promise'
+isPromise           = isTypeOf "Promise"
 backwards.isPromise = isPromise
 
 
 # isRegExp :: a -> Boolean
-isRegExp           = isTypeOf 'RegExp'
+isRegExp           = isTypeOf "RegExp"
 backwards.isRegExp = isRegExp
 
 
@@ -316,7 +318,7 @@ Check if an Object is a String.
 ###
 
 # isString :: a -> Boolean
-isString           = isTypeOf 'String'
+isString           = isTypeOf "String"
 backwards.isString = isString
 
 
@@ -335,7 +337,7 @@ Check if an Object is undefined.
 
 # isUndefined :: a -> Boolean
 isUndefined = (x) ->
-  x is undefined or isTypeOf 'Undefined', x
+  x is undefined or isTypeOf "Undefined", x
 
 backwards.isUndefined = isUndefined
 
@@ -465,7 +467,6 @@ indexOf = (search, i, x) ->
       i = 0
 
   while i < len
-    # return i if x[i] is search
     return i if x[i] is search or isNaN( search ) and isNaN( x[i] )
     i++
   -1
@@ -643,7 +644,7 @@ backwards.log = (x) ->
     root[name] = f()
   
   undefined
-)( this, 'backwards', () -> backwards )
+)( this, "backwards", () -> backwards )
 
 ### 
 

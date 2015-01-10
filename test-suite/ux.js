@@ -1,5 +1,5 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, doc, drop, either, every, filter, filterPassedAndFailedTests, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFunction, isNull, isNumber, isObject, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
+  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, doc, drop, either, every, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFunction, isNull, isNumber, isObject, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
 
   test = require("tape");
 
@@ -145,6 +145,28 @@
     array = [12, 5, 8, 130, 44];
     filteredArray = [12, 130, 44];
     t.equal(filter(predicate, array).toString(), filteredArray.toString());
+    return t.end();
+  });
+
+  test = require("tape");
+
+  flatten = require("../../build/backwards.dev").flatten;
+
+  txt = "backwards.flatten should";
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof flatten, "function");
+    return t.end();
+  });
+
+  test("" + txt + " flatten Arrays one level without causing side-effects on the original Array", function(t) {
+    var actual, array, expected, flattened;
+    array = [[1, 2], [3, 4], [5, 6]];
+    actual = array.toString();
+    expected = [1, 2, 3, 4, 5, 6].toString();
+    flattened = flatten(array).toString();
+    t.equal(flattened, expected);
+    t.equal(array.toString(), actual);
     return t.end();
   });
 
@@ -832,7 +854,7 @@
   });
 
   test("" + txt + " reduce Arrays in the 'proper' order", function(t) {
-    var expected, flatten, flattenedArray;
+    var expected, flattenedArray;
     flatten = reduce(append, []);
     flattenedArray = flatten([[0, 1], [2, 3], [4, 5]]);
     expected = [0, 1, 2, 3, 4, 5];
