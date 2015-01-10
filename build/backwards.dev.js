@@ -518,6 +518,20 @@
 
   backwards.map = autoCurry(map);
 
+
+  /**
+  The copy function takes an Object and returns a fresh copy of 
+  the Object. 
+  
+  @method copy
+  @param x {"any"} The Object you wish to copy. 
+  @return {"any"} A fresh copy of the given Object. 
+  @public
+  @example
+      copy( [1, 2, 3] );                  // [1, 2, 3]
+      copy( { id: 1, name: "string" } );  // { id: 1, name: "string" }
+   */
+
   copy = backwards.map(identity);
 
   backwards.copy = copy;
