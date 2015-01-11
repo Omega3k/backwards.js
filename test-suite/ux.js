@@ -1,5 +1,5 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, drop, either, every, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFunction, isNull, isNumber, isObject, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
+  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, drop, either, every, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFunction, isNaN, isNull, isNumber, isObject, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
 
   test = require("tape");
 
@@ -251,22 +251,18 @@
   });
 
   test("" + txt + " filter Objects correctly", function(t) {
-    var actual, actualObj, emptyObj, expected, filteredE_1, filteredE_2, filteredObj, obj;
+    var actual, emptyObj, expected, obj;
     obj = {
       id: 1,
       friends: 500
     };
     actual = "{ id: 1, friends: 500,  }";
     expected = "{ friends: 500,  }";
-    actualObj = stringify(obj);
-    filteredObj = stringify(filter(predicate, obj));
-    filteredE_1 = stringify({});
-    filteredE_2 = stringify(new Object());
     emptyObj = "{  }";
-    t.equal(filteredObj, expected);
-    t.equal(actualObj, actual);
-    t.equal(filteredE_1, emptyObj);
-    t.equal(filteredE_2, emptyObj);
+    t.equal(stringify(filter(predicate, obj)), expected);
+    t.equal(stringify(obj), actual);
+    t.equal(stringify({}), emptyObj);
+    t.equal(stringify(new Object()), emptyObj);
     return t.end();
   });
 
@@ -604,6 +600,48 @@
     t.equal(isFunction(new String()), false);
     t.equal(isFunction(null), false);
     t.equal(isFunction(void 0), false);
+    return t.end();
+  });
+
+  test = require("tape");
+
+  isNaN = require("../../build/backwards.dev").isNaN;
+
+  txt = "backwards.isNaN should";
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof isNaN, "function");
+    return t.end();
+  });
+
+  test("" + txt + " return true if given an Array", function(t) {
+    t.equal(isNaN(NaN), true);
+    t.equal(isNaN(new Number()), true);
+    return t.end();
+  });
+
+  test("" + txt + " return false if given anything else", function(t) {
+    t.equal(isNaN(arguments), false);
+    t.equal(isNaN([]), false);
+    t.equal(isNaN(new Array()), false);
+    t.equal(isNaN(true), false);
+    t.equal(isNaN(new Date()), false);
+    t.equal(isNaN(new Error()), false);
+    t.equal(isNaN(new TypeError()), false);
+    t.equal(isNaN(function(x) {
+      return x;
+    }), false);
+    t.equal(isNaN(new Function()), false);
+    t.equal(isNaN(1234), false);
+    t.equal(isNaN(Infinity), false);
+    t.equal(isNaN({}), false);
+    t.equal(isNaN(new Object()), false);
+    t.equal(isNaN(/./), false);
+    t.equal(isNaN(new RegExp()), false);
+    t.equal(isNaN("string"), false);
+    t.equal(isNaN(new String()), false);
+    t.equal(isNaN(null), false);
+    t.equal(isNaN(void 0), false);
     return t.end();
   });
 

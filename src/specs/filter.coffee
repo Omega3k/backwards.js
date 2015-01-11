@@ -35,16 +35,12 @@ test "#{ txt } filter Objects correctly", (t) ->
 
   actual      = "{ id: 1, friends: 500,  }"
   expected    = "{ friends: 500,  }"
-  actualObj   = stringify obj
-  filteredObj = stringify filter( predicate, obj )
-  filteredE_1 = stringify {}
-  filteredE_2 = stringify new Object()
   emptyObj    = "{  }"
 
-  t.equal filteredObj                                 , expected
-  t.equal actualObj                                   , actual
-  t.equal filteredE_1                                 , emptyObj
-  t.equal filteredE_2                                 , emptyObj
+  t.equal stringify( filter( predicate, obj ) )       , expected
+  t.equal stringify( obj )                            , actual
+  t.equal stringify( {} )                             , emptyObj
+  t.equal stringify( new Object() )                   , emptyObj
   t.end()
 
 test "#{ txt } filter Numbers correctly", (t) ->
