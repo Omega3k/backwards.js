@@ -221,23 +221,79 @@
     return x > 10;
   };
 
+  stringify = function(obj) {
+    var acc, key, value;
+    acc = "{ ";
+    for (key in obj) {
+      value = obj[key];
+      acc += "" + key + ": " + value + ", ";
+    }
+    return "" + acc + " }";
+  };
+
   test("" + txt + " be a function", function(t) {
     t.equal(typeof filter, "function");
     return t.end();
   });
 
   test("" + txt + " filter Arrays correctly", function(t) {
-    var array, filteredArray;
+    var actual, array, emptyArray, expected, filteredArray;
     array = [12, 5, 8, 130, 44];
-    filteredArray = [12, 130, 44];
-    t.equal(filter(predicate, array).toString(), filteredArray.toString());
+    actual = array.toString();
+    expected = [12, 130, 44].toString();
+    filteredArray = filter(predicate, array).toString();
+    emptyArray = [].toString();
+    t.equal(filteredArray, expected);
+    t.equal(array.toString(), actual);
+    t.equal(filter(predicate, []).toString(), emptyArray);
+    t.equal(filter(predicate, new Array()).toString(), emptyArray);
     return t.end();
   });
 
-  test("" + txt + " filter other Objects correctly", function(t) {
-    t.equal(filter(predicate, 99), 99);
+  test("" + txt + " filter Objects correctly", function(t) {
+    var actual, actualObj, emptyObj, expected, filteredE_1, filteredE_2, filteredObj, obj;
+    obj = {
+      id: 1,
+      friends: 500
+    };
+    actual = "{ id: 1, friends: 500,  }";
+    expected = "{ friends: 500,  }";
+    actualObj = stringify(obj);
+    filteredObj = stringify(filter(predicate, obj));
+    filteredE_1 = stringify({});
+    filteredE_2 = stringify(new Object());
+    emptyObj = "{  }";
+    t.equal(filteredObj, expected);
+    t.equal(actualObj, actual);
+    t.equal(filteredE_1, emptyObj);
+    t.equal(filteredE_2, emptyObj);
+    return t.end();
+  });
+
+  test("" + txt + " filter Numbers correctly", function(t) {
     t.equal(filter(predicate, 9), void 0);
+    t.equal(filter(predicate, 1234), 1234);
+    t.equal(filter(predicate, Infinity), Infinity);
+    t.equal(filter(predicate, NaN), void 0);
+    t.equal(filter(predicate, new Number()), void 0);
+    return t.end();
+  });
+
+  test("" + txt + " filter other values correctly as well", function(t) {
+    var date;
+    date = new Date();
     t.equal(filter(predicate, true), void 0);
+    t.equal(filter(predicate, date), date);
+    t.equal(filter(predicate, new Error()), void 0);
+    t.equal(filter(predicate, new TypeError()), void 0);
+    t.equal(filter(predicate, predicate), void 0);
+    t.equal(filter(predicate, new Function()), void 0);
+    t.equal(filter(predicate, /./), void 0);
+    t.equal(filter(predicate, new RegExp()), void 0);
+    t.equal(filter(predicate, "string"), void 0);
+    t.equal(filter(predicate, new String()), void 0);
+    t.equal(filter(predicate, null), void 0);
+    t.equal(filter(predicate, void 0), void 0);
     return t.end();
   });
 
