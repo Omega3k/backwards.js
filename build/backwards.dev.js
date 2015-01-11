@@ -237,9 +237,39 @@
 
   backwards.isBoolean = isBoolean;
 
+
+  /**
+  Check if an Object is a Date. 
+  
+  @method isDate
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var passed = isDate( new Date() )   // true
+        , failed = isDate( +new Date() )  // false
+        , fails  = isDate( false )        // false
+      ;
+   */
+
   isDate = isTypeOf("Date");
 
   backwards.isDate = isDate;
+
+
+  /**
+  Check if an Object is an Error. 
+  
+  @method isError
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var passed = isError( new Error() )       // true
+        , passes = isError( new TypeError() )   // false
+        , failed = isError( false )             // false
+      ;
+   */
 
   isError = isTypeOf("Error" || isTypeOf("TypeError"));
 
@@ -261,8 +291,9 @@
   @public
   @example
       var noop   = function () {}
-        , passed = isFunction( noop )   // true
-        , failed = isFunction( false )  // false
+        , passed = isFunction( noop )             // true
+        , passes = isFunction( new Function() )   // true
+        , failed = isFunction( false )            // false
       ;
    */
 
@@ -364,6 +395,21 @@
   isPromise = isTypeOf("Promise");
 
   backwards.isPromise = isPromise;
+
+
+  /**
+  Check if an Object is a regular expression ( RegExp ). 
+  
+  @method isRegExp
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var passed = isRegExp( /./ )            // true
+        , passes = isRegExp( new RegExp() )   // true
+        , failed = isRegExp( false )          // false
+      ;
+   */
 
   isRegExp = isTypeOf("RegExp");
 
@@ -655,9 +701,9 @@
   @example
       var predicate = function (x) { return x > 10 };
   
+      every( predicate, [] );                     // true
       every( predicate, [12, 54, 18, 130, 44] );  // true
       every( predicate, [12, 5, 8, 130, 44] );    // false
-      every( predicate, [] );                     // true
    */
 
   every = function(f, xs) {
