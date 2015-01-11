@@ -366,30 +366,18 @@ isEmpty = (x) ->
 
 backwards.isEmpty = isEmpty
 
-# backwards.isEmpty = (x) ->
-#   if isArray x then isArrayEmpty x
-#   else if isObject x then isObjectEmpty x
 
-
-# arrayReduce :: (a -> b) -> a -> [a] -> [b]
-arrayReduce = (f, acc, xs) ->
-  acc = f acc, val, i, xs for val, i in xs
-  acc
-
-
-# objectReduce :: (a -> b) -> a -> {a} -> {b}
-objectReduce = (f, acc, x) ->
-  acc = f acc, val, i, x for own val, i of x
-  acc
-
-
-# reduce :: (a -> b) -> a -> Array|Object -> b
+# reduce :: (a -> b) -> a -> Array|Object|"any" -> b
 reduce = (f, acc, x) ->
-  if isArray x then arrayReduce f, acc, x
-  else if isObject x then objectReduce f, acc, x
+  if isArray x
+    acc = [] if not acc?
+    acc = f acc, value, key, x for value, key in x
+  else if isObject x
+    acc = {} if not acc?
+    acc = f acc, value, key, x for own key, value of x
   else
-    acc = f x
-    acc
+    acc = f acc, x
+  acc
 
 backwards.reduce = autoCurry reduce
 
@@ -401,30 +389,33 @@ forEach = (f, xs) ->
 backwards.forEach = autoCurry forEach
 
 
-arrayFilter = (f, xs) -> x for x in xs when f x
-filterOne   = (f, x) -> if f x then x else null
-
-filter = (f, x) ->
-  if isArray x then arrayFilter f, x
-  else filterOne f, x
-
-backwards.filter = autoCurry filter
-
-
-arrayMap = ( f, xs ) -> f x for x in xs
-
-objectMap = ( f, xs ) -> 
-  acc = {}
-  for own key, x of xs
-    acc[key] = f x
-  acc
-
-map = (f, xs) ->
-  if isArray xs then arrayMap f, xs
-  else if isObject xs then objectMap f, xs
-  else f xs
+map = (f, x) ->
+  if isArray x or isArguments x
+    reduce (acc, value, index, array) ->
+      val = f value, index, array
+      acc.push val if val
+      acc
+    , [], x
+  else if isObject x
+    reduce (acc, value, key, object) ->
+      val      = f value, key, object
+      acc[key] = val if val
+      acc
+    , {}, x
+  else
+    reduce (acc, value) ->
+      f value
+    , undefined, x
 
 backwards.map = autoCurry map
+
+
+filter = (f, x) ->
+  map (value, index, array) ->
+    value if f value, index, array
+  , x
+
+backwards.filter = autoCurry filter
 
 
 ###*

@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, array, arrayFilter, arrayMap, arrayProto, arrayReduce, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, filterOne, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, map, maybe, noop, object, objectMap, objectProto, objectReduce, reduce, slice, some, take, toString,
+  var add, append, array, arrayProto, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, map, maybe, noop, object, objectProto, reduce, slice, some, take, toString,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -414,34 +414,29 @@
 
   backwards.isEmpty = isEmpty;
 
-  arrayReduce = function(f, acc, xs) {
-    var i, val, _i, _len;
-    for (i = _i = 0, _len = xs.length; _i < _len; i = ++_i) {
-      val = xs[i];
-      acc = f(acc, val, i, xs);
-    }
-    return acc;
-  };
-
-  objectReduce = function(f, acc, x) {
-    var i, val;
-    for (val in x) {
-      if (!__hasProp.call(x, val)) continue;
-      i = x[val];
-      acc = f(acc, val, i, x);
-    }
-    return acc;
-  };
-
   reduce = function(f, acc, x) {
+    var key, value, _i, _len;
     if (isArray(x)) {
-      return arrayReduce(f, acc, x);
+      if (acc == null) {
+        acc = [];
+      }
+      for (key = _i = 0, _len = x.length; _i < _len; key = ++_i) {
+        value = x[key];
+        acc = f(acc, value, key, x);
+      }
     } else if (isObject(x)) {
-      return objectReduce(f, acc, x);
+      if (acc == null) {
+        acc = {};
+      }
+      for (key in x) {
+        if (!__hasProp.call(x, key)) continue;
+        value = x[key];
+        acc = f(acc, value, key, x);
+      }
     } else {
-      acc = f(x);
-      return acc;
+      acc = f(acc, x);
     }
+    return acc;
   };
 
   backwards.reduce = autoCurry(reduce);
@@ -455,68 +450,43 @@
 
   backwards.forEach = autoCurry(forEach);
 
-  arrayFilter = function(f, xs) {
-    var x, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = xs.length; _i < _len; _i++) {
-      x = xs[_i];
-      if (f(x)) {
-        _results.push(x);
-      }
-    }
-    return _results;
-  };
-
-  filterOne = function(f, x) {
-    if (f(x)) {
-      return x;
+  map = function(f, x) {
+    if (isArray(x || isArguments(x))) {
+      return reduce(function(acc, value, index, array) {
+        var val;
+        val = f(value, index, array);
+        if (val) {
+          acc.push(val);
+        }
+        return acc;
+      }, [], x);
+    } else if (isObject(x)) {
+      return reduce(function(acc, value, key, object) {
+        var val;
+        val = f(value, key, object);
+        if (val) {
+          acc[key] = val;
+        }
+        return acc;
+      }, {}, x);
     } else {
-      return null;
-    }
-  };
-
-  filter = function(f, x) {
-    if (isArray(x)) {
-      return arrayFilter(f, x);
-    } else {
-      return filterOne(f, x);
-    }
-  };
-
-  backwards.filter = autoCurry(filter);
-
-  arrayMap = function(f, xs) {
-    var x, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = xs.length; _i < _len; _i++) {
-      x = xs[_i];
-      _results.push(f(x));
-    }
-    return _results;
-  };
-
-  objectMap = function(f, xs) {
-    var acc, key, x;
-    acc = {};
-    for (key in xs) {
-      if (!__hasProp.call(xs, key)) continue;
-      x = xs[key];
-      acc[key] = f(x);
-    }
-    return acc;
-  };
-
-  map = function(f, xs) {
-    if (isArray(xs)) {
-      return arrayMap(f, xs);
-    } else if (isObject(xs)) {
-      return objectMap(f, xs);
-    } else {
-      return f(xs);
+      return reduce(function(acc, value) {
+        return f(value);
+      }, void 0, x);
     }
   };
 
   backwards.map = autoCurry(map);
+
+  filter = function(f, x) {
+    return map(function(value, index, array) {
+      if (f(value, index, array)) {
+        return value;
+      }
+    }, x);
+  };
+
+  backwards.filter = autoCurry(filter);
 
 
   /**

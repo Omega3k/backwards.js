@@ -234,6 +234,13 @@
     return t.end();
   });
 
+  test("" + txt + " filter other Objects correctly", function(t) {
+    t.equal(filter(predicate, 99), 99);
+    t.equal(filter(predicate, 9), void 0);
+    t.equal(filter(predicate, true), void 0);
+    return t.end();
+  });
+
   test = require("tape");
 
   flatten = require("../../build/backwards.dev").flatten;
@@ -945,6 +952,14 @@
     flattenedArray = flatten([[0, 1], [2, 3], [4, 5]]);
     expected = [0, 1, 2, 3, 4, 5];
     t.equal(flattenedArray.toString(), expected.toString());
+    return t.end();
+  });
+
+  test("" + txt + " reduce Objects down to a single value", function(t) {
+    t.equal(reduce(add, 0, {
+      id: 1,
+      grand_parents: 4
+    }), 5);
     return t.end();
   });
 
