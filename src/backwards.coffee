@@ -595,21 +595,13 @@ Extracts a subset of the given object, from the beginning to *i*.
 @return {Array|String} A subset of *x* from the beginning to *i*
 @public
 @example
-    var firstThree  = take( 3 )
-      , oneTwoThree = firstThree( [1, 2, 3, 4, 5] ) // [1, 2, 3]
-      , hello       = take( 5, 'Hello World!' )     // 'Hello'
+    take( 3, [1, 2, 3, 4, 5] );   // [1, 2, 3]
+    take( 5, "Hello World!" );    // "Hello"
     ;
 ###
 
-# take = (int, x) ->
-#   if isArray x  or isString x then x[0...int]
-#   else throw new Error 'take() only works on Arrays and Strings'
-
 take = (i, x) ->
-  try
-    x[0...i]
-  catch error
-    error
+  return x[0...i]
 
 backwards.take = autoCurry take
 
@@ -623,20 +615,12 @@ Drops a subset of the given object, from the beginning to *i*, and returns the r
 @return {Array|String} A subset of *x* from index *i* to the end
 @public
 @example
-    var firstThree = drop( 3 )
-      , fourFive   = firstThree( [1, 2, 3, 4, 5] )  // [4, 5]
-      , world      = drop( 6, 'Hello World!' )      // 'World!'
+    drop( 3, [1, 2, 3, 4, 5] );   // [4, 5]
+    drop( 6, "Hello World!" );    // "World!"
 ###
 
-# drop = (int, x) ->
-#   if isArray x  or isString x then x[int...x.length]
-#   else throw new Error 'drop() only works on Arrays and Strings'
-
 drop = (i, x) ->
-  try
-    x[i...x.length]
-  catch error
-    error
+  return x[i...x.length]
 
 backwards.drop = autoCurry drop
 
