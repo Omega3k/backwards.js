@@ -13,3 +13,9 @@ test "#{ txt } filter Arrays correctly", (t) ->
   filteredArray = [12, 130, 44]
   t.equal filter( predicate, array ).toString(), filteredArray.toString()
   t.end()
+
+test "#{ txt } filter other Objects correctly", (t) ->
+  t.equal filter( predicate, 99 ), 99
+  t.equal filter( predicate, 9 ), undefined
+  t.equal filter( predicate, true ), undefined
+  t.end()

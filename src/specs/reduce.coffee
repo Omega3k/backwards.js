@@ -20,3 +20,10 @@ test "#{ txt } reduce Arrays in the 'proper' order", (t) ->
 
   t.equal flattenedArray.toString(), expected.toString()
   t.end()
+
+test "#{ txt } reduce Objects down to a single value", (t) ->
+  t.equal reduce( add, 0, {
+      id  : 1
+      grand_parents: 4
+    } ), 5
+  t.end()
