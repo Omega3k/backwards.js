@@ -51,6 +51,7 @@
   
   @method curry
   @param f {Function} The function to be curried. 
+  @param args* {"any"} Arguments that should be applied to the resulting function. 
   @return {Function} A curried function. 
   @private
    */
@@ -114,7 +115,7 @@
   Compose your functions to a single function. 
   
   @method compose
-  @param function* {Function} Two or more functions that should be composed together. 
+  @param fs* {Function} Two or more functions that should be composed together. 
   @return {Function} The result of composing all the argument functions. 
   @public
   @example
@@ -126,9 +127,8 @@
         return x * 2;
       }
   
-      var timesTwoPlusOne = compose( addOne, timesTwo ) // A composed function
-        , five            = timesTwoPlusOne( 2 )        // 5
-        , nine            = timesTwoPlusOne( 4 )        // 9
+      var nine = compose( addOne, timesTwo )( 4 )   // 9
+        , ten  = compose( timesTwo, addOne )( 4 )   // 10
       ;
    */
 
@@ -226,6 +226,7 @@
   @public
   @example
       var passed = isBoolean( true )  // true
+        , passes = isBoolean( false ) // true
         , failed = isBoolean( 0 )     // false
       ;
    */
@@ -244,8 +245,8 @@
 
   backwards.isError = isError;
 
-  isFinite = function(x) {
-    return isFinite(x) && !isNaN(parseFloat(x));
+  isFinite = isFinite || function(x) {
+    return isNumber(x) && x !== Infinity;
   };
 
   backwards.isFinite = isFinite;
@@ -276,6 +277,21 @@
   })();
 
   backwards.isFunction = isFunction;
+
+
+  /**
+  Check if an Object is a NaN object. 
+  
+  @method isNaN
+  @param x {"any"} The Object you wish to check the type of. 
+  @return {Boolean} A Boolean value. 
+  @public
+  @example
+      var passed = isNaN( NaN )           // true
+        , passes = isNaN( new Number() )  // true
+        , failed = isNaN( false )         // false
+      ;
+   */
 
   isNaN = isNaN || function(x) {
     return isNumber(x) && x !== +x;
@@ -362,7 +378,7 @@
   @return {Boolean} A Boolean value. 
   @public
   @example
-      var passed = isString( 'string' )  // true
+      var passed = isString( "string" )  // true
         , failed = isString( false )     // false
       ;
    */

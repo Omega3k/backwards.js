@@ -30,11 +30,11 @@ This function is an internal function that is used by 'autoCurry' to create curr
 
 @method curry
 @param f {Function} The function to be curried. 
+@param args* {"any"} Arguments that should be applied to the resulting function. 
 @return {Function} A curried function. 
 @private
 ###
 
-# curry :: Function -> Function
 curry = (f, args...) ->
   (params...) ->
     f.apply @, args.concat params
@@ -60,7 +60,6 @@ Create a curried function from a function that normally takes multiple parameter
     ;
 ###
 
-# autoCurry :: Function -> Number -> Function
 autoCurry = (f, length = f.length) ->
   newFunction = (args...) ->
     if args.length < length
@@ -77,7 +76,7 @@ backwards.autoCurry = autoCurry
 Compose your functions to a single function. 
 
 @method compose
-@param function* {Function} Two or more functions that should be composed together. 
+@param fs* {Function} Two or more functions that should be composed together. 
 @return {Function} The result of composing all the argument functions. 
 @public
 @example
@@ -89,13 +88,11 @@ Compose your functions to a single function.
       return x * 2;
     }
 
-    var timesTwoPlusOne = compose( addOne, timesTwo ) // A composed function
-      , five            = timesTwoPlusOne( 2 )        // 5
-      , nine            = timesTwoPlusOne( 4 )        // 9
+    var nine = compose( addOne, timesTwo )( 4 )   // 9
+      , ten  = compose( timesTwo, addOne )( 4 )   // 10
     ;
 ###
 
-# compose :: Function, ... -> Function
 compose = (fs...) ->
   (args...) ->
     i = fs.length
@@ -120,7 +117,6 @@ Check if an Object is of a particular type.
     ;
 ###
 
-# isTypeOf :: String -> a -> Boolean
 isTypeOf = autoCurry (type, x) ->
   str = "[object #{ type }]"
   toString.call(x) is str
@@ -141,7 +137,6 @@ Check if an Object is an Arguments object.
     ;
 ###
 
-# isArguments :: a -> Boolean
 isArguments = do () ->
   if isTypeOf "Arguments", arguments then isTypeOf "Arguments"
   else (x) ->
@@ -163,7 +158,6 @@ Check if an Object is an Array.
     ;
 ###
 
-# isArray :: a -> Boolean
 isArray           = Array.isArray or isTypeOf "Array"
 backwards.isArray = isArray
 
@@ -177,11 +171,11 @@ Check if an Object is a Boolean.
 @public
 @example
     var passed = isBoolean( true )  // true
+      , passes = isBoolean( false ) // true
       , failed = isBoolean( 0 )     // false
     ;
 ###
 
-# isBoolean :: a -> Boolean
 isBoolean = (x) ->
   x is true or x is false or isTypeOf "Boolean", x
 
@@ -199,8 +193,11 @@ backwards.isError = isError
 
 
 # isFinite :: a -> Boolean
-isFinite = (x) ->
-  isFinite(x) and not isNaN parseFloat x
+# isFinite = (x) ->
+#   isFinite(x) and not isNaN parseFloat x
+
+isFinite = isFinite or (x) ->
+  isNumber(x) and x isnt Infinity
 
 backwards.isFinite = isFinite
 
@@ -219,7 +216,6 @@ Check if an Object is a Function.
     ;
 ###
 
-# isFunction :: a -> Boolean
 isFunction = do () ->
   if typeof /./ isnt "function"
     (x) -> typeof x is "function"
@@ -228,7 +224,20 @@ isFunction = do () ->
 backwards.isFunction = isFunction
 
 
-# isNaN :: a -> Boolean
+###*
+Check if an Object is a NaN object. 
+
+@method isNaN
+@param x {"any"} The Object you wish to check the type of. 
+@return {Boolean} A Boolean value. 
+@public
+@example
+    var passed = isNaN( NaN )           // true
+      , passes = isNaN( new Number() )  // true
+      , failed = isNaN( false )         // false
+    ;
+###
+
 isNaN = isNaN or (x) ->
   isNumber(x) and x isnt +x
 
@@ -248,7 +257,6 @@ Check if an Object is a Null object.
     ;
 ###
 
-# isNull :: a -> Boolean
 isNull = (x) ->
   x is null or isTypeOf "Null", x
 
@@ -268,7 +276,6 @@ Check if an Object is a Number.
     ;
 ###
 
-# isNumber :: a -> Boolean
 isNumber           = isTypeOf "Number"
 backwards.isNumber = isNumber
 
@@ -286,7 +293,6 @@ Check if an Object is an Object.
     ;
 ###
 
-# isObject :: a -> Boolean
 isObject = (x) ->
   if not x? or isArguments x then false
   else isTypeOf "Object", x
@@ -312,12 +318,11 @@ Check if an Object is a String.
 @return {Boolean} A Boolean value. 
 @public
 @example
-    var passed = isString( 'string' )  // true
+    var passed = isString( "string" )  // true
       , failed = isString( false )     // false
     ;
 ###
 
-# isString :: a -> Boolean
 isString           = isTypeOf "String"
 backwards.isString = isString
 
@@ -335,7 +340,6 @@ Check if an Object is undefined.
     ;
 ###
 
-# isUndefined :: a -> Boolean
 isUndefined = (x) ->
   x is undefined or isTypeOf "Undefined", x
 
