@@ -17,6 +17,7 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isNaN( new Array() )    , false
   t.equal isNaN( true )           , false
   t.equal isNaN( new Date() )     , false
+  t.equal isNaN( +new Date() )    , false
   t.equal isNaN( new Error() )    , false
   t.equal isNaN( new TypeError() ), false
   t.equal isNaN( (x) -> x )       , false

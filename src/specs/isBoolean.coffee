@@ -16,6 +16,7 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isBoolean( new Array() )    , false
   
   t.equal isBoolean( new Date() )     , false
+  t.equal isBoolean( +new Date() )    , false
   t.equal isBoolean( new Error() )    , false
   t.equal isBoolean( new TypeError() ), false
   t.equal isBoolean( (x) -> x )       , false

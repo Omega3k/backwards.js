@@ -16,6 +16,7 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isUndefined( new Array() )    , false
   t.equal isUndefined( true )           , false
   t.equal isUndefined( new Date() )     , false
+  t.equal isUndefined( +new Date() )    , false
   t.equal isUndefined( new Error() )    , false
   t.equal isUndefined( new TypeError() ), false
   t.equal isUndefined( (x) -> x )       , false

@@ -10,6 +10,7 @@ test "#{ txt } return true if given a finite Number", (t) ->
   t.equal isFinite( 1234 )           , true
   t.equal isFinite( NaN )            , true
   t.equal isFinite( new Number() )   , true
+  t.equal isFinite( +new Date() )    , true
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
@@ -18,6 +19,7 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isFinite( new Array() )    , false
   t.equal isFinite( true )           , false
   t.equal isFinite( new Date() )     , false
+
   t.equal isFinite( new Error() )    , false
   t.equal isFinite( new TypeError() ), false
   t.equal isFinite( (x) -> x )       , false

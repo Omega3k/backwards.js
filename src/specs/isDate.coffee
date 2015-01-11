@@ -15,7 +15,7 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isDate( [] )             , false
   t.equal isDate( new Array() )    , false
   t.equal isDate( true )           , false
-  
+  t.equal isDate( +new Date() )    , false
   t.equal isDate( new Error() )    , false
   t.equal isDate( new TypeError() ), false
   t.equal isDate( (x) -> x )       , false

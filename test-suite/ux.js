@@ -267,11 +267,14 @@
   });
 
   test("" + txt + " filter Numbers correctly", function(t) {
+    var timestamp;
+    timestamp = +new Date();
     t.equal(filter(predicate, 9), void 0);
     t.equal(filter(predicate, 1234), 1234);
     t.equal(filter(predicate, Infinity), Infinity);
     t.equal(filter(predicate, NaN), void 0);
     t.equal(filter(predicate, new Number()), void 0);
+    t.equal(filter(predicate, timestamp), timestamp);
     return t.end();
   });
 
@@ -372,6 +375,7 @@
     t.equal(isArguments(new Array()), false);
     t.equal(isArguments(true), false);
     t.equal(isArguments(new Date()), false);
+    t.equal(isArguments(+new Date()), false);
     t.equal(isArguments(new Error()), false);
     t.equal(isArguments(new TypeError()), false);
     t.equal(isArguments(function(x) {
@@ -414,6 +418,7 @@
     t.equal(isArray(arguments), false);
     t.equal(isArray(true), false);
     t.equal(isArray(new Date()), false);
+    t.equal(isArray(+new Date()), false);
     t.equal(isArray(new Error()), false);
     t.equal(isArray(new TypeError()), false);
     t.equal(isArray(function(x) {
@@ -456,6 +461,7 @@
     t.equal(isBoolean([]), false);
     t.equal(isBoolean(new Array()), false);
     t.equal(isBoolean(new Date()), false);
+    t.equal(isBoolean(+new Date()), false);
     t.equal(isBoolean(new Error()), false);
     t.equal(isBoolean(new TypeError()), false);
     t.equal(isBoolean(function(x) {
@@ -498,6 +504,7 @@
     t.equal(isDate([]), false);
     t.equal(isDate(new Array()), false);
     t.equal(isDate(true), false);
+    t.equal(isDate(+new Date()), false);
     t.equal(isDate(new Error()), false);
     t.equal(isDate(new TypeError()), false);
     t.equal(isDate(function(x) {
@@ -542,6 +549,7 @@
     t.equal(isError(new Array()), false);
     t.equal(isError(true), false);
     t.equal(isError(new Date()), false);
+    t.equal(isError(+new Date()), false);
     t.equal(isError(function(x) {
       return x;
     }), false);
@@ -576,6 +584,7 @@
     t.equal(isFinite(1234), true);
     t.equal(isFinite(NaN), true);
     t.equal(isFinite(new Number()), true);
+    t.equal(isFinite(+new Date()), true);
     return t.end();
   });
 
@@ -628,6 +637,7 @@
     t.equal(isFunction(new Array()), false);
     t.equal(isFunction(true), false);
     t.equal(isFunction(new Date()), false);
+    t.equal(isFunction(+new Date()), false);
     t.equal(isFunction(new Error()), false);
     t.equal(isFunction(new TypeError()), false);
     t.equal(isFunction(1234), false);
@@ -668,6 +678,7 @@
     t.equal(isNaN(new Array()), false);
     t.equal(isNaN(true), false);
     t.equal(isNaN(new Date()), false);
+    t.equal(isNaN(+new Date()), false);
     t.equal(isNaN(new Error()), false);
     t.equal(isNaN(new TypeError()), false);
     t.equal(isNaN(function(x) {
@@ -709,6 +720,7 @@
     t.equal(isNull(new Array()), false);
     t.equal(isNull(true), false);
     t.equal(isNull(new Date()), false);
+    t.equal(isNull(+new Date()), false);
     t.equal(isNull(new Error()), false);
     t.equal(isNull(new TypeError()), false);
     t.equal(isNull(function(x) {
@@ -745,6 +757,7 @@
     t.equal(isNumber(Infinity), true);
     t.equal(isNumber(NaN), true);
     t.equal(isNumber(new Number()), true);
+    t.equal(isNumber(+new Date()), true);
     return t.end();
   });
 
@@ -794,6 +807,7 @@
     t.equal(isObject(new Array()), false);
     t.equal(isObject(true), false);
     t.equal(isObject(new Date()), false);
+    t.equal(isObject(+new Date()), false);
     t.equal(isObject(new Error()), false);
     t.equal(isObject(new TypeError()), false);
     t.equal(isObject(function(x) {
@@ -836,6 +850,7 @@
     t.equal(isRegExp(new Array()), false);
     t.equal(isRegExp(true), false);
     t.equal(isRegExp(new Date()), false);
+    t.equal(isRegExp(+new Date()), false);
     t.equal(isRegExp(new Error()), false);
     t.equal(isRegExp(new TypeError()), false);
     t.equal(isRegExp(function(x) {
@@ -878,6 +893,7 @@
     t.equal(isString(new Array()), false);
     t.equal(isString(true), false);
     t.equal(isString(new Date()), false);
+    t.equal(isString(+new Date()), false);
     t.equal(isString(new Error()), false);
     t.equal(isString(new TypeError()), false);
     t.equal(isString(function(x) {
@@ -919,6 +935,7 @@
     t.equal(isUndefined(new Array()), false);
     t.equal(isUndefined(true), false);
     t.equal(isUndefined(new Date()), false);
+    t.equal(isUndefined(+new Date()), false);
     t.equal(isUndefined(new Error()), false);
     t.equal(isUndefined(new TypeError()), false);
     t.equal(isUndefined(function(x) {

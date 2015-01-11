@@ -17,6 +17,7 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isRegExp( new Array() )    , false
   t.equal isRegExp( true )           , false
   t.equal isRegExp( new Date() )     , false
+  t.equal isRegExp( +new Date() )    , false
   t.equal isRegExp( new Error() )    , false
   t.equal isRegExp( new TypeError() ), false
   t.equal isRegExp( (x) -> x )       , false

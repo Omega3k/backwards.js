@@ -11,6 +11,7 @@ test "#{ txt } return true if given a Number", (t) ->
   t.equal isNumber( Infinity )       , true
   t.equal isNumber( NaN )            , true
   t.equal isNumber( new Number() )   , true
+  t.equal isNumber( +new Date() )    , true
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
@@ -19,6 +20,7 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isNumber( new Array() )    , false
   t.equal isNumber( true )           , false
   t.equal isNumber( new Date() )     , false
+  
   t.equal isNumber( new Error() )    , false
   t.equal isNumber( new TypeError() ), false
   t.equal isNumber( (x) -> x )       , false

@@ -16,6 +16,7 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isNull( new Array() )    , false
   t.equal isNull( true )           , false
   t.equal isNull( new Date() )     , false
+  t.equal isNull( +new Date() )    , false
   t.equal isNull( new Error() )    , false
   t.equal isNull( new TypeError() ), false
   t.equal isNull( (x) -> x )       , false

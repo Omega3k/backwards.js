@@ -44,11 +44,13 @@ test "#{ txt } filter Objects correctly", (t) ->
   t.end()
 
 test "#{ txt } filter Numbers correctly", (t) ->
+  timestamp = +new Date()
   t.equal filter( predicate, 9 )                      , undefined
   t.equal filter( predicate, 1234 )                   , 1234
   t.equal filter( predicate, Infinity )               , Infinity
   t.equal filter( predicate, NaN )                    , undefined
   t.equal filter( predicate, new Number() )           , undefined
+  t.equal filter( predicate, timestamp )              , timestamp
   t.end()
 
 test "#{ txt } filter other values correctly as well", (t) ->

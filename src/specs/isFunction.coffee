@@ -17,6 +17,7 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isFunction( new Array() )    , false
   t.equal isFunction( true )           , false
   t.equal isFunction( new Date() )     , false
+  t.equal isFunction( +new Date() )    , false
   t.equal isFunction( new Error() )    , false
   t.equal isFunction( new TypeError() ), false
   
