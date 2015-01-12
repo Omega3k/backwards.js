@@ -625,18 +625,43 @@ backwards.maybe = autoCurry maybe
 Extracts a subset of the given object, from the beginning to *i*. 
 
 @method take
-@param i {Number} The number of indexes you wish to extract
-@param x {Array|String} An Array or a String
-@return {Array|String} A subset of *x* from the beginning to *i*
+@param i {Number|Array} The number of indexes you wish to extract
+@param x {Array|String|Object} An Array, String or Object
+@return {Array|String|Object} A subset of *x* from the beginning to *i*
 @public
 @example
-    take( 3, [1, 2, 3, 4, 5] );   // [1, 2, 3]
-    take( 5, "Hello World!" );    // "Hello"
+    var array = [1, 2, 3, 4, 5]
+      , string = "Hello World!"
+      , object = {
+        id    : 1,
+        age   : 29,
+        gender: "male",
+        name  : "John Doe"
+      }
     ;
+
+    take(  3, array );          // [1, 2, 3]
+    take( -2, array );          // [4, 5]
+    take(  5, string );         // "Hello"
+    take( -6, string );         // "World!"
+    take( ['name'], object );   // { name: "John Doe" }
 ###
 
+first = (i, x) -> x[0...i]
+last  = (i, x) -> x[i...x.length]
+
 take = (i, x) ->
-  return x[0...i]
+  if isNumber i
+    if i > 0 then first i, x else last i, x
+  else
+    acc   = {}
+    value = undefined
+    forEach (key) ->
+      value    = x[key]
+      acc[key] = value if value
+      return
+    , i
+    acc
 
 backwards.take = autoCurry take
 
@@ -645,17 +670,35 @@ backwards.take = autoCurry take
 Drops a subset of the given object, from the beginning to *i*, and returns the rest of the object. 
 
 @method drop
-@param i {Number} The number of indexes you wish to extract
-@param x {Array|String} An Array or a String
-@return {Array|String} A subset of *x* from index *i* to the end
+@param i {Number|Array} The number of indexes you wish to extract
+@param x {Array|String|Object} An Array, String or Object
+@return {Array|String|Object} A subset of *x* from index *i* to the end
 @public
 @example
-    drop( 3, [1, 2, 3, 4, 5] );   // [4, 5]
-    drop( 6, "Hello World!" );    // "World!"
+    var array = [1, 2, 3, 4, 5]
+      , string = "Hello World!"
+      , object = {
+        id    : 1,
+        age   : 29,
+        gender: "male",
+        name  : "John Doe"
+      }
+    ;
+
+    drop(  3, array );                        // [4, 5]
+    drop( -2, array );                        // [1, 2, 3]
+    drop(  6, string );                       // "World!"
+    drop( -7, string );                       // "Hello"
+    drop( ['id', 'age', 'gender'], object );  // { name: "John Doe" }
 ###
 
 drop = (i, x) ->
-  return x[i...x.length]
+  if isNumber i
+    if i > 0 then last i, x else first i, x
+  else
+    filter (value, key) ->
+      not contains key, 0, i
+    , x
 
 backwards.drop = autoCurry drop
 

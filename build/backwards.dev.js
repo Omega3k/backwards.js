@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, array, arrayProto, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, map, maybe, noop, object, objectProto, reduce, slice, some, take, toString,
+  var add, append, array, arrayProto, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, first, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, last, map, maybe, noop, object, objectProto, reduce, slice, some, take, toString,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -744,18 +744,55 @@
   Extracts a subset of the given object, from the beginning to *i*. 
   
   @method take
-  @param i {Number} The number of indexes you wish to extract
-  @param x {Array|String} An Array or a String
-  @return {Array|String} A subset of *x* from the beginning to *i*
+  @param i {Number|Array} The number of indexes you wish to extract
+  @param x {Array|String|Object} An Array, String or Object
+  @return {Array|String|Object} A subset of *x* from the beginning to *i*
   @public
   @example
-      take( 3, [1, 2, 3, 4, 5] );   // [1, 2, 3]
-      take( 5, "Hello World!" );    // "Hello"
+      var array = [1, 2, 3, 4, 5]
+        , string = "Hello World!"
+        , object = {
+          id    : 1,
+          age   : 29,
+          gender: "male",
+          name  : "John Doe"
+        }
       ;
+  
+      take(  3, array );          // [1, 2, 3]
+      take( -2, array );          // [4, 5]
+      take(  5, string );         // "Hello"
+      take( -6, string );         // "World!"
+      take( ['name'], object );   // { name: "John Doe" }
    */
 
-  take = function(i, x) {
+  first = function(i, x) {
     return x.slice(0, i);
+  };
+
+  last = function(i, x) {
+    return x.slice(i, x.length);
+  };
+
+  take = function(i, x) {
+    var acc, value;
+    if (isNumber(i)) {
+      if (i > 0) {
+        return first(i, x);
+      } else {
+        return last(i, x);
+      }
+    } else {
+      acc = {};
+      value = void 0;
+      forEach(function(key) {
+        value = x[key];
+        if (value) {
+          acc[key] = value;
+        }
+      }, i);
+      return acc;
+    }
   };
 
   backwards.take = autoCurry(take);
@@ -765,17 +802,40 @@
   Drops a subset of the given object, from the beginning to *i*, and returns the rest of the object. 
   
   @method drop
-  @param i {Number} The number of indexes you wish to extract
-  @param x {Array|String} An Array or a String
-  @return {Array|String} A subset of *x* from index *i* to the end
+  @param i {Number|Array} The number of indexes you wish to extract
+  @param x {Array|String|Object} An Array, String or Object
+  @return {Array|String|Object} A subset of *x* from index *i* to the end
   @public
   @example
-      drop( 3, [1, 2, 3, 4, 5] );   // [4, 5]
-      drop( 6, "Hello World!" );    // "World!"
+      var array = [1, 2, 3, 4, 5]
+        , string = "Hello World!"
+        , object = {
+          id    : 1,
+          age   : 29,
+          gender: "male",
+          name  : "John Doe"
+        }
+      ;
+  
+      drop(  3, array );                        // [4, 5]
+      drop( -2, array );                        // [1, 2, 3]
+      drop(  6, string );                       // "World!"
+      drop( -7, string );                       // "Hello"
+      drop( ['id', 'age', 'gender'], object );  // { name: "John Doe" }
    */
 
   drop = function(i, x) {
-    return x.slice(i, x.length);
+    if (isNumber(i)) {
+      if (i > 0) {
+        return last(i, x);
+      } else {
+        return first(i, x);
+      }
+    } else {
+      return filter(function(value, key) {
+        return !contains(key, 0, i);
+      }, x);
+    }
   };
 
   backwards.drop = autoCurry(drop);
