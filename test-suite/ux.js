@@ -144,6 +144,16 @@
 
   txt = "backwards.drop should";
 
+  stringify = function(obj) {
+    var acc, key, value;
+    acc = "{ ";
+    for (key in obj) {
+      value = obj[key];
+      acc += "" + key + ": " + value + ", ";
+    }
+    return "" + acc + " }";
+  };
+
   test("" + txt + " be a function", function(t) {
     t.equal(typeof drop, "function");
     return t.end();
@@ -151,11 +161,31 @@
 
   test("" + txt + " work on Arrays", function(t) {
     t.equal(drop(3, [1, 2, 3, 4, 5]).toString(), [4, 5].toString());
+    t.equal(drop(-2, [1, 2, 3, 4, 5]).toString(), [1, 2, 3].toString());
     return t.end();
   });
 
   test("" + txt + " work on Strings", function(t) {
     t.equal(drop(6, "Hello World!"), "World!");
+    t.equal(drop(-7, "Hello World!"), "Hello");
+    return t.end();
+  });
+
+  test("" + txt + " work on Objects", function(t) {
+    var actual, droppedObj1, droppedObj2, expected, obj;
+    obj = {
+      id: 1,
+      age: 29,
+      gender: "male",
+      name: "John Doe"
+    };
+    actual = stringify(obj);
+    expected = "{ name: " + obj.name + ",  }";
+    droppedObj1 = drop(['id', 'age', 'gender'], obj);
+    droppedObj2 = drop(['occupation'], droppedObj1);
+    t.equal(stringify(droppedObj1), expected);
+    t.equal(stringify(droppedObj2), expected);
+    t.equal(stringify(obj), actual);
     return t.end();
   });
 
@@ -1152,6 +1182,16 @@
 
   txt = "backwards.take should";
 
+  stringify = function(obj) {
+    var acc, key, value;
+    acc = "{ ";
+    for (key in obj) {
+      value = obj[key];
+      acc += "" + key + ": " + value + ", ";
+    }
+    return "" + acc + " }";
+  };
+
   test("" + txt + " be a function", function(t) {
     t.equal(typeof take, "function");
     return t.end();
@@ -1159,11 +1199,31 @@
 
   test("" + txt + " work on Arrays", function(t) {
     t.equal(take(3, [1, 2, 3, 4, 5]).toString(), [1, 2, 3].toString());
+    t.equal(take(-2, [1, 2, 3, 4, 5]).toString(), [4, 5].toString());
     return t.end();
   });
 
   test("" + txt + " work on Strings", function(t) {
     t.equal(take(5, "Hello World!"), "Hello");
+    t.equal(take(-6, "Hello World!"), "World!");
+    return t.end();
+  });
+
+  test("" + txt + " work on Objects", function(t) {
+    var actual, expected, obj, takenObj1, takenObj2;
+    obj = {
+      id: 1,
+      age: 29,
+      gender: "male",
+      name: "John Doe"
+    };
+    actual = stringify(obj);
+    expected = "{ name: " + obj.name + ",  }";
+    takenObj1 = stringify(take(['name'], obj));
+    takenObj2 = stringify(take(['name', 'occupation'], obj));
+    t.equal(takenObj1, expected);
+    t.equal(takenObj2, expected);
+    t.equal(stringify(obj), actual);
     return t.end();
   });
 
