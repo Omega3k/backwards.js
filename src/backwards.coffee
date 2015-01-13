@@ -327,8 +327,28 @@ isObject = (x) ->
 backwards.isObject = isObject
 
 
-# isPromise :: a -> Boolean
-isPromise           = isTypeOf "Promise"
+###*
+Check if an Object is a Promise. 
+
+@method isPromise
+@param x {"any"} The Object you wish to check the type of. 
+@return {Boolean} A Boolean value. 
+@public
+@example
+    var promise = new Promise(function (resolve, reject) {
+      resolve( "I am a promise" );
+    });
+
+    isPromise( promise );   // true
+    isPromise( {} );        // false
+###
+
+isPromise = (x) ->
+  return true if isTypeOf "Promise", x
+  if x?
+    return true if typeof( x.then ) is "function"
+  false
+
 backwards.isPromise = isPromise
 
 
