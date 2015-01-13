@@ -12,6 +12,10 @@ test "#{ txt } return true if given an Error", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
+  if Promise
+    promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
+    t.equal isError( promise )      , false
+
   t.equal isError( arguments )      , false
   t.equal isError( [] )             , false
   t.equal isError( new Array() )    , false

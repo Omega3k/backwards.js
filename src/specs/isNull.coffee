@@ -11,6 +11,10 @@ test "#{ txt } return true if given a Null", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
+  if Promise
+    promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
+    t.equal isNull( promise )      , false
+
   t.equal isNull( arguments )      , false
   t.equal isNull( [] )             , false
   t.equal isNull( new Array() )    , false

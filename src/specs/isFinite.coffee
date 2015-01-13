@@ -14,6 +14,10 @@ test "#{ txt } return true if given a finite Number", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
+  if Promise
+    promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
+    t.equal isFinite( promise )      , false
+
   t.equal isFinite( arguments )      , false
   t.equal isFinite( [] )             , false
   t.equal isFinite( new Array() )    , false

@@ -12,6 +12,10 @@ test "#{ txt } return true if given a String", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
+  if Promise
+    promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
+    t.equal isString( promise )      , false
+
   t.equal isString( arguments )      , false
   t.equal isString( [] )             , false
   t.equal isString( new Array() )    , false

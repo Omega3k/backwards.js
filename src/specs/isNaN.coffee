@@ -12,6 +12,10 @@ test "#{ txt } return true if given an Array", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
+  if Promise
+    promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
+    t.equal isNaN( promise )      , false
+
   t.equal isNaN( arguments )      , false
   t.equal isNaN( [] )             , false
   t.equal isNaN( new Array() )    , false

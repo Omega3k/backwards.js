@@ -12,6 +12,10 @@ test "#{ txt } return true if given a RegExp", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
+  if Promise
+    promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
+    t.equal isRegExp( promise )      , false
+
   t.equal isRegExp( arguments )      , false
   t.equal isRegExp( [] )             , false
   t.equal isRegExp( new Array() )    , false

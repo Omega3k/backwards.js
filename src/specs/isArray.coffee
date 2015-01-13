@@ -12,11 +12,15 @@ test "#{ txt } return true if given an Array", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
+  if Promise
+    promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
+    t.equal isArray( promise )      , false
+
   t.equal isArray( arguments )      , false
   
   t.equal isArray( true )           , false
   t.equal isArray( new Date() )     , false
-  t.equal isArray( +new Date() )     , false
+  t.equal isArray( +new Date() )    , false
   t.equal isArray( new Error() )    , false
   t.equal isArray( new TypeError() ), false
   t.equal isArray( (x) -> x )       , false

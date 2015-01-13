@@ -1,5 +1,5 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, drop, either, every, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
+  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, drop, either, every, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
 
   test = require("tape");
 
@@ -401,6 +401,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isArguments(promise), false);
+    }
     t.equal(isArguments([]), false);
     t.equal(isArguments(new Array()), false);
     t.equal(isArguments(true), false);
@@ -445,6 +452,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isArray(promise), false);
+    }
     t.equal(isArray(arguments), false);
     t.equal(isArray(true), false);
     t.equal(isArray(new Date()), false);
@@ -487,6 +501,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isBoolean(promise), false);
+    }
     t.equal(isBoolean(arguments), false);
     t.equal(isBoolean([]), false);
     t.equal(isBoolean(new Array()), false);
@@ -530,6 +551,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isDate(promise), false);
+    }
     t.equal(isDate(arguments), false);
     t.equal(isDate([]), false);
     t.equal(isDate(new Array()), false);
@@ -574,6 +602,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isError(promise), false);
+    }
     t.equal(isError(arguments), false);
     t.equal(isError([]), false);
     t.equal(isError(new Array()), false);
@@ -619,6 +654,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isFinite(promise), false);
+    }
     t.equal(isFinite(arguments), false);
     t.equal(isFinite([]), false);
     t.equal(isFinite(new Array()), false);
@@ -662,6 +704,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isFunction(promise), false);
+    }
     t.equal(isFunction(arguments), false);
     t.equal(isFunction([]), false);
     t.equal(isFunction(new Array()), false);
@@ -703,6 +752,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isNaN(promise), false);
+    }
     t.equal(isNaN(arguments), false);
     t.equal(isNaN([]), false);
     t.equal(isNaN(new Array()), false);
@@ -745,6 +801,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isNull(promise), false);
+    }
     t.equal(isNull(arguments), false);
     t.equal(isNull([]), false);
     t.equal(isNull(new Array()), false);
@@ -792,6 +855,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isNumber(promise), false);
+    }
     t.equal(isNumber(arguments), false);
     t.equal(isNumber([]), false);
     t.equal(isNumber(new Array()), false);
@@ -832,6 +902,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isObject(promise), false);
+    }
     t.equal(isObject(arguments), false);
     t.equal(isObject([]), false);
     t.equal(isObject(new Array()), false);
@@ -859,6 +936,56 @@
 
   test = require("tape");
 
+  isPromise = require("../../build/backwards.dev").isPromise;
+
+  txt = "backwards.isPromise should";
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof isPromise, "function");
+    return t.end();
+  });
+
+  test("" + txt + " return true if given a Promise", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve(false);
+      });
+      t.equal(isPromise(promise), true);
+    }
+    return t.end();
+  });
+
+  test("" + txt + " return false if given anything else", function(t) {
+    t.equal(isPromise(arguments), false);
+    t.equal(isPromise([]), false);
+    t.equal(isPromise(new Array()), false);
+    t.equal(isPromise(true), false);
+    t.equal(isPromise(new Date()), false);
+    t.equal(isPromise(+new Date()), false);
+    t.equal(isPromise(new Error()), false);
+    t.equal(isPromise(new TypeError()), false);
+    t.equal(isPromise(function(x) {
+      return x;
+    }), false);
+    t.equal(isPromise(new Function()), false);
+    t.equal(isPromise(1234), false);
+    t.equal(isPromise(Infinity), false);
+    t.equal(isPromise(NaN), false);
+    t.equal(isPromise(new Number()), false);
+    t.equal(isPromise({}), false);
+    t.equal(isPromise(new Object()), false);
+    t.equal(isPromise(/./), false);
+    t.equal(isPromise(new RegExp()), false);
+    t.equal(isPromise("string"), false);
+    t.equal(isPromise(new String()), false);
+    t.equal(isPromise(null), false);
+    t.equal(isPromise(void 0), false);
+    return t.end();
+  });
+
+  test = require("tape");
+
   isRegExp = require("../../build/backwards.dev").isRegExp;
 
   txt = "backwards.isRegExp should";
@@ -875,6 +1002,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isRegExp(promise), false);
+    }
     t.equal(isRegExp(arguments), false);
     t.equal(isRegExp([]), false);
     t.equal(isRegExp(new Array()), false);
@@ -918,6 +1052,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isString(promise), false);
+    }
     t.equal(isString(arguments), false);
     t.equal(isString([]), false);
     t.equal(isString(new Array()), false);
@@ -960,6 +1101,13 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (Promise) {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isUndefined(promise), false);
+    }
     t.equal(isUndefined(arguments), false);
     t.equal(isUndefined([]), false);
     t.equal(isUndefined(new Array()), false);

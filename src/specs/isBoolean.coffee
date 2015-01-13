@@ -11,6 +11,10 @@ test "#{ txt } return true if given a Boolean", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
+  if Promise
+    promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
+    t.equal isBoolean( promise )      , false
+
   t.equal isBoolean( arguments )      , false
   t.equal isBoolean( [] )             , false
   t.equal isBoolean( new Array() )    , false
