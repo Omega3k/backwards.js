@@ -346,7 +346,7 @@ Check if an Object is a Promise.
 isPromise = (x) ->
   return true if isTypeOf "Promise", x
   if x?
-    return true if typeof( x.then ) is "function"
+    return true if typeof x.then is "function"
   false
 
 backwards.isPromise = isPromise
@@ -653,10 +653,10 @@ Extracts a subset of the given object, from the beginning to *i*.
     var array = [1, 2, 3, 4, 5]
       , string = "Hello World!"
       , object = {
-        id    : 1,
-        age   : 29,
-        gender: "male",
-        name  : "John Doe"
+          id    : 1,
+          age   : 29,
+          gender: "male",
+          name  : "John Doe"
       }
     ;
 
@@ -698,10 +698,10 @@ Drops a subset of the given object, from the beginning to *i*, and returns the r
     var array = [1, 2, 3, 4, 5]
       , string = "Hello World!"
       , object = {
-        id    : 1,
-        age   : 29,
-        gender: "male",
-        name  : "John Doe"
+          id    : 1,
+          age   : 29,
+          gender: "male",
+          name  : "John Doe"
       }
     ;
 

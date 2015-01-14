@@ -779,10 +779,10 @@
       var array = [1, 2, 3, 4, 5]
         , string = "Hello World!"
         , object = {
-          id    : 1,
-          age   : 29,
-          gender: "male",
-          name  : "John Doe"
+            id    : 1,
+            age   : 29,
+            gender: "male",
+            name  : "John Doe"
         }
       ;
   
@@ -837,10 +837,10 @@
       var array = [1, 2, 3, 4, 5]
         , string = "Hello World!"
         , object = {
-          id    : 1,
-          age   : 29,
-          gender: "male",
-          name  : "John Doe"
+            id    : 1,
+            age   : 29,
+            gender: "male",
+            name  : "John Doe"
         }
       ;
   
