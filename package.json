@@ -35,9 +35,11 @@
     "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-contrib-yuidoc": "^0.5.2",
-    "grunt-saucelabs": "^8.3.2",
+    "grunt-saucelabs": "^8.4.1",
     "jquery": "^2.1.1",
+    "lodash": "^2.4.1",
     "tape": "^3.0.0",
-    "travis-encrypt": "^1.0.1"
+    "travis-encrypt": "^1.0.1",
+    "underscore": "^1.7.0"
   }
 }
