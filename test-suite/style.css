@@ -53,9 +53,10 @@ h2 {
 }
 
 span.number {
-  margin-right    : 0.5em;
-  padding         : 0.5em;
-  background-color: rgba(0, 0, 0, 0.1);
+	margin-right    : 0.5em;
+	margin-left     : -0.5em;
+	padding         : 0.5em;
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
 /*#summary {

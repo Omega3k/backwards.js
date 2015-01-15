@@ -1336,6 +1336,19 @@
     return t.end();
   });
 
+  test("" + txt + " throw a TypeError if given no initial value and an empty array", function(t) {
+    var bool, error;
+    bool = false;
+    try {
+      reduce(add, void 0, []);
+    } catch (_error) {
+      error = _error;
+      bool = true;
+    }
+    t.equal(bool, true);
+    return t.end();
+  });
+
   test("" + txt + " reduce Objects down to a single value", function(t) {
     t.equal(reduce(add, 0, {
       id: 1,
