@@ -431,14 +431,148 @@ isEmpty = (x) ->
 backwards.isEmpty = isEmpty
 
 
-# reduce :: (a -> b) -> a -> Array|Object|"any" -> b
-reduce = (f, acc, x) ->
+###*
+forEach executes the provided callback once for each element present in the array in ascending order. It is not invoked for indexes that have been deleted or elided. However, it is executed for elements that are present and have the value undefined.
+
+callback is invoked with three arguments:
+
+    the element value
+    the element index
+    the array being traversed
+
+The range of elements processed by forEach is set before the first invocation of callback. Elements that are appended to the array after the call to forEach begins will not be visited by callback. If the values of existing elements of the array are changed, the value passed to callback will be the value at the time forEach visits them; elements that are deleted before being visited are not visited.
+
+@method forEach
+@param f {Function} The function you wish to execute over each element in the object. 
+@param x {"any"} The Object you wish to iterate over. 
+@return {undefined}
+@public
+@example
+    var f = function (value, key, object) {
+      alert( value, key );
+    };
+
+    forEach( f, [1, 2, 3] );                  // undefined
+    forEach( f, { id: 1, name: "string" } );  // undefined
+    forEach( f, "Hello folks!" );             // undefined
+###
+
+# forEach = (f, xs) ->
+#   reduce ((acc, x, i, xs) -> f x, i, xs), xs, xs
+#   return
+
+forEach = (f, x) ->
   if isArray x
-    acc = [] if not acc?
-    acc = f acc, value, key, x for value, key in x
+    f value, key, x for value, key in x
   else if isObject x
-    acc = {} if not acc?
-    acc = f acc, value, key, x for own key, value of x
+    f value, key, x for own key, value of x
+  else
+    f x
+  return
+
+backwards.forEach = autoCurry forEach
+
+
+###*
+map calls a provided callback function (f) once for each element in an array, in ascending order, and constructs a new array from the results. callback is invoked only for indexes of the array which have assigned values; it is not invoked for indexes that are undefined, those which have been deleted or which have never been assigned values.
+
+callback is invoked with three arguments: the value of the element, the index of the element, and the Array object being traversed.
+
+map does not mutate the array on which it is called (although callback, if invoked, may do so).
+
+The range of elements processed by map is set before the first invocation of callback. Elements which are appended to the array after the call to map begins will not be visited by callback. If existing elements of the array are changed, or deleted, their value as passed to callback will be the value at the time map visits them; elements that are deleted are not visited.
+
+@method map
+@public
+@param f {Function} The function you wish to execute over each element in the object. 
+@param x {"any"} The Object you wish to iterate over. 
+@return {"any"}
+@example
+    var addOne = function (x) {
+      return x + 1;
+    };
+
+    map( addOne, [1, 2, 3] );                  // [2, 3, 4]
+    map( addOne, { id: 1, name: "string" } );  // ["id1", "name1"]
+    map( addOne, "Hello folks!" );             // "Hello folks!1"
+###
+
+__arrayMap = (f, xs) ->
+  for value, index in xs
+    f value, index, xs if value
+
+__objectMap = (f, obj) ->
+  for own key, value of obj
+    f value, key, obj if value
+
+map = (f, x) ->
+  if isArray x then __arrayMap f, x
+  else if isObject x then __objectMap f, x
+  else if x and isFunction x.map then x.map f
+  else if isPromise x then x.then f
+  else if x then f x
+
+backwards.map = autoCurry map
+
+
+filter = (f, x) ->
+  if isArray x
+    acc = []
+    map (value, index, array) ->
+      acc.push value if f value, index, array
+    , x
+    acc
+  else x if f x
+
+backwards.filter = autoCurry filter
+
+
+keys = (x) ->
+  acc = []
+  forEach (value, key, object) ->
+    acc.push key
+  , x
+  acc
+
+
+###*
+reduce executes the callback function once for each element present in the array, excluding holes in the array, receiving four arguments: the initial value (or value from the previous callback call), the value of the current element, the current index, and the array over which iteration is occurring.
+
+The first time the callback is called, previousValue and currentValue can be one of two values. If initialValue is provided in the call to reduce, then previousValue will be equal to initialValue and currentValue will be equal to the first value in the array. If no initialValue was provided, then previousValue will be equal to the first value in the array and currentValue will be equal to the second.
+
+If the array is empty and no initialValue was provided, TypeError would be thrown. If the array has only one element (regardless of position) and no initialValue was provided, or if initialValue is provided but the array is empty, the solo value would be returned without calling callback.
+
+@method extend
+@public
+@param f {Function} The callback function. 
+@param acc {"any"} The initial value. 
+@param x {"any"} The object you wish to reduce. 
+@return {"any"} Returns the reduced value.  
+@example
+    var obj = {
+      id    : 1,
+      age   : 29,
+      gender: "male",
+      name  : "John Doe"
+    };
+
+    extend( obj, { age: 30, name: "John Doe Sr." } );
+    // { id: 1, age: 30, gender: "male", name: "John Doe Sr." }
+
+    extend( obj, { id: 2 } );
+    // { id: 2, age: 30, gender: "male", name: "John Doe Sr." }
+
+    extend( {}, obj, { id: 2, age: 0, name: "John Doe Jr." } );
+    // { id: 2, age: 0, gender: "male", name: "John Doe Jr." }
+###
+
+reduce = (f, acc, x) ->
+  if isArray(x) or isObject(x)
+    forEach (value, key, object) ->
+      if acc is undefined then acc = value
+      else acc = f acc, value, key, object
+      return
+    , x
   else
     acc = f acc, x
   acc
@@ -446,40 +580,43 @@ reduce = (f, acc, x) ->
 backwards.reduce = autoCurry reduce
 
 
-forEach = (f, xs) ->
-  reduce ((acc, x, i, xs) -> f x, i, xs), xs, xs
-  undefined
+###*
+The extend function takes two or more objects and returns the first object extended with the properties (and values) of the other objects in ascending order. 
 
-backwards.forEach = autoCurry forEach
+@method extend
+@param acc {Object} The Object you wish to extend. 
+@param objects* {Object} The objects you wish to extend. 
+@return {Object} Returns the first object extended with the other objects properties and values in ascending order. 
+@public
+@example
+    var obj = {
+      id    : 1,
+      age   : 29,
+      gender: "male",
+      name  : "John Doe"
+    };
 
+    extend( obj, { age: 30, name: "John Doe Sr." } );
+    // { id: 1, age: 30, gender: "male", name: "John Doe Sr." }
 
-map = (f, x) ->
-  if isArray x or isArguments x
-    reduce (acc, value, index, array) ->
-      val = f value, index, array
-      acc.push val if val
-      acc
-    , [], x
-  else if isObject x
-    reduce (acc, value, key, object) ->
-      val      = f value, key, object
-      acc[key] = val if val
-      acc
-    , {}, x
-  else
-    reduce (acc, value) ->
-      f value
-    , undefined, x
+    extend( obj, { id: 2 } );
+    // { id: 2, age: 30, gender: "male", name: "John Doe Sr." }
 
-backwards.map = autoCurry map
+    extend( {}, obj, { id: 2, age: 0, name: "John Doe Jr." } );
+    // { id: 2, age: 0, gender: "male", name: "John Doe Jr." }
+###
 
+extend = (acc, objects...) ->
+  acc = acc or {}
+  forEach (object) ->
+    forEach (value, key) ->
+      acc[key] = value
+      return
+    , object
+  , objects
+  acc
 
-filter = (f, x) ->
-  map (value, index, array) ->
-    value if f value, index, array
-  , x
-
-backwards.filter = autoCurry filter
+backwards.extend = autoCurry extend
 
 
 ###*
@@ -495,7 +632,10 @@ the Object.
     copy( { id: 1, name: "string" } );  // { id: 1, name: "string" }
 ###
 
-copy           = backwards.map identity
+copy = (x) ->
+  if isObject x then extend {}, x
+  else map identity, x
+
 backwards.copy = copy
 
 
@@ -716,9 +856,13 @@ drop = (i, x) ->
   if isNumber i
     if i > 0 then last i, x else first i, x
   else
-    filter (value, key) ->
-      not contains key, 0, i
+    acc = {}
+    forEach (value, key) ->
+      if not contains key, 0, i
+        acc[key] = value
+        return
     , x
+    acc
 
 backwards.drop = autoCurry drop
 
@@ -730,35 +874,36 @@ backwards.drop = autoCurry drop
 #   else if x is 0 then "0"
 #   else "undefined"
 
-# console = ( window.console = window.console or {} )
-console = console or {}
-forEach (method) ->
-  console[ method ] = noop if not console[ method ]
-  undefined
-, [
-  "assert"
-  "clear"
-  "count"
-  "debug"
-  "dir"
-  "dirxml"
-  "error"
-  "exception"
-  "group"
-  "groupCollapsed"
-  "groupEnd"
-  "info"
-  "log"
-  "markTimeline"
-  "profile"
-  "profileEnd"
-  "table"
-  "time"
-  "timeEnd"
-  "timeStamp"
-  "trace"
-  "warn"
-]
+# if window?
+#   # console = ( window.console = window.console or {} )
+#   console = console or {}
+#   forEach (method) ->
+#     console[ method ] = noop if not console[ method ]
+#     undefined
+#   , [
+#     "assert"
+#     "clear"
+#     "count"
+#     "debug"
+#     "dir"
+#     "dirxml"
+#     "error"
+#     "exception"
+#     "group"
+#     "groupCollapsed"
+#     "groupEnd"
+#     "info"
+#     "log"
+#     "markTimeline"
+#     "profile"
+#     "profileEnd"
+#     "table"
+#     "time"
+#     "timeEnd"
+#     "timeStamp"
+#     "trace"
+#     "warn"
+#   ]
 
 backwards.log = (x) ->
   console.log x
@@ -768,24 +913,32 @@ backwards.log = (x) ->
 # Export backwards object
 # =======================
 
-(( root, name, f ) ->
-  # Register as a named AMD module
-  if define? and define.amd
-    define name, [], f
+if define? and define.amd
+  define "backwards", [], () -> backwards
+else if exports?
+  if module? and module.exports then module.exports = backwards
+  else exports.backwards = backwards
+else if window? then window.backwards = backwards
+else return backwards
 
-  # Register as a CommonJS-like module
-  else if exports?
-    if module? and module.exports
-      module.exports = f()
-    else
-      exports[name] = f()
+# (( root, name, f ) ->
+#   # Register as a named AMD module
+#   if define? and define.amd
+#     define name, [], f
 
-  # Register as a global object on the window
-  else
-    root[name] = f()
+#   # Register as a CommonJS-like module
+#   else if exports?
+#     if module? and module.exports
+#       module.exports = f()
+#     else
+#       exports[name] = f()
+
+#   # Register as a global object on the window
+#   else
+#     root[name] = f()
   
-  undefined
-)( this, "backwards", () -> backwards )
+#   undefined
+# )( this, "backwards", () -> backwards )
 
 ### 
 

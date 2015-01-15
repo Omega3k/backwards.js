@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, array, arrayProto, autoCurry, backwards, compose, console, contains, copy, curry, drop, either, every, exists, filter, first, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, last, map, maybe, noop, object, objectProto, reduce, slice, some, take, toString,
+  var add, append, array, arrayProto, autoCurry, backwards, compose, contains, copy, curry, drop, either, every, exists, extend, filter, first, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, maybe, noop, object, objectProto, reduce, slice, some, take, toString, __arrayMap, __objectMap,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -503,25 +503,192 @@
 
   backwards.isEmpty = isEmpty;
 
-  reduce = function(f, acc, x) {
+
+  /**
+  forEach executes the provided callback once for each element present in the array in ascending order. It is not invoked for indexes that have been deleted or elided. However, it is executed for elements that are present and have the value undefined.
+  
+  callback is invoked with three arguments:
+  
+      the element value
+      the element index
+      the array being traversed
+  
+  The range of elements processed by forEach is set before the first invocation of callback. Elements that are appended to the array after the call to forEach begins will not be visited by callback. If the values of existing elements of the array are changed, the value passed to callback will be the value at the time forEach visits them; elements that are deleted before being visited are not visited.
+  
+  @method forEach
+  @param f {Function} The function you wish to execute over each element in the object. 
+  @param x {"any"} The Object you wish to iterate over. 
+  @return {undefined}
+  @public
+  @example
+      var f = function (value, key, object) {
+        alert( value, key );
+      };
+  
+      forEach( f, [1, 2, 3] );                  // undefined
+      forEach( f, { id: 1, name: "string" } );  // undefined
+      forEach( f, "Hello folks!" );             // undefined
+   */
+
+  forEach = function(f, x) {
     var key, value, _i, _len;
     if (isArray(x)) {
-      if (acc == null) {
-        acc = [];
-      }
       for (key = _i = 0, _len = x.length; _i < _len; key = ++_i) {
         value = x[key];
-        acc = f(acc, value, key, x);
+        f(value, key, x);
       }
     } else if (isObject(x)) {
-      if (acc == null) {
-        acc = {};
-      }
       for (key in x) {
         if (!__hasProp.call(x, key)) continue;
         value = x[key];
-        acc = f(acc, value, key, x);
+        f(value, key, x);
       }
+    } else {
+      f(x);
+    }
+  };
+
+  backwards.forEach = autoCurry(forEach);
+
+
+  /**
+  map calls a provided callback function (f) once for each element in an array, in ascending order, and constructs a new array from the results. callback is invoked only for indexes of the array which have assigned values; it is not invoked for indexes that are undefined, those which have been deleted or which have never been assigned values.
+  
+  callback is invoked with three arguments: the value of the element, the index of the element, and the Array object being traversed.
+  
+  map does not mutate the array on which it is called (although callback, if invoked, may do so).
+  
+  The range of elements processed by map is set before the first invocation of callback. Elements which are appended to the array after the call to map begins will not be visited by callback. If existing elements of the array are changed, or deleted, their value as passed to callback will be the value at the time map visits them; elements that are deleted are not visited.
+  
+  @method map
+  @public
+  @param f {Function} The function you wish to execute over each element in the object. 
+  @param x {"any"} The Object you wish to iterate over. 
+  @return {"any"}
+  @example
+      var addOne = function (x) {
+        return x + 1;
+      };
+  
+      map( addOne, [1, 2, 3] );                  // [2, 3, 4]
+      map( addOne, { id: 1, name: "string" } );  // ["id1", "name1"]
+      map( addOne, "Hello folks!" );             // "Hello folks!1"
+   */
+
+  __arrayMap = function(f, xs) {
+    var index, value, _i, _len, _results;
+    _results = [];
+    for (index = _i = 0, _len = xs.length; _i < _len; index = ++_i) {
+      value = xs[index];
+      if (value) {
+        _results.push(f(value, index, xs));
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  __objectMap = function(f, obj) {
+    var key, value, _results;
+    _results = [];
+    for (key in obj) {
+      if (!__hasProp.call(obj, key)) continue;
+      value = obj[key];
+      if (value) {
+        _results.push(f(value, key, obj));
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  map = function(f, x) {
+    if (isArray(x)) {
+      return __arrayMap(f, x);
+    } else if (isObject(x)) {
+      return __objectMap(f, x);
+    } else if (x && isFunction(x.map)) {
+      return x.map(f);
+    } else if (isPromise(x)) {
+      return x.then(f);
+    } else if (x) {
+      return f(x);
+    }
+  };
+
+  backwards.map = autoCurry(map);
+
+  filter = function(f, x) {
+    var acc;
+    if (isArray(x)) {
+      acc = [];
+      map(function(value, index, array) {
+        if (f(value, index, array)) {
+          return acc.push(value);
+        }
+      }, x);
+      return acc;
+    } else {
+      if (f(x)) {
+        return x;
+      }
+    }
+  };
+
+  backwards.filter = autoCurry(filter);
+
+  keys = function(x) {
+    var acc;
+    acc = [];
+    forEach(function(value, key, object) {
+      return acc.push(key);
+    }, x);
+    return acc;
+  };
+
+
+  /**
+  reduce executes the callback function once for each element present in the array, excluding holes in the array, receiving four arguments: the initial value (or value from the previous callback call), the value of the current element, the current index, and the array over which iteration is occurring.
+  
+  The first time the callback is called, previousValue and currentValue can be one of two values. If initialValue is provided in the call to reduce, then previousValue will be equal to initialValue and currentValue will be equal to the first value in the array. If no initialValue was provided, then previousValue will be equal to the first value in the array and currentValue will be equal to the second.
+  
+  If the array is empty and no initialValue was provided, TypeError would be thrown. If the array has only one element (regardless of position) and no initialValue was provided, or if initialValue is provided but the array is empty, the solo value would be returned without calling callback.
+  
+  @method extend
+  @public
+  @param f {Function} The callback function. 
+  @param acc {"any"} The initial value. 
+  @param x {"any"} The object you wish to reduce. 
+  @return {"any"} Returns the reduced value.  
+  @example
+      var obj = {
+        id    : 1,
+        age   : 29,
+        gender: "male",
+        name  : "John Doe"
+      };
+  
+      extend( obj, { age: 30, name: "John Doe Sr." } );
+      // { id: 1, age: 30, gender: "male", name: "John Doe Sr." }
+  
+      extend( obj, { id: 2 } );
+      // { id: 2, age: 30, gender: "male", name: "John Doe Sr." }
+  
+      extend( {}, obj, { id: 2, age: 0, name: "John Doe Jr." } );
+      // { id: 2, age: 0, gender: "male", name: "John Doe Jr." }
+   */
+
+  reduce = function(f, acc, x) {
+    if (isArray(x) || isObject(x)) {
+      forEach(function(value, key, object) {
+        if (acc === void 0) {
+          acc = value;
+        } else {
+          acc = f(acc, value, key, object);
+        }
+      }, x);
     } else {
       acc = f(acc, x);
     }
@@ -530,52 +697,46 @@
 
   backwards.reduce = autoCurry(reduce);
 
-  forEach = function(f, xs) {
-    reduce((function(acc, x, i, xs) {
-      return f(x, i, xs);
-    }), xs, xs);
-    return void 0;
+
+  /**
+  The extend function takes two or more objects and returns the first object extended with the properties (and values) of the other objects in ascending order. 
+  
+  @method extend
+  @param acc {Object} The Object you wish to extend. 
+  @param objects* {Object} The objects you wish to extend. 
+  @return {Object} Returns the first object extended with the other objects properties and values in ascending order. 
+  @public
+  @example
+      var obj = {
+        id    : 1,
+        age   : 29,
+        gender: "male",
+        name  : "John Doe"
+      };
+  
+      extend( obj, { age: 30, name: "John Doe Sr." } );
+      // { id: 1, age: 30, gender: "male", name: "John Doe Sr." }
+  
+      extend( obj, { id: 2 } );
+      // { id: 2, age: 30, gender: "male", name: "John Doe Sr." }
+  
+      extend( {}, obj, { id: 2, age: 0, name: "John Doe Jr." } );
+      // { id: 2, age: 0, gender: "male", name: "John Doe Jr." }
+   */
+
+  extend = function() {
+    var acc, objects;
+    acc = arguments[0], objects = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    acc = acc || {};
+    forEach(function(object) {
+      return forEach(function(value, key) {
+        acc[key] = value;
+      }, object);
+    }, objects);
+    return acc;
   };
 
-  backwards.forEach = autoCurry(forEach);
-
-  map = function(f, x) {
-    if (isArray(x || isArguments(x))) {
-      return reduce(function(acc, value, index, array) {
-        var val;
-        val = f(value, index, array);
-        if (val) {
-          acc.push(val);
-        }
-        return acc;
-      }, [], x);
-    } else if (isObject(x)) {
-      return reduce(function(acc, value, key, object) {
-        var val;
-        val = f(value, key, object);
-        if (val) {
-          acc[key] = val;
-        }
-        return acc;
-      }, {}, x);
-    } else {
-      return reduce(function(acc, value) {
-        return f(value);
-      }, void 0, x);
-    }
-  };
-
-  backwards.map = autoCurry(map);
-
-  filter = function(f, x) {
-    return map(function(value, index, array) {
-      if (f(value, index, array)) {
-        return value;
-      }
-    }, x);
-  };
-
-  backwards.filter = autoCurry(filter);
+  backwards.extend = autoCurry(extend);
 
 
   /**
@@ -591,7 +752,13 @@
       copy( { id: 1, name: "string" } );  // { id: 1, name: "string" }
    */
 
-  copy = backwards.map(identity);
+  copy = function(x) {
+    if (isObject(x)) {
+      return extend({}, x);
+    } else {
+      return map(identity, x);
+    }
+  };
 
   backwards.copy = copy;
 
@@ -852,6 +1019,7 @@
    */
 
   drop = function(i, x) {
+    var acc;
     if (isNumber(i)) {
       if (i > 0) {
         return last(i, x);
@@ -859,44 +1027,38 @@
         return first(i, x);
       }
     } else {
-      return filter(function(value, key) {
-        return !contains(key, 0, i);
+      acc = {};
+      forEach(function(value, key) {
+        if (!contains(key, 0, i)) {
+          acc[key] = value;
+        }
       }, x);
+      return acc;
     }
   };
 
   backwards.drop = autoCurry(drop);
-
-  console = console || {};
-
-  forEach(function(method) {
-    if (!console[method]) {
-      console[method] = noop;
-    }
-    return void 0;
-  }, ["assert", "clear", "count", "debug", "dir", "dirxml", "error", "exception", "group", "groupCollapsed", "groupEnd", "info", "log", "markTimeline", "profile", "profileEnd", "table", "time", "timeEnd", "timeStamp", "trace", "warn"]);
 
   backwards.log = function(x) {
     console.log(x);
     return x;
   };
 
-  (function(root, name, f) {
-    if ((typeof define !== "undefined" && define !== null) && define.amd) {
-      define(name, [], f);
-    } else if (typeof exports !== "undefined" && exports !== null) {
-      if ((typeof module !== "undefined" && module !== null) && module.exports) {
-        module.exports = f();
-      } else {
-        exports[name] = f();
-      }
+  if ((typeof define !== "undefined" && define !== null) && define.amd) {
+    define("backwards", [], function() {
+      return backwards;
+    });
+  } else if (typeof exports !== "undefined" && exports !== null) {
+    if ((typeof module !== "undefined" && module !== null) && module.exports) {
+      module.exports = backwards;
     } else {
-      root[name] = f();
+      exports.backwards = backwards;
     }
-    return void 0;
-  })(this, "backwards", function() {
+  } else if (typeof window !== "undefined" && window !== null) {
+    window.backwards = backwards;
+  } else {
     return backwards;
-  });
+  }
 
 
   /* 
