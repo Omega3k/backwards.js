@@ -1331,8 +1331,86 @@
   });
 
   test("" + txt + " reduce Arrays down to a single value even if given no initial value", function(t) {
+    var max, min;
+    max = reduce(function(max, num) {
+      if (max > num) {
+        return max;
+      } else {
+        return num;
+      }
+    }, 0);
+    min = reduce(function(min, num) {
+      if (min < num) {
+        return min;
+      } else {
+        return num;
+      }
+    }, 0);
+    t.equal(max([1, 12, 99, 55]), 99);
+    t.equal(min([1, 12, 99, 55]), 0);
     t.equal(reduce(add, void 0, [0, 1, 2, 3]), 6);
     t.equal(reduce(append, void 0, [[1, 2], [3, 4]]).toString(), [1, 2, 3, 4].toString());
+    return t.end();
+  });
+
+  test("" + txt + " reduce Objects down to a single value", function(t) {
+    t.equal(reduce(add, 0, {
+      id: 1,
+      grand_parents: 4
+    }), 5);
+    t.equal(reduce(function(acc, value, key) {
+      acc += "" + key + ": " + value + ", ";
+      return acc;
+    }, "", {
+      id: 1,
+      grand_parents: 4
+    }), "id: 1, grand_parents: 4, ");
+    return t.end();
+  });
+
+  test("" + txt + " return the value without calling the callback function if given no initial value and an array with only one value", function(t) {
+    var error, value;
+    try {
+      value = reduce(add, void 0, [1]);
+    } catch (_error) {
+      error = _error;
+    }
+    t.equal(value, 1);
+    return t.end();
+  });
+
+  test("" + txt + " return the value without calling the callback function if given no initial value and an object with only one property", function(t) {
+    var error, value;
+    try {
+      value = reduce(add, void 0, {
+        name: "awesome!"
+      });
+    } catch (_error) {
+      error = _error;
+    }
+    t.equal(value, "awesome!");
+    return t.end();
+  });
+
+  test("" + txt + " return the initial value without calling the callback function if given an initial value and an empty array", function(t) {
+    var error, value;
+    try {
+      value = reduce(add, 1, []);
+    } catch (_error) {
+      error = _error;
+    }
+    t.equal(value, 1);
+    return t.end();
+  });
+
+  test("" + txt + " return the initial value without calling the callback function if given an initial value and an empty object", function(t) {
+    var error, value;
+    try {
+      value = reduce(add, "awesome!", {});
+    } catch (_error) {
+      error = _error;
+    }
+    t.equal(value, "awesome!");
     return t.end();
   });
 
@@ -1349,11 +1427,29 @@
     return t.end();
   });
 
-  test("" + txt + " reduce Objects down to a single value", function(t) {
-    t.equal(reduce(add, 0, {
-      id: 1,
-      grand_parents: 4
-    }), 5);
+  test("" + txt + " throw a TypeError if given no initial value and an empty object", function(t) {
+    var bool, error;
+    bool = false;
+    try {
+      reduce(add, void 0, {});
+    } catch (_error) {
+      error = _error;
+      bool = true;
+    }
+    t.equal(bool, true);
+    return t.end();
+  });
+
+  test("" + txt + " throw a TypeError if given no initial value and an empty object", function(t) {
+    var bool, error;
+    bool = false;
+    try {
+      reduce(add, void 0, void 0);
+    } catch (_error) {
+      error = _error;
+      bool = true;
+    }
+    t.equal(bool, true);
     return t.end();
   });
 
