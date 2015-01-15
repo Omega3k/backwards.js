@@ -1,5 +1,6 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, drop, either, every, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString;
+  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, drop, either, every, extend, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString,
+    __hasProp = {}.hasOwnProperty;
 
   test = require("tape");
 
@@ -84,18 +85,22 @@
       id: 1,
       name: "Some String"
     };
-    actual = stringify(obj);
-    expected = "" + actual + "1";
-    copiedObj = stringify(copy(obj)) + "1";
+    actual = [obj.id, obj.name].toString();
+    expected = [2, "Some String"].toString();
+    copiedObj = copy(obj);
+    copiedObj.id++;
+    copiedObj = [copiedObj.id, copiedObj.name].toString();
     t.equal(copiedObj, expected);
-    t.equal(stringify(obj), actual);
+    t.equal([obj.id, obj.name].toString(), actual);
     return t.end();
   });
 
   test("" + txt + " copy Booleans and not cause side-effects", function(t) {
-    var bool;
+    var bool, copiedBool;
     bool = true;
-    t.equal(copy(bool) + 1, 2);
+    copiedBool = copy(bool);
+    copiedBool++;
+    t.equal(copiedBool, 2);
     t.equal(bool, true);
     return t.end();
   });
@@ -243,6 +248,64 @@
 
   test = require("tape");
 
+  extend = require("../../build/backwards.dev").extend;
+
+  txt = "backwards.extend should";
+
+  stringify = function(object) {
+    var acc, key, value;
+    acc = "{ ";
+    for (key in object) {
+      if (!__hasProp.call(object, key)) continue;
+      value = object[key];
+      acc += "" + key + ": " + value + ", ";
+    }
+    return "" + acc.slice(0, acc.length - 2) + " }";
+  };
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof extend, "function");
+    return t.end();
+  });
+
+  test("" + txt + " extend Objects and return the first object with side-effects", function(t) {
+    var actual, child, expected_child, expected_parent, obj, parent;
+    obj = {
+      id: 1,
+      age: 29,
+      gender: "male",
+      name: "John Doe"
+    };
+    actual = stringify(obj);
+    expected_parent = stringify({
+      id: 1,
+      age: 30,
+      gender: "male",
+      name: "John Doe Sr."
+    });
+    expected_child = stringify({
+      id: 2,
+      age: 0,
+      gender: "male",
+      name: "John Doe Jr."
+    });
+    parent = extend(obj, {
+      age: 30,
+      name: "John Doe Sr."
+    });
+    child = extend({}, obj, {
+      id: 2,
+      age: 0,
+      name: "John Doe Jr."
+    });
+    t.equal(expected_parent, stringify(parent));
+    t.equal(expected_parent, stringify(obj));
+    t.equal(expected_child, stringify(child));
+    return t.end();
+  });
+
+  test = require("tape");
+
   filter = require("../../build/backwards.dev").filter;
 
   txt = "backwards.filter should";
@@ -277,22 +340,6 @@
     t.equal(array.toString(), actual);
     t.equal(filter(predicate, []).toString(), emptyArray);
     t.equal(filter(predicate, new Array()).toString(), emptyArray);
-    return t.end();
-  });
-
-  test("" + txt + " filter Objects correctly", function(t) {
-    var actual, emptyObj, expected, obj;
-    obj = {
-      id: 1,
-      friends: 500
-    };
-    actual = "{ id: 1, friends: 500,  }";
-    expected = "{ friends: 500,  }";
-    emptyObj = "{  }";
-    t.equal(stringify(filter(predicate, obj)), expected);
-    t.equal(stringify(obj), actual);
-    t.equal(stringify({}), emptyObj);
-    t.equal(stringify(new Object()), emptyObj);
     return t.end();
   });
 
@@ -1175,11 +1222,8 @@
       name: "Some String"
     };
     actual = stringify(obj);
-    expected = stringify({
-      id: 2,
-      name: "Some String1"
-    });
-    mappedObj = stringify(map(addOne, obj));
+    expected = [2, "Some String1"].toString();
+    mappedObj = map(addOne, obj).toString();
     t.equal(mappedObj, expected);
     t.equal(stringify(obj), actual);
     return t.end();
@@ -1280,9 +1324,15 @@
   test("" + txt + " reduce Arrays in the 'proper' order", function(t) {
     var expected, flattenedArray;
     flatten = reduce(append, []);
-    flattenedArray = flatten([[0, 1], [2, 3], [4, 5]]);
-    expected = [0, 1, 2, 3, 4, 5];
-    t.equal(flattenedArray.toString(), expected.toString());
+    flattenedArray = flatten([[0, 1], [2, 3], [4, 5]]).toString();
+    expected = [0, 1, 2, 3, 4, 5].toString();
+    t.equal(flattenedArray, expected);
+    return t.end();
+  });
+
+  test("" + txt + " reduce Arrays down to a single value even if given no initial value", function(t) {
+    t.equal(reduce(add, void 0, [0, 1, 2, 3]), 6);
+    t.equal(reduce(append, void 0, [[1, 2], [3, 4]]).toString(), [1, 2, 3, 4].toString());
     return t.end();
   });
 

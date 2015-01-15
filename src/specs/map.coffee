@@ -20,18 +20,28 @@ test "#{ txt } map over Arrays and not cause side-effects", (t) ->
   t.equal array.toString(), actual
   t.end()
 
+# test "#{ txt } map over Objects and not cause side-effects", (t) ->
+#   obj       = { id: 1, name: "Some String" }
+#   actual    = stringify obj
+#   expected  = stringify { id: 2, name: "Some String1" }
+#   mappedObj = stringify map addOne, obj
+
+#   t.equal mappedObj, expected
+#   t.equal stringify( obj ), actual
+#   t.end()
+
 test "#{ txt } map over Objects and not cause side-effects", (t) ->
   obj       = { id: 1, name: "Some String" }
   actual    = stringify obj
-  expected  = stringify { id: 2, name: "Some String1" }
-  mappedObj = stringify map addOne, obj
+  expected  = [2, "Some String1"].toString()
+  mappedObj = map( addOne, obj ).toString()
 
   t.equal mappedObj, expected
   t.equal stringify( obj ), actual
   t.end()
 
 test "#{ txt } map over Booleans and not cause side-effects", (t) ->
-  bool       = true
+  bool = true
 
   t.equal map( addOne, bool ), 2
   t.equal bool, true
@@ -46,7 +56,7 @@ test "#{ txt } map over Dates and not cause side-effects", (t) ->
   t.end()
 
 test "#{ txt } map over Errors and not cause side-effects", (t) ->
-  error   = new Error "This is an error message"
+  error  = new Error "This is an error message"
   actual = error.toString()
 
   t.equal map( addOne, error ), "#{ error.toString() }1"

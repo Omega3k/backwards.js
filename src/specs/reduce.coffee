@@ -15,10 +15,23 @@ test "#{ txt } reduce Arrays down to a single value", (t) ->
 
 test "#{ txt } reduce Arrays in the 'proper' order", (t) ->
   flatten        = reduce append, []
-  flattenedArray = flatten [[0, 1], [2, 3], [4, 5]]
-  expected       = [0, 1, 2, 3, 4, 5]
+  flattenedArray = flatten( [[0, 1], [2, 3], [4, 5]] ).toString()
+  expected       = [0, 1, 2, 3, 4, 5].toString()
 
-  t.equal flattenedArray.toString(), expected.toString()
+  t.equal flattenedArray, expected
+  t.end()
+
+test "#{ txt } reduce Arrays down to a single value even if 
+given no initial value", (t) ->
+  t.equal(
+    reduce( add, undefined, [0, 1, 2, 3] )
+    , 6
+    )
+
+  t.equal(
+    reduce( append, undefined, [[1, 2], [3, 4]] ).toString()
+    , [1, 2, 3, 4].toString()
+    )
   t.end()
 
 test "#{ txt } reduce Objects down to a single value", (t) ->

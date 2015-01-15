@@ -28,20 +28,20 @@ test "#{ txt } filter Arrays correctly", (t) ->
   t.equal filter( predicate, new Array() ).toString() , emptyArray
   t.end()
 
-test "#{ txt } filter Objects correctly", (t) ->
-  obj         = 
-    id     : 1
-    friends: 500
+# test "#{ txt } filter Objects correctly", (t) ->
+#   obj         = 
+#     id     : 1
+#     friends: 500
 
-  actual      = "{ id: 1, friends: 500,  }"
-  expected    = "{ friends: 500,  }"
-  emptyObj    = "{  }"
+#   actual      = "{ id: 1, friends: 500,  }"
+#   expected    = "{ friends: 500,  }"
+#   emptyObj    = "{  }"
 
-  t.equal stringify( filter( predicate, obj ) )       , expected
-  t.equal stringify( obj )                            , actual
-  t.equal stringify( {} )                             , emptyObj
-  t.equal stringify( new Object() )                   , emptyObj
-  t.end()
+#   t.equal stringify( filter( predicate, obj ) )       , expected
+#   t.equal stringify( obj )                            , actual
+#   t.equal stringify( {} )                             , emptyObj
+#   t.equal stringify( new Object() )                   , emptyObj
+#   t.end()
 
 test "#{ txt } filter Numbers correctly", (t) ->
   timestamp = +new Date()

@@ -20,18 +20,22 @@ test "#{ txt } copy Arrays and not cause side-effects", (t) ->
 
 test "#{ txt } copy Objects and not cause side-effects", (t) ->
   obj       = { id: 1, name: "Some String" }
-  actual    = stringify obj
-  expected  = "#{ actual }1"
-  copiedObj = stringify( copy( obj ) ) + "1"
+  actual    = [ obj.id, obj.name ].toString()
+  expected  = [ 2, "Some String" ].toString()
+  copiedObj = copy( obj )
+  copiedObj.id++
+  copiedObj = [ copiedObj.id, copiedObj.name ].toString()
 
   t.equal copiedObj, expected
-  t.equal stringify( obj ), actual
+  t.equal [ obj.id, obj.name ].toString(), actual
   t.end()
 
 test "#{ txt } copy Booleans and not cause side-effects", (t) ->
-  bool = true
+  bool       = true
+  copiedBool = copy bool
+  copiedBool++
 
-  t.equal copy( bool ) + 1, 2
+  t.equal copiedBool, 2
   t.equal bool, true
   t.end()
 
