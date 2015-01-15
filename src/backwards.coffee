@@ -599,11 +599,11 @@ backwards.reduce = autoCurry reduce
 
 max = backwards.reduce (max, num) ->
   if max > num then max else num
-, 0
+, undefined
 
 min = backwards.reduce (min, num) ->
   if min < num then min else num
-, 0
+, undefined
 
 
 ###*

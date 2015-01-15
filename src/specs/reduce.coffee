@@ -25,14 +25,14 @@ test "#{ txt } reduce Arrays down to a single value even if
 given no initial value", (t) ->
   max = reduce (max, num) ->
     if max > num then max else num
-  , 0
+  , undefined
 
   min = reduce (min, num) ->
     if min < num then min else num
-  , 0
+  , undefined
 
   t.equal max([1, 12, 99, 55]), 99
-  t.equal min([1, 12, 99, 55]), 0
+  t.equal min([1, 12, 99, 55]), 1
 
   t.equal(
     reduce( add, undefined, [0, 1, 2, 3] )

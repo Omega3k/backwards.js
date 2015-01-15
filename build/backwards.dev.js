@@ -720,7 +720,7 @@
     } else {
       return num;
     }
-  }, 0);
+  }, void 0);
 
   min = backwards.reduce(function(min, num) {
     if (min < num) {
@@ -728,7 +728,7 @@
     } else {
       return num;
     }
-  }, 0);
+  }, void 0);
 
 
   /**

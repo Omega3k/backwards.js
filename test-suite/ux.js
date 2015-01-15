@@ -1338,16 +1338,16 @@
       } else {
         return num;
       }
-    }, 0);
+    }, void 0);
     min = reduce(function(min, num) {
       if (min < num) {
         return min;
       } else {
         return num;
       }
-    }, 0);
+    }, void 0);
     t.equal(max([1, 12, 99, 55]), 99);
-    t.equal(min([1, 12, 99, 55]), 0);
+    t.equal(min([1, 12, 99, 55]), 1);
     t.equal(reduce(add, void 0, [0, 1, 2, 3]), 6);
     t.equal(reduce(append, void 0, [[1, 2], [3, 4]]).toString(), [1, 2, 3, 4].toString());
     return t.end();
