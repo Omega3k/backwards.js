@@ -510,14 +510,17 @@
   callback is invoked with three arguments:
   
       the element value
-      the element index
-      the array being traversed
+      the element index, key or undefined
+      the array or object being traversed or undefined
   
   The range of elements processed by forEach is set before the first invocation of callback. Elements that are appended to the array after the call to forEach begins will not be visited by callback. If the values of existing elements of the array are changed, the value passed to callback will be the value at the time forEach visits them; elements that are deleted before being visited are not visited.
   
   @method forEach
   @param f {Function} The function you wish to execute over each element in the object. 
-  @param x {"any"} The Object you wish to iterate over. 
+  @param f.value {"any"} The element value. 
+  @param f.key {Number|String|undefined} The element index, key or undefined. 
+  @param f.object {Array|Object|undefined} The array or object being traversed or undefined. 
+  @param x {"any"} The object you wish to iterate over. 
   @return {undefined}
   @public
   @example
@@ -554,7 +557,11 @@
   /**
   map calls a provided callback function (f) once for each element in an array, in ascending order, and constructs a new array from the results. callback is invoked only for indexes of the array which have assigned values; it is not invoked for indexes that are undefined, those which have been deleted or which have never been assigned values.
   
-  callback is invoked with three arguments: the value of the element, the index of the element, and the Array object being traversed.
+  callback is invoked with three arguments:
+  
+      the element value
+      the element index, key or undefined
+      the array or object being traversed or undefined
   
   map does not mutate the array on which it is called (although callback, if invoked, may do so).
   
@@ -563,7 +570,10 @@
   @method map
   @public
   @param f {Function} The function you wish to execute over each element in the object. 
-  @param x {"any"} The Object you wish to iterate over. 
+  @param f.value {"any"} The element value. 
+  @param f.key {Number|String|undefined} The element index, key or undefined. 
+  @param f.object {Array|Object|undefined} The array or object being traversed or undefined. 
+  @param x {"any"} The object you wish to iterate over. 
   @return {"any"}
   @example
       var addOne = function (x) {
@@ -656,31 +666,27 @@
   
   If the array is empty and no initialValue was provided, TypeError would be thrown. If the array has only one element (regardless of position) and no initialValue was provided, or if initialValue is provided but the array is empty, the solo value would be returned without calling callback.
   
-  @method extend
+  @method reduce
   @public
   @param f {Function} The callback function. 
   @param acc {"any"} The initial value. 
   @param x {"any"} The object you wish to reduce. 
   @return {"any"} Returns the reduced value.  
   @example
-      var obj = {
-        id    : 1,
-        age   : 29,
-        gender: "male",
-        name  : "John Doe"
-      };
+      var add     = function (a, b) { return a + b; }
+        , append  = function (a, b) { return a.concat(b); }
+        , flatten = reduce( append, [] )
+      ;
   
-      extend( obj, { age: 30, name: "John Doe Sr." } );
-      // { id: 1, age: 30, gender: "male", name: "John Doe Sr." }
-  
-      extend( obj, { id: 2 } );
-      // { id: 2, age: 30, gender: "male", name: "John Doe Sr." }
-  
-      extend( {}, obj, { id: 2, age: 0, name: "John Doe Jr." } );
-      // { id: 2, age: 0, gender: "male", name: "John Doe Jr." }
+      reduce( add, 0        , [0, 1, 2, 3] );   // 6
+      reduce( add, undefined, [0, 1, 2, 3] );   // 6
+      flatten( [[0, 1], [2, 3], [4, 5]] );      // [0, 1, 2, 3, 4, 5]
    */
 
   reduce = function(f, acc, x) {
+    if ((acc == null) && isEmpty(x)) {
+      throw new TypeError("Reduce of empty array with no initial value");
+    }
     if (isArray(x) || isObject(x)) {
       forEach(function(value, key, object) {
         if (acc === void 0) {
