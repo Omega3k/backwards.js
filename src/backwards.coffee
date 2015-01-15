@@ -607,13 +607,13 @@ min = backwards.reduce (min, num) ->
 
 
 ###*
-The extend function takes two or more objects and returns the first object extended with the properties (and values) of the other objects in ascending order. 
+The __extend__ function takes two or more objects and returns the first object (__acc__) extended with the properties (and values) of the other objects in ascending order. 
 
 @method extend
-@param acc {Object} The Object you wish to extend. 
-@param objects* {Object} The objects you wish to extend. 
-@return {Object} Returns the first object extended with the other objects properties and values in ascending order. 
 @public
+@param acc {Object} The object you wish to extend. 
+@param objects* {Object} The objects you wish to be extended to __acc__. 
+@return {Object} Returns the first object (__acc__) extended with the other objects properties and values in ascending order. 
 @example
     var obj = {
       id    : 1,
@@ -646,13 +646,13 @@ backwards.extend = autoCurry extend
 
 
 ###*
-The copy function takes an Object and returns a fresh copy of 
+The __copy__ function takes an Object and returns a fresh copy of 
 the Object. 
 
 @method copy
+@public
 @param x {"any"} The Object you wish to copy. 
 @return {"any"} A fresh copy of the given Object. 
-@public
 @example
     copy( [1, 2, 3] );                  // [1, 2, 3]
     copy( { id: 1, name: "string" } );  // { id: 1, name: "string" }
@@ -666,13 +666,13 @@ backwards.copy = copy
 
 
 ###*
-The flatten function takes an Array of Arrays and flattens 
-the Array one level. 
+The __flatten__ function takes an array of arrays and flattens 
+the array one level. 
 
 @method flatten
+@public
 @param x {Array} The Array you wish to flatten. 
 @return {Array} A flattened Array. 
-@public
 @example
     var array = [[1, 2], [3, 4], [5, 6]];
 
@@ -684,16 +684,16 @@ backwards.flatten = flatten
 
 
 ###*
-The indexOf function returns the first index at which a given element can be found in the array, or -1 if it is not present.
+The __indexOf__ function returns the first index at which a given element can be found in the array, or -1 if it is not present.
 
 If the index is greater than or equal to the array's length, -1 is returned, which means the array will not be searched. If the provided index value is a negative number, it is taken as the offset from the end of the array. Note: if the provided index is negative, the array is still searched from front to back. If the calculated index is less than 0, then the whole array will be searched. 
 
 @method indexOf
+@public
 @param search {"mixed"} The element to locate in the array.
 @param i {Number} The index to start the search at. 
 @param x {Array} The Array you wish to search in. 
 @return {Number} The first index at which a given element can be found in the Array, or -1 if not found. 
-@public
 @example
     var array = [2, 5, 9];
 
@@ -723,16 +723,16 @@ backwards.indexOf = autoCurry indexOf
 
 
 ###*
-The contains function returns true if a given element can be found in the array, or false if it is not present.
+The __contains__ function returns true if a given element can be found in the array, or false if it is not present.
 
 If the index is greater than or equal to the array's length, false is returned, which means the array will not be searched. If the provided index value is a negative number, it is taken as the offset from the end of the array. Note: if the provided index is negative, the array is still searched from front to back. If the calculated index is less than 0, then the whole array will be searched. 
 
 @method contains
+@public
 @param search {"mixed"} The element to locate in the array.
 @param i {Number} The index to start the search at. 
 @param x {Array} The Array you wish to search in. 
 @return {Boolean} Returns true if *search* is found in the *Array*, or false if it is not found. 
-@public
 @example
     var array = [1, 2, 3, NaN];
 
@@ -750,13 +750,13 @@ backwards.contains = autoCurry contains
 
 
 ###*
-It takes a predicate function and an array and returns true if some of the values in the array conforms with the predicate function, or false if not. It returns false if given an empty array. 
+The __some__ function takes a predicate function and an array and returns true if some of the values in the array conforms with the predicate function, or false if not. It returns false if given an empty array. 
 
 @method some
+@public
 @param f {Function} A predicate function. 
 @param xs {Array} The array you wish to check. 
 @return {Boolean} Returns true if some of the values in the array conforms with the predicate function, or false if not. It returns false if given an empty array. 
-@public
 @example
     var predicate = function (x) { return x > 10 };
 
@@ -773,13 +773,13 @@ backwards.some = autoCurry some
 
 
 ###*
-It takes a predicate function and an array and returns true if every value in the array conforms with the predicate function, or false if not. It returns true if given an empty array. 
+The __every__ function takes a predicate function and an array and returns true if every value in the array conforms with the predicate function, or false if not. It returns true if given an empty array. 
 
 @method every
+@public
 @param f {Function} A predicate function. 
 @param xs {Array} The array you wish to check. 
 @return {Boolean} Returns true if every value in the array conforms with the predicate function, or false if not. It returns true if given an empty array. 
-@public
 @example
     var predicate = function (x) { return x > 10 };
 
@@ -808,13 +808,15 @@ backwards.maybe = autoCurry maybe
 
 
 ###*
-Extracts a subset of the given object, from the beginning to *i*. 
+The __take__ function returns a subset of the given object. If given a positive number and an array or string it will return the first __i__ indexes of the object. If given a negative number and an array or string it will return the last __i__ indexes of the object. 
+
+If given an array of strings and an object it will return an object containing the keys / properties that was listed in __i__. 
 
 @method take
-@param i {Number|Array} The number of indexes you wish to extract
-@param x {Array|String|Object} An Array, String or Object
-@return {Array|String|Object} A subset of *x* from the beginning to *i*
 @public
+@param i {Number|Array} The number of indexes you wish to extract, or an array of strings which represents the keys of the object you wish to extract. 
+@param x {Array|String|Object} An array, string or object
+@return {Array|String|Object} A subset of the object. 
 @example
     var array = [1, 2, 3, 4, 5]
       , string = "Hello World!"
@@ -856,10 +858,10 @@ backwards.take = autoCurry take
 Drops a subset of the given object, from the beginning to *i*, and returns the rest of the object. 
 
 @method drop
+@public
 @param i {Number|Array} The number of indexes you wish to extract
 @param x {Array|String|Object} An Array, String or Object
 @return {Array|String|Object} A subset of *x* from index *i* to the end
-@public
 @example
     var array = [1, 2, 3, 4, 5]
       , string = "Hello World!"
