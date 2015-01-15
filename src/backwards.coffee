@@ -546,18 +546,29 @@ keys = (x) ->
 
 
 ###*
-reduce executes the callback function once for each element present in the array, excluding holes in the array, receiving four arguments: the initial value (or value from the previous callback call), the value of the current element, the current index, and the array over which iteration is occurring.
+__reduce__ executes the callback function once for each element present in the array, excluding holes in the array, receiving four arguments: the initial value (or value from the previous callback call), the value of the current element, the current index, and the array over which iteration is occurring.
 
-The first time the callback is called, previousValue and currentValue can be one of two values. If initialValue is provided in the call to reduce, then previousValue will be equal to initialValue and currentValue will be equal to the first value in the array. If no initialValue was provided, then previousValue will be equal to the first value in the array and currentValue will be equal to the second.
+The callback function (__f__) is invoked with four arguments:
 
-If the array is empty and no initialValue was provided, TypeError would be thrown. If the array has only one element (regardless of position) and no initialValue was provided, or if initialValue is provided but the array is empty, the solo value would be returned without calling callback.
+    The initial value (or return value from the previous callback invocation). 
+    The element value. 
+    The element index, key or undefined. 
+    The array or object being traversed or undefined. 
+
+The first time the callback function (__f__) is called, __accumulator__ and __value__ can be one of two values. If initial value (__acc__) is provided in the call to reduce, then __accumulator__ will be equal to initial value and __value__ will be equal to the first value in the array. If no initial value (__acc__) was provided, then __accumulator__ will be equal to the first value in the array and __value__ will be equal to the second.
+
+If the array or object (__x__) is empty and no initial value (__acc__) is provided, a TypeError will be thrown. If the array or object (__x__) only has one element (regardless of position) and no initial value (__acc__) is provided, or if initial value (__acc__) is provided but the array or object (__x__) is empty, the solo value will be returned without calling callback function (__f__).
 
 @method reduce
 @public
 @param f {Function} The callback function. 
+@param f.accumulator {"any"} The initial value (or return value from the previous callback invocation). 
+@param f.value {"any"} The element value. 
+@param f.key {Number|String|undefined} The element index, key or undefined. 
+@param f.object {Array|Object|undefined} The array or object being traversed or undefined. 
 @param acc {"any"} The initial value. 
 @param x {"any"} The object you wish to reduce. 
-@return {"any"} Returns the reduced value.  
+@return {"any"|TypeError} Returns the reduced value, or a TypeError if given an empty object and no initial value.
 @example
     var add     = function (a, b) { return a + b; }
       , append  = function (a, b) { return a.concat(b); }
@@ -571,7 +582,7 @@ If the array is empty and no initialValue was provided, TypeError would be throw
 
 reduce = (f, acc, x) ->
   if not acc? and isEmpty x
-    throw new TypeError "Reduce of empty array with no initial value"
+    throw new TypeError "Reduce of empty object with no initial value"
 
   if isArray(x) or isObject(x)
     forEach (value, key, object) ->
@@ -584,6 +595,15 @@ reduce = (f, acc, x) ->
   acc
 
 backwards.reduce = autoCurry reduce
+
+
+max = backwards.reduce (max, num) ->
+  if max > num then max else num
+, 0
+
+min = backwards.reduce (min, num) ->
+  if min < num then min else num
+, 0
 
 
 ###*
