@@ -34,6 +34,15 @@ given no initial value", (t) ->
     )
   t.end()
 
+test "#{ txt } throw a TypeError if given no initial value and an empty array", (t) ->
+  bool = false
+  try
+    reduce add, undefined, []
+  catch error
+    bool = true
+  t.equal bool, true
+  t.end()
+
 test "#{ txt } reduce Objects down to a single value", (t) ->
   t.equal reduce( add, 0, {
       id  : 1
