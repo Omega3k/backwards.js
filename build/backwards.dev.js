@@ -1075,7 +1075,11 @@
   backwards.drop = autoCurry(drop);
 
   backwards.log = function(x) {
-    console.log(x);
+    try {
+      console.log(x);
+    } catch (_error) {
+      alert(x);
+    }
     return x;
   };
 
@@ -1096,34 +1100,25 @@
   }
 
 
-  /* 
+  /*
   
-   * { error, success } = options
+  IDEAS, NOTES & BACKLOG
+  ======================
   
-   * Game Loop
-  while running
-    now = Date.now()
-    delta = now - lastTime
-    buffer += delta
-    while buffer >= TICK
-      update TICK
-      buffer -= TICK
-    render()
-    lastTime = now
+  BACKLOG
   
-   * map :: (a -> b) -> [a] -> [b]
-  map = (f, [x, xs...]) ->
-    if x is undefined
-      []
-    else
-      [f(x), map(f, xs)...]
+  IDEAS
+    * Make the backwards object itself a function that can be invoked in the following ways: 
+      
+      Debug mode: 
+      Pass a string which represents the method you would like returned. This will return the method wrapped in a "try, catch" which will return valuable information when debugging ( an error message containing an url to where you can find more information about how to use the method ). 
   
-   * length :: [a] -> Int
-  length = ([x, xs...]) ->
-    if x is undefined
-      0
-    else
-      1 + length xs
+      Extended with prototype: 
+      Pass in any kind of object to get back the object extended with a backwards-prototype. Like for example: 
+        backwards( [0, 1, 2, 3] ).map( (x) -> x + 1 )   // [1, 2, 3, 4]
+  
+      NOTES: 
+      Make sure that the prototype way of invocation should work on strings as well, meaning that invocation with a string that does not represent a method on the backwards object should return the string extended with the backwards prototype.
    */
 
 }).call(this);

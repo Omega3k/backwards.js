@@ -407,6 +407,8 @@ backwards.isUndefined = isUndefined
 
 
 # exists :: a -> Boolean
+# exists = (x) ->
+#   typeof x isnt "undefined" and x isnt null
 exists           = (x) -> x?
 backwards.exists = exists
 
@@ -934,20 +936,60 @@ backwards.drop = autoCurry drop
 #   ]
 
 backwards.log = (x) ->
-  console.log x
+  try
+    console.log x
+  catch
+    alert x
   x
 
 
 # Export backwards object
 # =======================
 
+# AMD ( almond.js, r.js ... )
 if define? and define.amd
   define "backwards", [], () -> backwards
+
+# Node.js / CommonJS-like 
 else if exports?
-  if module? and module.exports then module.exports = backwards
-  else exports.backwards = backwards
-else if window? then window.backwards = backwards
+  if module? and module.exports
+    module.exports = backwards
+  else
+    exports.backwards = backwards
+
+# Global Object
+else if window?
+  window.backwards = backwards
+
+# Return backwards if none of the above
 else return backwards
+
+
+###
+
+IDEAS, NOTES & BACKLOG
+======================
+
+BACKLOG
+
+IDEAS
+  * Make the backwards object itself a function that can be invoked in the following ways: 
+    
+    Debug mode: 
+    Pass a string which represents the method you would like returned. This will return the method wrapped in a "try, catch" which will return valuable information when debugging ( an error message containing an url to where you can find more information about how to use the method ). 
+
+    Extended with prototype: 
+    Pass in any kind of object to get back the object extended with a backwards-prototype. Like for example: 
+      backwards( [0, 1, 2, 3] ).map( (x) -> x + 1 )   // [1, 2, 3, 4]
+
+    NOTES: 
+    Make sure that the prototype way of invocation should work on strings as well, meaning that invocation with a string that does not represent a method on the backwards object should return the string extended with the backwards prototype. 
+
+###
+
+
+
+# { error, success } = options
 
 # (( root, name, f ) ->
 #   # Register as a named AMD module
@@ -968,33 +1010,27 @@ else return backwards
 #   undefined
 # )( this, "backwards", () -> backwards )
 
-### 
+# # Game Loop
+# while running
+#   now = Date.now()
+#   delta = now - lastTime
+#   buffer += delta
+#   while buffer >= TICK
+#     update TICK
+#     buffer -= TICK
+#   render()
+#   lastTime = now
 
-# { error, success } = options
+# # map :: (a -> b) -> [a] -> [b]
+# map = (f, [x, xs...]) ->
+#   if x is undefined
+#     []
+#   else
+#     [f(x), map(f, xs)...]
 
-# Game Loop
-while running
-  now = Date.now()
-  delta = now - lastTime
-  buffer += delta
-  while buffer >= TICK
-    update TICK
-    buffer -= TICK
-  render()
-  lastTime = now
-
-# map :: (a -> b) -> [a] -> [b]
-map = (f, [x, xs...]) ->
-  if x is undefined
-    []
-  else
-    [f(x), map(f, xs)...]
-
-# length :: [a] -> Int
-length = ([x, xs...]) ->
-  if x is undefined
-    0
-  else
-    1 + length xs
-
-###
+# # length :: [a] -> Int
+# length = ([x, xs...]) ->
+#   if x is undefined
+#     0
+#   else
+#     1 + length xs
