@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, array, arrayProto, autoCurry, backwards, compose, contains, copy, curry, drop, either, every, exists, extend, filter, first, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, reduce, slice, some, take, toString, __arrayMap, __objectMap,
+  var add, append, array, arrayProto, backwards, compose, contains, copy, curry, drop, either, every, exists, extend, filter, first, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, reduce, slice, some, take, toString, __arrayMap, __curry, __objectMap,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -47,16 +47,16 @@
 
 
   /**
-  This function is an internal function that is used by 'autoCurry' to create curried functions from functions that take more than one parameter. 
+  This function is an internal function that is used by 'curry' to create curried functions from functions that take more than one parameter. 
   
-  @method curry
+  @method __curry
+  @private
   @param f {Function} The function to be curried. 
   @param args* {"any"} Arguments that should be applied to the resulting function. 
-  @return {Function} A curried function. 
-  @private
+  @return {Function} A curried function.
    */
 
-  curry = function() {
+  __curry = function() {
     var args, f;
     f = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
     return function() {
@@ -70,24 +70,24 @@
   /**
   Create a curried function from a function that normally takes multiple parameters. 
   
-  @method autoCurry
+  @method curry
+  @public
   @param f {Function} The function to be curried. 
   @param [length] {Number} An optional parameter defining how many parameters the given function has. 
   @return {Function} A curried function. 
-  @public
   @example
       function concat ( a, b ) {
         return a.concat( b );
       }
   
-      var curriedConcat  = autoCurry( concat )      // A curried function
+      var curriedConcat  = curry( concat )          // A curried function
         , oneAndTwo      = curriedConcat( [1, 2] )  // A curried function
         , oneTwoAndThree = oneAndTwo( [3] )         // [1, 2, 3]
         , oneTwoAndFour  = oneAndTwo( [4] )         // [1, 2, 4]
       ;
    */
 
-  autoCurry = function(f, length) {
+  curry = function(f, length) {
     var newFunction;
     if (length == null) {
       length = f.length;
@@ -96,7 +96,7 @@
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       if (args.length < length) {
-        return autoCurry(curry.apply(this, [f].concat(args)), length - args.length);
+        return curry(__curry.apply(this, [f].concat(args)), length - args.length);
       } else {
         return f.apply(this, args);
       }
@@ -108,7 +108,7 @@
     return newFunction;
   };
 
-  backwards.autoCurry = autoCurry;
+  backwards.curry = curry;
 
 
   /**
@@ -164,7 +164,7 @@
       ;
    */
 
-  isTypeOf = autoCurry(function(type, x) {
+  isTypeOf = curry(function(type, x) {
     var str;
     str = "[object " + type + "]";
     return toString.call(x) === str;
@@ -551,7 +551,7 @@
     }
   };
 
-  backwards.forEach = autoCurry(forEach);
+  backwards.forEach = curry(forEach);
 
 
   /**
@@ -628,7 +628,7 @@
     }
   };
 
-  backwards.map = autoCurry(map);
+  backwards.map = curry(map);
 
   filter = function(f, x) {
     var acc;
@@ -647,7 +647,7 @@
     }
   };
 
-  backwards.filter = autoCurry(filter);
+  backwards.filter = curry(filter);
 
   keys = function(x) {
     var acc;
@@ -712,7 +712,7 @@
     return acc;
   };
 
-  backwards.reduce = autoCurry(reduce);
+  backwards.reduce = curry(reduce);
 
   max = backwards.reduce(function(max, num) {
     if (max > num) {
@@ -769,7 +769,7 @@
     return acc;
   };
 
-  backwards.extend = autoCurry(extend);
+  backwards.extend = curry(extend);
 
 
   /**
@@ -856,7 +856,7 @@
     return -1;
   };
 
-  backwards.indexOf = autoCurry(indexOf);
+  backwards.indexOf = curry(indexOf);
 
 
   /**
@@ -884,7 +884,7 @@
     return (indexOf(search, i, x)) > -1;
   };
 
-  backwards.contains = autoCurry(contains);
+  backwards.contains = curry(contains);
 
 
   /**
@@ -914,7 +914,7 @@
     return false;
   };
 
-  backwards.some = autoCurry(some);
+  backwards.some = curry(some);
 
 
   /**
@@ -944,7 +944,7 @@
     return true;
   };
 
-  backwards.every = autoCurry(every);
+  backwards.every = curry(every);
 
   either = function(a, b) {
     if (b) {
@@ -954,7 +954,7 @@
     }
   };
 
-  backwards.either = autoCurry(either);
+  backwards.either = curry(either);
 
   maybe = function(f, x) {
     if (x) {
@@ -964,7 +964,7 @@
     }
   };
 
-  backwards.maybe = autoCurry(maybe);
+  backwards.maybe = curry(maybe);
 
 
   /**
@@ -1024,7 +1024,7 @@
     }
   };
 
-  backwards.take = autoCurry(take);
+  backwards.take = curry(take);
 
 
   /**
@@ -1072,7 +1072,7 @@
     }
   };
 
-  backwards.drop = autoCurry(drop);
+  backwards.drop = curry(drop);
 
   backwards.log = function(x) {
     try {

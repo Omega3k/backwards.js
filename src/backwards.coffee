@@ -26,16 +26,16 @@ append      = (a, b) -> if a.concat then a.concat b else a += b
 
 
 ###*
-This function is an internal function that is used by 'autoCurry' to create curried functions from functions that take more than one parameter. 
+This function is an internal function that is used by 'curry' to create curried functions from functions that take more than one parameter. 
 
-@method curry
+@method __curry
+@private
 @param f {Function} The function to be curried. 
 @param args* {"any"} Arguments that should be applied to the resulting function. 
 @return {Function} A curried function. 
-@private
 ###
 
-curry = (f, args...) ->
+__curry = (f, args...) ->
   (params...) ->
     f.apply @, args.concat params
 
@@ -43,33 +43,33 @@ curry = (f, args...) ->
 ###*
 Create a curried function from a function that normally takes multiple parameters. 
 
-@method autoCurry
+@method curry
+@public
 @param f {Function} The function to be curried. 
 @param [length] {Number} An optional parameter defining how many parameters the given function has. 
 @return {Function} A curried function. 
-@public
 @example
     function concat ( a, b ) {
       return a.concat( b );
     }
 
-    var curriedConcat  = autoCurry( concat )      // A curried function
+    var curriedConcat  = curry( concat )          // A curried function
       , oneAndTwo      = curriedConcat( [1, 2] )  // A curried function
       , oneTwoAndThree = oneAndTwo( [3] )         // [1, 2, 3]
       , oneTwoAndFour  = oneAndTwo( [4] )         // [1, 2, 4]
     ;
 ###
 
-autoCurry = (f, length = f.length) ->
+curry = (f, length = f.length) ->
   newFunction = (args...) ->
     if args.length < length
-      autoCurry curry.apply(@, [f].concat(args)), length - args.length
+      curry __curry.apply(@, [f].concat(args)), length - args.length
     else f.apply @, args
   newFunction.toString = () -> f.toString()
   newFunction.curried = true
   return newFunction
 
-backwards.autoCurry = autoCurry
+backwards.curry = curry
 
 
 ###*
@@ -117,7 +117,7 @@ Check if an Object is of a particular type.
     ;
 ###
 
-isTypeOf = autoCurry (type, x) ->
+isTypeOf = curry (type, x) ->
   str = "[object #{ type }]"
   toString.call(x) is str
 
@@ -475,7 +475,7 @@ forEach = (f, x) ->
     f x
   return
 
-backwards.forEach = autoCurry forEach
+backwards.forEach = curry forEach
 
 
 ###*
@@ -524,7 +524,7 @@ map = (f, x) ->
   else if isPromise x then x.then f
   else if x then f x
 
-backwards.map = autoCurry map
+backwards.map = curry map
 
 
 filter = (f, x) ->
@@ -536,7 +536,7 @@ filter = (f, x) ->
     acc
   else x if f x
 
-backwards.filter = autoCurry filter
+backwards.filter = curry filter
 
 
 keys = (x) ->
@@ -596,7 +596,7 @@ reduce = (f, acc, x) ->
     acc = f acc, x
   acc
 
-backwards.reduce = autoCurry reduce
+backwards.reduce = curry reduce
 
 
 max = backwards.reduce (max, num) ->
@@ -644,7 +644,7 @@ extend = (acc, objects...) ->
   , objects
   acc
 
-backwards.extend = autoCurry extend
+backwards.extend = curry extend
 
 
 ###*
@@ -721,7 +721,7 @@ indexOf = (search, i, x) ->
     i++
   -1
 
-backwards.indexOf = autoCurry indexOf
+backwards.indexOf = curry indexOf
 
 
 ###*
@@ -748,7 +748,7 @@ If the index is greater than or equal to the array's length, false is returned, 
 contains = (search, i, x) ->
   ( indexOf search, i, x ) > -1
 
-backwards.contains = autoCurry contains
+backwards.contains = curry contains
 
 
 ###*
@@ -771,7 +771,7 @@ some = (f, xs) ->
   return true for x in xs when f x
   false
 
-backwards.some = autoCurry some
+backwards.some = curry some
 
 
 ###*
@@ -794,19 +794,19 @@ every = (f, xs) ->
   return false for x in xs when not f x
   true
 
-backwards.every = autoCurry every
+backwards.every = curry every
 
 
 either = (a, b) ->
   if b then b else a
 
-backwards.either = autoCurry either
+backwards.either = curry either
 
 
 maybe = (f, x) ->
   if x then f x else undefined
 
-backwards.maybe = autoCurry maybe
+backwards.maybe = curry maybe
 
 
 ###*
@@ -853,7 +853,7 @@ take = (i, x) ->
     , i
     acc
 
-backwards.take = autoCurry take
+backwards.take = curry take
 
 
 ###*
@@ -894,7 +894,7 @@ drop = (i, x) ->
     , x
     acc
 
-backwards.drop = autoCurry drop
+backwards.drop = curry drop
 
 # toString = (x) ->
 #   # if x then x.toString()
@@ -1012,8 +1012,8 @@ IDEAS
 
 # # Game Loop
 # while running
-#   now = Date.now()
-#   delta = now - lastTime
+#   now     = Date.now()
+#   delta   = now - lastTime
 #   buffer += delta
 #   while buffer >= TICK
 #     update TICK
