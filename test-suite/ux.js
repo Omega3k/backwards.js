@@ -449,7 +449,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -500,7 +500,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -549,7 +549,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -599,7 +599,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -650,7 +650,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -702,7 +702,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -752,7 +752,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -800,7 +800,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -849,7 +849,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -903,7 +903,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -950,7 +950,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -994,7 +994,7 @@
 
   test("" + txt + " return true if given a Promise", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve(false);
       });
@@ -1050,7 +1050,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -1100,7 +1100,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });
@@ -1149,7 +1149,7 @@
 
   test("" + txt + " return false if given anything else", function(t) {
     var promise;
-    if (Promise) {
+    if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
       });

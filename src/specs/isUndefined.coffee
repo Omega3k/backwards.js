@@ -11,7 +11,7 @@ test "#{ txt } return true if given an Undefined", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
-  if Promise
+  if typeof Promise isnt "undefined"
     promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
     t.equal isUndefined( promise )      , false
 

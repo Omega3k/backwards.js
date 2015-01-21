@@ -7,7 +7,7 @@ test "#{ txt } be a function", (t) ->
   t.end()
 
 test "#{ txt } return true if given a Promise", (t) ->
-  if Promise
+  if typeof Promise isnt "undefined"
     promise = new Promise (resolve, reject) -> resolve false
     t.equal isPromise( promise )      , true
   t.end()
