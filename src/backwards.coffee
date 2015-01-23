@@ -76,9 +76,9 @@ backwards.curry = curry
 Compose your functions to a single function. 
 
 @method compose
+@public
 @param fs* {Function} Two or more functions that should be composed together. 
 @return {Function} The result of composing all the argument functions. 
-@public
 @example
     function addOne ( x ) {
       return x + 1;
@@ -106,10 +106,10 @@ backwards.compose = compose
 Check if an Object is of a particular type. 
 
 @method isTypeOf
+@public
 @param type {String} The String representation of the Object. 
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value representing whether x is a type. 
-@public
 @example
     var isBoolean = isTypeOf( 'Boolean' ) // A composed function
       , passed    = isBoolean( true )     // true
@@ -128,9 +128,9 @@ backwards.isTypeOf = isTypeOf
 Check if an Object is an Arguments object. 
 
 @method isArguments
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isArguments( arguments )  // true
       , failed = isArguments( false )      // false
@@ -149,9 +149,9 @@ backwards.isArguments = isArguments
 Check if an Object is an Array. 
 
 @method isArray
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isArray( [1, 2, 3] )  // true
       , failed = isArray( false )      // false
@@ -166,9 +166,9 @@ backwards.isArray = isArray
 Check if an Object is a Boolean. 
 
 @method isBoolean
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isBoolean( true )  // true
       , passes = isBoolean( false ) // true
@@ -186,9 +186,9 @@ backwards.isBoolean = isBoolean
 Check if an Object is a Date. 
 
 @method isDate
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isDate( new Date() )   // true
       , failed = isDate( +new Date() )  // false
@@ -204,19 +204,34 @@ backwards.isDate = isDate
 Check if an Object is an Error. 
 
 @method isError
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isError( new Error() )       // true
-      , passes = isError( new TypeError() )   // false
+      , passes = isError( new TypeError() )   // true
       , failed = isError( false )             // false
     ;
 ###
 
-isError           = isTypeOf "Error" or isTypeOf "TypeError"
+isError           = isTypeOf "Error" # or isTypeOf "TypeError"
 backwards.isError = isError
 
+
+###*
+Check if an Object is a finite number. 
+
+@method isFinite
+@public
+@param x {"any"} The Object you wish to check the type of. 
+@return {Boolean} A Boolean value. 
+@example
+    isFinite( 1234 );           // true
+    isFinite( NaN );            // true
+    isFinite( new Number() );   // true
+    isFinite( +new Date() );    // true
+    isFinite( Infinity );       // false
+###
 
 # isFinite :: a -> Boolean
 # isFinite = (x) ->
@@ -232,9 +247,9 @@ backwards.isFinite = isFinite
 Check if an Object is a Function. 
 
 @method isFunction
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var noop   = function () {}
       , passed = isFunction( noop )             // true
@@ -255,9 +270,9 @@ backwards.isFunction = isFunction
 Check if an Object is a NaN object. 
 
 @method isNaN
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isNaN( NaN )           // true
       , passes = isNaN( new Number() )  // true
@@ -275,9 +290,9 @@ backwards.isNaN = isNaN
 Check if an Object is a Null object. 
 
 @method isNull
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isNull( null )    // true
       , failed = isNull( false )   // false
@@ -294,9 +309,9 @@ backwards.isNull = isNull
 Check if an Object is a Number. 
 
 @method isNumber
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isNumber( 123 )     // true
       , failed = isNumber( false )   // false
@@ -311,9 +326,9 @@ backwards.isNumber = isNumber
 Check if an Object is an Object. 
 
 @method isObject
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isObject( {} )      // true
       , failed = isObject( false )   // false
@@ -331,9 +346,9 @@ backwards.isObject = isObject
 Check if an Object is a Promise. 
 
 @method isPromise
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var promise = new Promise(function (resolve, reject) {
       resolve( "I am a promise" );
@@ -356,9 +371,9 @@ backwards.isPromise = isPromise
 Check if an Object is a regular expression ( RegExp ). 
 
 @method isRegExp
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isRegExp( /./ )            // true
       , passes = isRegExp( new RegExp() )   // true
@@ -374,9 +389,9 @@ backwards.isRegExp = isRegExp
 Check if an Object is a String. 
 
 @method isString
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isString( "string" )  // true
       , failed = isString( false )     // false
@@ -391,9 +406,9 @@ backwards.isString = isString
 Check if an Object is undefined. 
 
 @method isUndefined
+@public
 @param x {"any"} The Object you wish to check the type of. 
 @return {Boolean} A Boolean value. 
-@public
 @example
     var passed = isUndefined( void 0 )   // true
       , failed = isUndefined( false )    // false
@@ -445,13 +460,13 @@ callback is invoked with three arguments:
 The range of elements processed by forEach is set before the first invocation of callback. Elements that are appended to the array after the call to forEach begins will not be visited by callback. If the values of existing elements of the array are changed, the value passed to callback will be the value at the time forEach visits them; elements that are deleted before being visited are not visited.
 
 @method forEach
+@public
 @param f {Function} The function you wish to execute over each element in the object. 
 @param f.value {"any"} The element value. 
 @param f.key {Number|String|undefined} The element index, key or undefined. 
 @param f.object {Array|Object|undefined} The array or object being traversed or undefined. 
 @param x {"any"} The object you wish to iterate over. 
 @return {undefined}
-@public
 @example
     var f = function (value, key, object) {
       alert( value, key );
