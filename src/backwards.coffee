@@ -701,16 +701,18 @@ backwards.flatten = flatten
 
 
 ###*
-The __indexOf__ function returns the first index at which a given element can be found in the array, or -1 if it is not present.
+The __indexOf__ function returns the first index at which a given element can be found, or -1 if it could not be found.
 
-If the index is greater than or equal to the array's length, -1 is returned, which means the array will not be searched. If the provided index value is a negative number, it is taken as the offset from the end of the array. Note: if the provided index is negative, the array is still searched from front to back. If the calculated index is less than 0, then the whole array will be searched. 
+If the index (__i__) is greater than or equal to the array or string length, -1 is returned, which means the array will not be searched. If the provided index value is a negative number, it is taken as the offset from the end of the array or string. Note: if the provided index is negative, the array is still searched from front to back. If the calculated index is less than 0, then the whole array will be searched. 
+
+If __x__ is a string, __i__ is greater than or equal to __x__.length and __search__ is an empty string ("") then __x__.length is returned. 
 
 @method indexOf
 @public
 @param search {"mixed"} The element to locate in the array.
 @param i {Number} The index to start the search at. 
-@param x {Array} The Array you wish to search in. 
-@return {Number} The first index at which a given element can be found in the Array, or -1 if not found. 
+@param x {Array|String} The array or string you wish to search. 
+@return {Number} The first index at which a given element can be found, or -1 if not found. 
 @example
     var array = [2, 5, 9];
 
@@ -723,17 +725,26 @@ If the index is greater than or equal to the array's length, -1 is returned, whi
 
 indexOf = (search, i, x) ->
   len = x.length
+  i   = i or 0
 
   if len is 0 or i >= len
-    return -1
+    if search is "" and isString x
+      return len
+    else
+      return -1
   else if i < 0
     i = len + i
     if i < 0
       i = 0
 
-  while i < len
-    return i if x[i] is search or isNaN( search ) and isNaN( x[i] )
-    i++
+  if isArray x
+    while i < len
+      return i if x[i] is search or isNaN( search ) and isNaN( x[i] )
+      i++
+
+  else if isString x
+    return x.indexOf search, i
+
   -1
 
 backwards.indexOf = curry indexOf
@@ -748,7 +759,7 @@ If the index is greater than or equal to the array's length, false is returned, 
 @public
 @param search {"mixed"} The element to locate in the array.
 @param i {Number} The index to start the search at. 
-@param x {Array} The Array you wish to search in. 
+@param x {Array|String} The Array you wish to search in. 
 @return {Boolean} Returns true if *search* is found in the *Array*, or false if it is not found. 
 @example
     var array = [1, 2, 3, NaN];
@@ -761,7 +772,7 @@ If the index is greater than or equal to the array's length, false is returned, 
 ###
 
 contains = (search, i, x) ->
-  ( indexOf search, i, x ) > -1
+  ( indexOf search, i, x ) isnt -1
 
 backwards.contains = curry contains
 
