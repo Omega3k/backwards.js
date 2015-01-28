@@ -125,6 +125,25 @@ backwards.isTypeOf = isTypeOf
 
 
 ###*
+Check if an object is a DOM element. 
+
+@method isElement
+@public
+@param x {"any"} The object you wish to check the type of. 
+@return {Boolean} A boolean value. 
+@example
+    isElement( document.createElement("div") );   // true
+    isElement( {} );                              // false
+    isElement( false );                           // false
+###
+
+isElement = (x) ->
+  not not( x and x.nodeType is 1 )
+
+backwards.isElement = isElement
+
+
+###*
 Check if an Object is an Arguments object. 
 
 @method isArguments
@@ -214,7 +233,7 @@ Check if an Object is an Error.
     ;
 ###
 
-isError           = isTypeOf "Error" # or isTypeOf "TypeError"
+isError           = isTypeOf "Error"
 backwards.isError = isError
 
 

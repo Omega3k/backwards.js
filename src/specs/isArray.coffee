@@ -12,6 +12,10 @@ test "#{ txt } return true if given an Array", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
+  if typeof document isnt "undefined"
+    domElement = document.createElement "div"
+    t.equal isArray( domElement )   , false
+
   if typeof Promise isnt "undefined"
     promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
     t.equal isArray( promise )      , false

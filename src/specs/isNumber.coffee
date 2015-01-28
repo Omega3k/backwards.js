@@ -15,6 +15,10 @@ test "#{ txt } return true if given a Number", (t) ->
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
+  if typeof document isnt "undefined"
+    domElement = document.createElement "div"
+    t.equal isNumber( domElement )   , false
+
   if typeof Promise isnt "undefined"
     promise = new Promise (resolve, reject) -> resolve "I'm a Promise"
     t.equal isNumber( promise )      , false

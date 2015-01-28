@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, array, arrayProto, backwards, compose, contains, copy, curry, either, every, exists, extend, filter, first, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, omit, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap,
+  var add, append, array, arrayProto, backwards, compose, contains, copy, curry, either, every, exists, extend, filter, first, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, omit, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -171,6 +171,26 @@
   });
 
   backwards.isTypeOf = isTypeOf;
+
+
+  /**
+  Check if an object is a DOM element. 
+  
+  @method isElement
+  @public
+  @param x {"any"} The object you wish to check the type of. 
+  @return {Boolean} A boolean value. 
+  @example
+      isElement( document.createElement("div") );   // true
+      isElement( {} );                              // false
+      isElement( false );                           // false
+   */
+
+  isElement = function(x) {
+    return !!(x && x.nodeType === 1);
+  };
+
+  backwards.isElement = isElement;
 
 
   /**

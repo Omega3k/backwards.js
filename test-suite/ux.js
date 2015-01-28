@@ -1,5 +1,5 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, either, every, extend, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, omit, pick, pluck, predicate, reduce, results, some, stringify, summaryTemplate, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString,
+  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, either, every, extend, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, omit, pick, pluck, predicate, reduce, results, some, stringify, summaryTemplate, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString,
     __hasProp = {}.hasOwnProperty;
 
   test = require("tape");
@@ -422,7 +422,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isArguments(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -473,7 +477,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isArray(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -522,7 +530,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isBoolean(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -572,7 +584,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isDate(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -607,6 +623,61 @@
 
   test = require("tape");
 
+  isElement = require("../../build/backwards.dev").isElement;
+
+  txt = "backwards.isElement should";
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof isElement, "function");
+    return t.end();
+  });
+
+  test("" + txt + " return true if given a DOM element", function(t) {
+    var domElement;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isElement(domElement), true);
+    }
+    return t.end();
+  });
+
+  test("" + txt + " return false if given anything else", function(t) {
+    var promise;
+    if (typeof Promise !== "undefined") {
+      promise = new Promise(function(resolve, reject) {
+        return resolve("I'm a Promise");
+      });
+      t.equal(isElement(promise), false);
+    }
+    t.equal(isElement(arguments), false);
+    t.equal(isElement([]), false);
+    t.equal(isElement(new Array()), false);
+    t.equal(isElement(true), false);
+    t.equal(isElement(new Date()), false);
+    t.equal(isElement(+new Date()), false);
+    t.equal(isElement(new Error()), false);
+    t.equal(isElement(new TypeError()), false);
+    t.equal(isElement(function(x) {
+      return x;
+    }), false);
+    t.equal(isElement(new Function()), false);
+    t.equal(isElement(1234), false);
+    t.equal(isElement(Infinity), false);
+    t.equal(isElement(NaN), false);
+    t.equal(isElement(new Number()), false);
+    t.equal(isElement({}), false);
+    t.equal(isElement(new Object()), false);
+    t.equal(isElement(/./), false);
+    t.equal(isElement(new RegExp()), false);
+    t.equal(isElement("string"), false);
+    t.equal(isElement(new String()), false);
+    t.equal(isElement(null), false);
+    t.equal(isElement(void 0), false);
+    return t.end();
+  });
+
+  test = require("tape");
+
   isError = require("../../build/backwards.dev").isError;
 
   txt = "backwards.isError should";
@@ -623,7 +694,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isError(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -675,7 +750,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isFinite(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -725,7 +804,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isFunction(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -773,7 +856,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isNaN(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -822,7 +909,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isNull(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -876,7 +967,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isNumber(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -923,7 +1018,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isObject(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -978,6 +1077,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
+    var domElement;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isPromise(domElement), false);
+    }
     t.equal(isPromise(arguments), false);
     t.equal(isPromise([]), false);
     t.equal(isPromise(new Array()), false);
@@ -1023,7 +1127,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isRegExp(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -1073,7 +1181,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isString(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
@@ -1122,7 +1234,11 @@
   });
 
   test("" + txt + " return false if given anything else", function(t) {
-    var promise;
+    var domElement, promise;
+    if (typeof document !== "undefined") {
+      domElement = document.createElement("div");
+      t.equal(isUndefined(domElement), false);
+    }
     if (typeof Promise !== "undefined") {
       promise = new Promise(function(resolve, reject) {
         return resolve("I'm a Promise");
