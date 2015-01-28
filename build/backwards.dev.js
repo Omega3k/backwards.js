@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, array, arrayProto, backwards, compose, contains, copy, curry, drop, either, every, exists, extend, filter, first, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, reduce, slice, some, take, toString, __arrayMap, __curry, __objectMap,
+  var add, append, array, arrayProto, backwards, compose, contains, copy, curry, either, every, exists, extend, filter, first, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, omit, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -995,11 +995,11 @@
 
 
   /**
-  The __take__ function returns a subset of the given object. If given a positive number and an array or string it will return the first __i__ indexes of the object. If given a negative number and an array or string it will return the last __i__ indexes of the object. 
+  The __pick__ function returns a subset of the given object. If given a positive number and an array or string it will return the first __i__ indexes of the object. If given a negative number and an array or string it will return the last __i__ indexes of the object. 
   
   If given an array of strings and an object it will return an object containing the keys / properties that was listed in __i__. 
   
-  @method take
+  @method pick
   @public
   @param i {Number|Array} The number of indexes you wish to extract, or an array of strings which represents the keys of the object you wish to extract. 
   @param x {Array|String|Object} An array, string or object
@@ -1015,11 +1015,11 @@
         }
       ;
   
-      take(  3, array );          // [1, 2, 3]
-      take( -2, array );          // [4, 5]
-      take(  5, string );         // "Hello"
-      take( -6, string );         // "World!"
-      take( ['name'], object );   // { name: "John Doe" }
+      pick(  3, array );          // [1, 2, 3]
+      pick( -2, array );          // [4, 5]
+      pick(  5, string );         // "Hello"
+      pick( -6, string );         // "World!"
+      pick( ['name'], object );   // { name: "John Doe" }
    */
 
   first = function(i, x) {
@@ -1030,7 +1030,7 @@
     return x.slice(i, x.length);
   };
 
-  take = function(i, x) {
+  pick = function(i, x) {
     var acc, value;
     if (isNumber(i)) {
       if (i > 0) {
@@ -1051,13 +1051,13 @@
     }
   };
 
-  backwards.take = curry(take);
+  backwards.pick = curry(pick);
 
 
   /**
   Drops a subset of the given object, from the beginning to *i*, and returns the rest of the object. 
   
-  @method drop
+  @method omit
   @public
   @param i {Number|Array} The number of indexes you wish to extract
   @param x {Array|String|Object} An Array, String or Object
@@ -1073,14 +1073,14 @@
         }
       ;
   
-      drop(  3, array );                        // [4, 5]
-      drop( -2, array );                        // [1, 2, 3]
-      drop(  6, string );                       // "World!"
-      drop( -7, string );                       // "Hello"
-      drop( ['id', 'age', 'gender'], object );  // { name: "John Doe" }
+      omit(  3, array );                        // [4, 5]
+      omit( -2, array );                        // [1, 2, 3]
+      omit(  6, string );                       // "World!"
+      omit( -7, string );                       // "Hello"
+      omit( ['id', 'age', 'gender'], object );  // { name: "John Doe" }
    */
 
-  drop = function(i, x) {
+  omit = function(i, x) {
     var acc;
     if (isNumber(i)) {
       if (i > 0) {
@@ -1099,7 +1099,7 @@
     }
   };
 
-  backwards.drop = curry(drop);
+  backwards.omit = curry(omit);
 
   backwards.log = function(x) {
     try {

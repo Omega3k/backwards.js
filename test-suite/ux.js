@@ -1,5 +1,5 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, drop, either, every, extend, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, pluck, predicate, reduce, results, some, stringify, summaryTemplate, take, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString,
+  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, either, every, extend, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, omit, pick, pluck, predicate, reduce, results, some, stringify, summaryTemplate, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString,
     __hasProp = {}.hasOwnProperty;
 
   test = require("tape");
@@ -151,57 +151,6 @@
     string = "string";
     t.equal(copy(string) + "1", "string1");
     t.equal(string, "string");
-    return t.end();
-  });
-
-  test = require("tape");
-
-  drop = require("../../build/backwards.dev").drop;
-
-  txt = "backwards.drop should";
-
-  stringify = function(obj) {
-    var acc, key, value;
-    acc = "{ ";
-    for (key in obj) {
-      value = obj[key];
-      acc += "" + key + ": " + value + ", ";
-    }
-    return "" + acc + " }";
-  };
-
-  test("" + txt + " be a function", function(t) {
-    t.equal(typeof drop, "function");
-    return t.end();
-  });
-
-  test("" + txt + " work on Arrays", function(t) {
-    t.equal(drop(3, [1, 2, 3, 4, 5]).toString(), [4, 5].toString());
-    t.equal(drop(-2, [1, 2, 3, 4, 5]).toString(), [1, 2, 3].toString());
-    return t.end();
-  });
-
-  test("" + txt + " work on Strings", function(t) {
-    t.equal(drop(6, "Hello World!"), "World!");
-    t.equal(drop(-7, "Hello World!"), "Hello");
-    return t.end();
-  });
-
-  test("" + txt + " work on Objects", function(t) {
-    var actual, droppedObj1, droppedObj2, expected, obj;
-    obj = {
-      id: 1,
-      age: 29,
-      gender: "male",
-      name: "John Doe"
-    };
-    actual = stringify(obj);
-    expected = "{ name: " + obj.name + ",  }";
-    droppedObj1 = drop(['id', 'age', 'gender'], obj);
-    droppedObj2 = drop(['occupation'], droppedObj1);
-    t.equal(stringify(droppedObj1), expected);
-    t.equal(stringify(droppedObj2), expected);
-    t.equal(stringify(obj), actual);
     return t.end();
   });
 
@@ -1324,6 +1273,108 @@
 
   test = require("tape");
 
+  omit = require("../../build/backwards.dev").omit;
+
+  txt = "backwards.omit should";
+
+  stringify = function(obj) {
+    var acc, key, value;
+    acc = "{ ";
+    for (key in obj) {
+      value = obj[key];
+      acc += "" + key + ": " + value + ", ";
+    }
+    return "" + acc + " }";
+  };
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof omit, "function");
+    return t.end();
+  });
+
+  test("" + txt + " work on Arrays", function(t) {
+    t.equal(omit(3, [1, 2, 3, 4, 5]).toString(), [4, 5].toString());
+    t.equal(omit(-2, [1, 2, 3, 4, 5]).toString(), [1, 2, 3].toString());
+    return t.end();
+  });
+
+  test("" + txt + " work on Strings", function(t) {
+    t.equal(omit(6, "Hello World!"), "World!");
+    t.equal(omit(-7, "Hello World!"), "Hello");
+    return t.end();
+  });
+
+  test("" + txt + " work on Objects", function(t) {
+    var actual, expected, obj, omitpedObj1, omitpedObj2;
+    obj = {
+      id: 1,
+      age: 29,
+      gender: "male",
+      name: "John Doe"
+    };
+    actual = stringify(obj);
+    expected = "{ name: " + obj.name + ",  }";
+    omitpedObj1 = omit(['id', 'age', 'gender'], obj);
+    omitpedObj2 = omit(['occupation'], omitpedObj1);
+    t.equal(stringify(omitpedObj1), expected);
+    t.equal(stringify(omitpedObj2), expected);
+    t.equal(stringify(obj), actual);
+    return t.end();
+  });
+
+  test = require("tape");
+
+  pick = require("../../build/backwards.dev").pick;
+
+  txt = "backwards.pick should";
+
+  stringify = function(obj) {
+    var acc, key, value;
+    acc = "{ ";
+    for (key in obj) {
+      value = obj[key];
+      acc += "" + key + ": " + value + ", ";
+    }
+    return "" + acc + " }";
+  };
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof pick, "function");
+    return t.end();
+  });
+
+  test("" + txt + " work on Arrays", function(t) {
+    t.equal(pick(3, [1, 2, 3, 4, 5]).toString(), [1, 2, 3].toString());
+    t.equal(pick(-2, [1, 2, 3, 4, 5]).toString(), [4, 5].toString());
+    return t.end();
+  });
+
+  test("" + txt + " work on Strings", function(t) {
+    t.equal(pick(5, "Hello World!"), "Hello");
+    t.equal(pick(-6, "Hello World!"), "World!");
+    return t.end();
+  });
+
+  test("" + txt + " work on Objects", function(t) {
+    var actual, expected, obj, picknObj1, picknObj2;
+    obj = {
+      id: 1,
+      age: 29,
+      gender: "male",
+      name: "John Doe"
+    };
+    actual = stringify(obj);
+    expected = "{ name: " + obj.name + ",  }";
+    picknObj1 = stringify(pick(['name'], obj));
+    picknObj2 = stringify(pick(['name', 'occupation'], obj));
+    t.equal(picknObj1, expected);
+    t.equal(picknObj2, expected);
+    t.equal(stringify(obj), actual);
+    return t.end();
+  });
+
+  test = require("tape");
+
   reduce = require("../../build/backwards.dev").reduce;
 
   txt = "backwards.reduce should";
@@ -1505,57 +1556,6 @@
 
   test("" + txt + " return false if given an empty Array", function(t) {
     t.equal(some(predicate, []), false);
-    return t.end();
-  });
-
-  test = require("tape");
-
-  take = require("../../build/backwards.dev").take;
-
-  txt = "backwards.take should";
-
-  stringify = function(obj) {
-    var acc, key, value;
-    acc = "{ ";
-    for (key in obj) {
-      value = obj[key];
-      acc += "" + key + ": " + value + ", ";
-    }
-    return "" + acc + " }";
-  };
-
-  test("" + txt + " be a function", function(t) {
-    t.equal(typeof take, "function");
-    return t.end();
-  });
-
-  test("" + txt + " work on Arrays", function(t) {
-    t.equal(take(3, [1, 2, 3, 4, 5]).toString(), [1, 2, 3].toString());
-    t.equal(take(-2, [1, 2, 3, 4, 5]).toString(), [4, 5].toString());
-    return t.end();
-  });
-
-  test("" + txt + " work on Strings", function(t) {
-    t.equal(take(5, "Hello World!"), "Hello");
-    t.equal(take(-6, "Hello World!"), "World!");
-    return t.end();
-  });
-
-  test("" + txt + " work on Objects", function(t) {
-    var actual, expected, obj, takenObj1, takenObj2;
-    obj = {
-      id: 1,
-      age: 29,
-      gender: "male",
-      name: "John Doe"
-    };
-    actual = stringify(obj);
-    expected = "{ name: " + obj.name + ",  }";
-    takenObj1 = stringify(take(['name'], obj));
-    takenObj2 = stringify(take(['name', 'occupation'], obj));
-    t.equal(takenObj1, expected);
-    t.equal(takenObj2, expected);
-    t.equal(stringify(obj), actual);
     return t.end();
   });
 
