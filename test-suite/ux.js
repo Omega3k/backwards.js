@@ -41,7 +41,7 @@
     return t.end();
   });
 
-  test("" + txt + " return the correct value ...", function(t) {
+  test("" + txt + " function correctly on arrays", function(t) {
     var array;
     array = [1, 2, 3, NaN];
     t.equal(contains(2, 0, array), true);
@@ -50,6 +50,17 @@
     t.equal(contains(3, -2, array), true);
     t.equal(contains(NaN, 0, array), true);
     t.equal(contains(2, -8, array), true);
+    return t.end();
+  });
+
+  test("" + txt + " function correctly on strings", function(t) {
+    var string;
+    string = "To be, or not to be, that is the question.";
+    t.equal(contains("To be", void 0, string), true);
+    t.equal(contains("question", void 0, string), true);
+    t.equal(contains("nonexistent", void 0, string), false);
+    t.equal(contains("To be", 1, string), false);
+    t.equal(contains("TO BE", void 0, string), false);
     return t.end();
   });
 
@@ -406,7 +417,7 @@
     return t.end();
   });
 
-  test("" + txt + " function correctly ...", function(t) {
+  test("" + txt + " function correctly on arrays", function(t) {
     var array;
     array = [2, 5, 9];
     t.equal(indexOf(2, 0, array), 0);
@@ -415,6 +426,20 @@
     t.equal(indexOf(2, -1, array), -1);
     t.equal(indexOf(2, -3, array), 0);
     t.equal(indexOf(2, -8, array), 0);
+    return t.end();
+  });
+
+  test("" + txt + " function correctly on strings", function(t) {
+    var string;
+    string = "Blue Whale";
+    t.equal(indexOf("Blue", void 0, string), 0);
+    t.equal(indexOf("Blute", void 0, string), -1);
+    t.equal(indexOf("blue", void 0, string), -1);
+    t.equal(indexOf("Whale", 0, string), 5);
+    t.equal(indexOf("Whale", 5, string), 5);
+    t.equal(indexOf("", 9, string), 9);
+    t.equal(indexOf("", 10, string), 10);
+    t.equal(indexOf("", 11, string), 10);
     return t.end();
   });
 
