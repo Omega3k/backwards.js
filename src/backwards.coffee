@@ -9,20 +9,22 @@ A set of utility functions for functional programming in Javascript.
 @class backwards
 @static
 ###
-backwards   = {}
 
-array       = Array
-arrayProto  = array.prototype
-slice       = arrayProto.slice
+backwards      = {}
 
-object      = Object
-objectProto = object.prototype
-toString    = objectProto.toString
+array          = Array
+arrayProto     = array.prototype
+slice          = arrayProto.slice
 
-noop        = () ->
-identity    = (x) -> x
-add         = (a, b) -> a + b
-append      = (a, b) -> if a.concat then a.concat b else a += b
+object         = Object
+objectProto    = object.prototype
+toString       = objectProto.toString
+hasOwnProperty = objectProto.hasOwnProperty
+
+noop           = () ->
+identity       = (x) -> x
+add            = (a, b) -> a + b
+append         = (a, b) -> if a.concat then a.concat b else a += b
 
 
 ###*
@@ -159,7 +161,7 @@ Check if an Object is an Arguments object.
 isArguments = do () ->
   if isTypeOf "Arguments", arguments then isTypeOf "Arguments"
   else (x) ->
-    x? and x.hasOwnProperty "callee"
+    x? and hasOwnProperty.call x, "callee"
 
 backwards.isArguments = isArguments
 
@@ -355,8 +357,9 @@ Check if an Object is an Object.
 ###
 
 isObject = (x) ->
-  if not x? or isArguments x then false
-  else isTypeOf "Object", x
+  if not x? or isArguments( x ) or isElement( x )
+    return false
+  else return isTypeOf "Object", x
 
 backwards.isObject = isObject
 

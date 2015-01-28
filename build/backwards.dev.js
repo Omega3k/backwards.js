@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, array, arrayProto, backwards, compose, contains, copy, curry, either, every, exists, extend, filter, first, flatten, forEach, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, omit, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap,
+  var add, append, array, arrayProto, backwards, compose, contains, copy, curry, either, every, exists, extend, filter, first, flatten, forEach, hasOwnProperty, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, omit, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -26,6 +26,8 @@
   objectProto = object.prototype;
 
   toString = objectProto.toString;
+
+  hasOwnProperty = objectProto.hasOwnProperty;
 
   noop = function() {};
 
@@ -211,7 +213,7 @@
       return isTypeOf("Arguments");
     } else {
       return function(x) {
-        return (x != null) && x.hasOwnProperty("callee");
+        return (x != null) && hasOwnProperty.call(x, "callee");
       };
     }
   })();
@@ -419,7 +421,7 @@
    */
 
   isObject = function(x) {
-    if ((x == null) || isArguments(x)) {
+    if ((x == null) || isArguments(x) || isElement(x)) {
       return false;
     } else {
       return isTypeOf("Object", x);
