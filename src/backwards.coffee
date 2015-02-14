@@ -845,6 +845,34 @@ every = (f, xs) ->
 backwards.every = curry every
 
 
+###*
+The __delete__ function takes an element and an array or string, and deletes the first occurence of that element from the list. It returns a new array or string. 
+
+@method delete
+@public
+@param x {"any"} The element to delete. 
+@param xs {Array|String} The array or string you wish to delete an element from. 
+@return {Array|String} Returns an array or string without causing side-effects on the given array or string. 
+@example
+    delete( 12        , [12, 54, 18, NaN, "element"] );   // [54,18,NaN,"element"]
+    delete( NaN       , [12, 54, 18, NaN, "element"] );   // [12,54,18,"element"]
+    delete( "element" , [12, 54, 18, NaN, "element"] );   // [12,54,18,NaN]
+    delete( 1234      , [12, 54, 18, NaN, "element"] );   // [12,54,18,NaN,"element"]
+    delete( "e"       , "element" );                      // "lement"
+    delete( "ele"     , "element" );                      // "ment"
+###
+
+_delete = (x, xs) ->
+  i = indexOf x, 0, xs
+  n = x.length or 1
+  if i isnt -1 and xs.length
+    xs[0...i].concat xs[i+n...xs.length]
+  else
+    xs
+
+backwards.delete = curry _delete
+
+
 either = (a, b) ->
   if b then b else a
 

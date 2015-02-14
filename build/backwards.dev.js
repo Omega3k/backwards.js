@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, array, arrayProto, backwards, compose, contains, copy, curry, either, every, exists, extend, filter, first, flatten, forEach, hasOwnProperty, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, omit, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap,
+  var add, append, array, arrayProto, backwards, compose, contains, copy, curry, either, every, exists, extend, filter, first, flatten, forEach, hasOwnProperty, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, omit, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -994,6 +994,37 @@
   };
 
   backwards.every = curry(every);
+
+
+  /**
+  The __delete__ function takes an element and an array or string, and deletes the first occurence of that element from the list. It returns a new array or string. 
+  
+  @method delete
+  @public
+  @param x {"any"} The element to delete. 
+  @param xs {Array|String} The array or string you wish to delete an element from. 
+  @return {Array|String} Returns an array or string without causing side-effects on the given array or string. 
+  @example
+      delete( 12        , [12, 54, 18, NaN, "element"] );   // [54,18,NaN,"element"]
+      delete( NaN       , [12, 54, 18, NaN, "element"] );   // [12,54,18,"element"]
+      delete( "element" , [12, 54, 18, NaN, "element"] );   // [12,54,18,NaN]
+      delete( 1234      , [12, 54, 18, NaN, "element"] );   // [12,54,18,NaN,"element"]
+      delete( "e"       , "element" );                      // "lement"
+      delete( "ele"     , "element" );                      // "ment"
+   */
+
+  _delete = function(x, xs) {
+    var i, n;
+    i = indexOf(x, 0, xs);
+    n = x.length || 1;
+    if (i !== -1 && xs.length) {
+      return xs.slice(0, i).concat(xs.slice(i + n, xs.length));
+    } else {
+      return xs;
+    }
+  };
+
+  backwards["delete"] = curry(_delete);
 
   either = function(a, b) {
     if (b) {
