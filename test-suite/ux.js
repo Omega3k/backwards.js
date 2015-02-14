@@ -1,5 +1,5 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, either, every, extend, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, omit, pick, pluck, predicate, reduce, results, some, stringify, summaryTemplate, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString,
+  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, either, every, extend, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, omit, pick, pluck, predicate, reduce, results, some, stringify, summaryTemplate, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString, _delete,
     __hasProp = {}.hasOwnProperty;
 
   test = require("tape");
@@ -151,6 +151,34 @@
     string = "string";
     t.equal(copy(string) + "1", "string1");
     t.equal(string, "string");
+    return t.end();
+  });
+
+  test = require("tape");
+
+  _delete = require("../../build/backwards.dev")["delete"];
+
+  txt = "backwards.delete should";
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof _delete, "function");
+    return t.end();
+  });
+
+  test("" + txt + " work as expected", function(t) {
+    var array;
+    array = [12, 54, 18, NaN, "element"];
+    t.equal(_delete("none", []).toString(), [].toString());
+    t.equal(_delete(12, array).toString(), [54, 18, NaN, "element"].toString());
+    t.equal(_delete(NaN, array).toString(), [12, 54, 18, "element"].toString());
+    t.equal(_delete("element", array).toString(), [12, 54, 18, NaN].toString());
+    t.equal(_delete(1234, array).toString(), [12, 54, 18, NaN, "element"].toString());
+    t.equal(_delete("none", ""), "");
+    t.equal(_delete("e", "element"), "lement");
+    t.equal(_delete("ele", "element"), "ment");
+    t.equal(_delete("men", "element"), "elet");
+    t.equal(_delete("ele", "eelement"), "ement");
+    t.equal(_delete("elee", "eelement"), "eelement");
     return t.end();
   });
 
