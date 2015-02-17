@@ -226,6 +226,7 @@ initConfig.jshint = {
     globals: {
       jQuery  : true,
       'window': true,
+      document: true,
       alert   : true,
       module  : true,
       exports : true,

@@ -9,11 +9,13 @@
   @class backwards
   @static
    */
-  var Maybe, add, append, array, arrayProto, backwards, compose, contains, copy, curry, either, every, exists, extend, filter, first, flatten, forEach, hasOwnProperty, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, omit, partition, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap, _delete,
+  var Maybe, add, append, array, arrayProto, backwards, browser, compose, contains, copy, curry, either, error, every, exists, extend, filter, first, flatten, forEach, hasOwnProperty, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, oldSlice, omit, partition, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
   backwards = {};
+
+  browser = typeof document !== "undefined" && document !== null;
 
   array = Array;
 
@@ -46,6 +48,31 @@
       return a += b;
     }
   };
+
+  if (browser) {
+    try {
+      slice.call(document.documentElement);
+    } catch (_error) {
+      error = _error;
+      oldSlice = slice;
+      slice = function(beginning, end) {
+        var acc, i, x, _i, _j, _len, _len1;
+        acc = [];
+        if (this.charAt) {
+          for (i = _i = 0, _len = this.length; _i < _len; i = ++_i) {
+            x = this[i];
+            acc.push(this.charAt(i));
+          }
+        } else {
+          for (i = _j = 0, _len1 = this.length; _j < _len1; i = ++_j) {
+            x = this[i];
+            acc.push(x);
+          }
+        }
+        return oldSlice.call(acc, beginning, end || acc.length);
+      };
+    }
+  }
 
 
   /**
@@ -1062,13 +1089,13 @@
   partition = function(f, xs) {
     var acc;
     acc = [[], []];
-    forEach(function(x) {
+    forEach(function(x, i, xs) {
       if (f(x)) {
         acc[0].push(x);
       } else {
         acc[1].push(x);
       }
-    }, xs);
+    }, slice.call(xs));
     return acc;
   };
 

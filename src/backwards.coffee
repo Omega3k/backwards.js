@@ -11,6 +11,7 @@ A set of utility functions for functional programming in Javascript.
 ###
 
 backwards      = {}
+browser        = document?
 
 array          = Array
 arrayProto     = array.prototype
@@ -25,6 +26,20 @@ noop           = () ->
 identity       = (x) -> x
 add            = (a, b) -> a + b
 append         = (a, b) -> if a.concat then a.concat b else a += b
+
+# https://gist.github.com/brettz9/6093105
+if browser
+  try
+    slice.call document.documentElement
+  catch error
+    oldSlice = slice
+    slice = (beginning, end) ->
+      acc = []
+      if @charAt
+        acc.push @charAt i for x, i in @
+      else
+        acc.push x for x, i in @
+      return oldSlice.call acc, beginning, end or acc.length
 
 
 ###*
@@ -916,10 +931,10 @@ The __partition__ function takes a predicate function and an array or a string, 
 
 partition = (f, xs) ->
     acc = [[], []]
-    forEach (x) ->
+    forEach (x, i, xs) ->
       if f x then acc[0].push x else acc[1].push x
       return
-    , xs
+    , slice.call xs
     acc
 
 backwards.partition = curry partition
