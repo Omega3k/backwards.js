@@ -82,6 +82,7 @@ function if given an initial value and an empty array", (t) ->
   try
     value = reduce add, 1, []
   catch error
+
   t.equal value, 1
   t.end()
 

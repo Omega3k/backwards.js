@@ -296,15 +296,13 @@ Check if an Object is a NaN object.
 @return {Boolean} A Boolean value. 
 @example
     var passed = isNaN( NaN )           // true
-      , passes = isNaN( new Number() )  // true
+      , passes = isNaN( new Number() )  // false
       , failed = isNaN( false )         // false
     ;
 ###
 
-isNaN = isNaN or (x) ->
-  isNumber(x) and x isnt +x
-
-backwards.isNaN = isNaN
+backwards.isNaN = Number.isNaN or (x) ->
+  typeof x is "number" && isNaN x
 
 
 ###*
@@ -503,8 +501,17 @@ The range of elements processed by forEach is set before the first invocation of
 #   reduce ((acc, x, i, xs) -> f x, i, xs), xs, xs
 #   return
 
+# forEach = (f, x) ->
+#   if isArray x
+#     f value, key, x for value, key in x
+#   else if isObject x
+#     f value, key, x for own key, value of x
+#   else
+#     f x
+#   return
+
 forEach = (f, x) ->
-  if isArray x
+  if x.length or isArray x
     f value, key, x for value, key in x
   else if isObject x
     f value, key, x for own key, value of x
@@ -746,8 +753,9 @@ If __x__ is a string, __i__ is greater than or equal to __x__.length and __searc
 ###
 
 indexOf = (search, i, x) ->
-  len = x.length
-  i   = i or 0
+  len   = x.length
+  i     = i or 0
+  isNaN = backwards.isNaN
 
   if len is 0 or i >= len
     if search is "" and isString x
@@ -871,6 +879,50 @@ _delete = (x, xs) ->
     xs
 
 backwards.delete = curry _delete
+
+
+###*
+The __partition__ function takes a predicate function and an array or a string, and returns an array with two indexes. The first index in the resulting array contains all the elements that conforms to the predicate function, and the second index contains all the elements that does not. 
+
+@method partition
+@public
+@param f {Function} The predicate function. 
+@param xs {Array|String} The array or string you wish to partition. 
+@return {Array} Returns an array with two indexes. The first index contains all the elements that conforms to the predicate function, and the second index contains all the elements that does not. 
+@example
+    var partition = backwards.partition
+      , indexOf   = backwards.indexOf
+      , array     = [12, 54, 18, NaN, "element"]
+      , string    = "elementary eh!"
+      , predicateArray, predicateString;
+
+    predicateArray  = function (x) {
+      return x > 15;
+    };
+
+    predicateString = function (x) {
+      return indexOf( x, 0, string );
+    };
+
+    partition( predicateArray, array );
+    // [[54, 18], [12, NaN, "element"]]
+    
+    partition( predicateString, string );
+    // [
+    //   ["e","l","e","m","e","n","t","e"], 
+    //   ["a","r","y"," ","h","!"]
+    // ]
+###
+
+partition = (f, xs) ->
+    acc = [[], []]
+    forEach (x) ->
+      if f x then acc[0].push x else acc[1].push x
+      return
+    , xs
+    acc
+
+backwards.partition = curry partition
 
 
 either = (a, b) ->
@@ -1017,6 +1069,34 @@ backwards.log = (x) ->
   catch
     alert x
   x
+
+
+# forEach (type) ->
+#   backwards["is#{ type }"] = (x) ->
+#     toString.call( x ).slice( 8, -1 ) is type
+#   return
+# , "Arguments Array Boolean Date Error Function Null Number Object Promise RegExp String Undefined".split " "
+
+
+class Maybe
+  constructor: (value) ->
+    return new Maybe value if not ( @ instanceof Maybe )
+    @value = value
+    return @
+
+  map: (f) ->
+    value = @value
+    if value?
+      new Maybe f value
+    else @
+
+  toString: () ->
+    "[maybe " + omit 8, toString.call @value
+
+  valueOf: () ->
+    @.value
+
+backwards.Maybe = Maybe
 
 
 # Export backwards object

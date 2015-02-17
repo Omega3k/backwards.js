@@ -8,7 +8,6 @@ test "#{ txt } be a function", (t) ->
 
 test "#{ txt } return true if given an Array", (t) ->
   t.equal isNaN( NaN )            , true
-  t.equal isNaN( new Number() )   , true
   t.end()
 
 test "#{ txt } return false if given anything else", (t) ->
@@ -31,6 +30,7 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isNaN( (x) -> x )       , false
   t.equal isNaN( new Function() ) , false
   t.equal isNaN( 1234 )           , false
+  t.equal isNaN( new Number() )   , false
   t.equal isNaN( Infinity )       , false
   
   t.equal isNaN( {} )             , false

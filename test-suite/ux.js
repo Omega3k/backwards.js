@@ -1,5 +1,5 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, compose, contains, copy, doc, either, every, extend, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, omit, pick, pluck, predicate, reduce, results, some, stringify, summaryTemplate, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString, _delete,
+  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, backwards, compose, contains, copy, doc, either, every, extend, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, omit, partition, pick, pluck, predicate, reduce, results, some, stringify, summaryTemplate, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString, _delete,
     __hasProp = {}.hasOwnProperty;
 
   test = require("tape");
@@ -879,7 +879,6 @@
 
   test("" + txt + " return true if given an Array", function(t) {
     t.equal(isNaN(NaN), true);
-    t.equal(isNaN(new Number()), true);
     return t.end();
   });
 
@@ -908,6 +907,7 @@
     }), false);
     t.equal(isNaN(new Function()), false);
     t.equal(isNaN(1234), false);
+    t.equal(isNaN(new Number()), false);
     t.equal(isNaN(Infinity), false);
     t.equal(isNaN({}), false);
     t.equal(isNaN(new Object()), false);
@@ -1463,6 +1463,37 @@
     t.equal(stringify(omitpedObj1), expected);
     t.equal(stringify(omitpedObj2), expected);
     t.equal(stringify(obj), actual);
+    return t.end();
+  });
+
+  test = require("tape");
+
+  backwards = require("../../build/backwards.dev");
+
+  partition = backwards.partition;
+
+  contains = backwards.contains;
+
+  txt = "backwards.partition should";
+
+  test("" + txt + " be a function", function(t) {
+    t.equal(typeof partition, "function");
+    return t.end();
+  });
+
+  test("" + txt + " work as expected", function(t) {
+    var array, predicateOne, predicateTwo;
+    array = [12, 54, 18, NaN, "element"];
+    predicateOne = function(x) {
+      return x > 15;
+    };
+    predicateTwo = function(x) {
+      return contains(x, 0, "element");
+    };
+    t.equal(partition(predicateOne, array)[0].toString(), [54, 18].toString());
+    t.equal(partition(predicateOne, array)[1].toString(), [12, NaN, "element"].toString());
+    t.equal(partition(predicateTwo, "elementary eh!")[0].toString(), ["e", "l", "e", "m", "e", "n", "t", "e"].toString());
+    t.equal(partition(predicateTwo, "elementary eh!")[1].toString(), ["a", "r", "y", " ", "h", "!"].toString());
     return t.end();
   });
 

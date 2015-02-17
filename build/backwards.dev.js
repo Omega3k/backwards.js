@@ -9,7 +9,7 @@
   @class backwards
   @static
    */
-  var add, append, array, arrayProto, backwards, compose, contains, copy, curry, either, every, exists, extend, filter, first, flatten, forEach, hasOwnProperty, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, omit, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap, _delete,
+  var Maybe, add, append, array, arrayProto, backwards, compose, contains, copy, curry, either, every, exists, extend, filter, first, flatten, forEach, hasOwnProperty, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, omit, partition, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -357,16 +357,14 @@
   @return {Boolean} A Boolean value. 
   @example
       var passed = isNaN( NaN )           // true
-        , passes = isNaN( new Number() )  // true
+        , passes = isNaN( new Number() )  // false
         , failed = isNaN( false )         // false
       ;
    */
 
-  isNaN = isNaN || function(x) {
-    return isNumber(x) && x !== +x;
+  backwards.isNaN = Number.isNaN || function(x) {
+    return typeof x === "number" && isNaN(x);
   };
-
-  backwards.isNaN = isNaN;
 
 
   /**
@@ -573,7 +571,7 @@
 
   forEach = function(f, x) {
     var key, value, _i, _len;
-    if (isArray(x)) {
+    if (x.length || isArray(x)) {
       for (key = _i = 0, _len = x.length; _i < _len; key = ++_i) {
         value = x[key];
         f(value, key, x);
@@ -877,9 +875,10 @@
    */
 
   indexOf = function(search, i, x) {
-    var len;
+    var isNaN, len;
     len = x.length;
     i = i || 0;
+    isNaN = backwards.isNaN;
     if (len === 0 || i >= len) {
       if (search === "" && isString(x)) {
         return len;
@@ -1026,6 +1025,55 @@
 
   backwards["delete"] = curry(_delete);
 
+
+  /**
+  The __partition__ function takes a predicate function and an array or a string, and returns an array with two indexes. The first index in the resulting array contains all the elements that conforms to the predicate function, and the second index contains all the elements that does not. 
+  
+  @method partition
+  @public
+  @param f {Function} The predicate function. 
+  @param xs {Array|String} The array or string you wish to partition. 
+  @return {Array} Returns an array with two indexes. The first index contains all the elements that conforms to the predicate function, and the second index contains all the elements that does not. 
+  @example
+      var partition = backwards.partition
+        , indexOf   = backwards.indexOf
+        , array     = [12, 54, 18, NaN, "element"]
+        , string    = "elementary eh!"
+        , predicateArray, predicateString;
+  
+      predicateArray  = function (x) {
+        return x > 15;
+      };
+  
+      predicateString = function (x) {
+        return indexOf( x, 0, string );
+      };
+  
+      partition( predicateArray, array );
+      // [[54, 18], [12, NaN, "element"]]
+      
+      partition( predicateString, string );
+      // [
+      //   ["e","l","e","m","e","n","t","e"], 
+      //   ["a","r","y"," ","h","!"]
+      // ]
+   */
+
+  partition = function(f, xs) {
+    var acc;
+    acc = [[], []];
+    forEach(function(x) {
+      if (f(x)) {
+        acc[0].push(x);
+      } else {
+        acc[1].push(x);
+      }
+    }, xs);
+    return acc;
+  };
+
+  backwards.partition = curry(partition);
+
   either = function(a, b) {
     if (b) {
       return b;
@@ -1162,6 +1210,39 @@
     }
     return x;
   };
+
+  Maybe = (function() {
+    function Maybe(value) {
+      if (!(this instanceof Maybe)) {
+        return new Maybe(value);
+      }
+      this.value = value;
+      return this;
+    }
+
+    Maybe.prototype.map = function(f) {
+      var value;
+      value = this.value;
+      if (value != null) {
+        return new Maybe(f(value));
+      } else {
+        return this;
+      }
+    };
+
+    Maybe.prototype.toString = function() {
+      return "[maybe " + omit(8, toString.call(this.value));
+    };
+
+    Maybe.prototype.valueOf = function() {
+      return this.value;
+    };
+
+    return Maybe;
+
+  })();
+
+  backwards.Maybe = Maybe;
 
   if ((typeof define !== "undefined" && define !== null) && define.amd) {
     define("backwards", [], function() {
