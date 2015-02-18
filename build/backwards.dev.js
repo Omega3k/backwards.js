@@ -1,21 +1,8 @@
 (function() {
   "use strict";
-
-  /**
-  A set of utility functions for functional programming in Javascript.
-  
-  @module backwards
-  @main backwards
-  @class backwards
-  @static
-   */
-  var Maybe, add, append, array, arrayProto, backwards, browser, compose, contains, copy, curry, either, error, every, exists, extend, filter, first, flatten, forEach, hasOwnProperty, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, oldSlice, omit, partition, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap, _delete,
+  var Maybe, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, either, error, every, exists, extend, filter, first, flatten, forEach, hasOwn, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, oldSlice, omit, partition, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
-
-  backwards = {};
-
-  browser = typeof document !== "undefined" && document !== null;
 
   array = Array;
 
@@ -29,7 +16,7 @@
 
   toString = objectProto.toString;
 
-  hasOwnProperty = objectProto.hasOwnProperty;
+  hasOwn = objectProto.hasOwnProperty;
 
   noop = function() {};
 
@@ -41,6 +28,10 @@
     return a + b;
   };
 
+  concat = function(a, b) {
+    return a.concat(b);
+  };
+
   append = function(a, b) {
     if (a.concat) {
       return a.concat(b);
@@ -49,7 +40,54 @@
     }
   };
 
-  if (browser) {
+
+  /**
+  A set of utility functions for functional programming in Javascript.
+  
+  @class backwards
+  @static
+  @public
+   */
+
+  backwards = {};
+
+
+  /**
+  The __VERSION__ property is a string indicating the version of __backwards__ as a string value. 
+  
+  @property VERSION
+  @type String
+  @final
+  @public
+   */
+
+  backwards.VERSION = "0.0.2";
+
+
+  /**
+  The __CLIENT_SIDE__ property is a boolean indicating if the current environment is client-side (a browser) or not. 
+  
+  @property CLIENT_SIDE
+  @type Boolean
+  @final
+  @public
+   */
+
+  backwards.CLIENT_SIDE = typeof document !== "undefined" && document !== null;
+
+
+  /**
+  The __SERVER_SIDE__ property is a boolean indicating if the current environment is server-side (f.ex. Node.js) or not. 
+  
+  @property SERVER_SIDE
+  @type Boolean
+  @final
+  @public
+   */
+
+  backwards.SERVER_SIDE = !backwards.CLIENT_SIDE;
+
+  if (backwards.CLIENT_SIDE) {
     try {
       slice.call(document.documentElement);
     } catch (_error) {
@@ -1238,6 +1276,19 @@
     return x;
   };
 
+
+  /**
+  A monad that may or may not contain a value. The Maybe monad implements the map interface. 
+  
+  @class Maybe
+  @namespace backwards
+  @constructor
+  @public
+  @example
+      var monad = new Maybe( 1234 );  // Maybe( 1234 )
+      monad instanceof Maybe          // true
+   */
+
   Maybe = (function() {
     function Maybe(value) {
       if (!(this instanceof Maybe)) {
@@ -1246,6 +1297,26 @@
       this.value = value;
       return this;
     }
+
+
+    /**
+    The __map__ function takes a transformation function and returns a new monad with the result of the transformation. 
+    
+    @method map
+    @public
+    @param f {Function} A function that applies a transform to the value and returns the new value. 
+    @return {Maybe} Returns a new Maybe monad. 
+    @example
+        var monadOne = new Maybe( 1234 )
+          , monadTwo = monad.map( addOne );
+    
+        function addOne (x) {
+          return x + 1;
+        }
+    
+        monadOne                              // Maybe( 1234 )
+        monadTwo                              // Maybe( 2345 )
+     */
 
     Maybe.prototype.map = function(f) {
       var value;

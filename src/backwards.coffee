@@ -1,34 +1,71 @@
 "use strict"
 
 
+array       = Array
+arrayProto  = array.prototype
+slice       = arrayProto.slice
+
+object      = Object
+objectProto = object.prototype
+toString    = objectProto.toString
+hasOwn      = objectProto.hasOwnProperty
+
+noop        = () ->
+identity    = (x) -> x
+add         = (a, b) -> a + b
+concat      = (a, b) -> a.concat b
+append      = (a, b) -> if a.concat then a.concat b else a += b
+
+
 ###*
 A set of utility functions for functional programming in Javascript.
 
-@module backwards
-@main backwards
 @class backwards
 @static
+@public
 ###
 
-backwards      = {}
-browser        = document?
+backwards = {}
 
-array          = Array
-arrayProto     = array.prototype
-slice          = arrayProto.slice
 
-object         = Object
-objectProto    = object.prototype
-toString       = objectProto.toString
-hasOwnProperty = objectProto.hasOwnProperty
+###*
+The __VERSION__ property is a string indicating the version of __backwards__ as a string value. 
 
-noop           = () ->
-identity       = (x) -> x
-add            = (a, b) -> a + b
-append         = (a, b) -> if a.concat then a.concat b else a += b
+@property VERSION
+@type String
+@final
+@public
+###
+
+backwards.VERSION = "0.0.2"
+
+
+###*
+The __CLIENT_SIDE__ property is a boolean indicating if the current environment is client-side (a browser) or not. 
+
+@property CLIENT_SIDE
+@type Boolean
+@final
+@public
+###
+
+backwards.CLIENT_SIDE = document?
+
+
+###*
+The __SERVER_SIDE__ property is a boolean indicating if the current environment is server-side (f.ex. Node.js) or not. 
+
+@property SERVER_SIDE
+@type Boolean
+@final
+@public
+###
+
+backwards.SERVER_SIDE = not backwards.CLIENT_SIDE
+
 
 # https://gist.github.com/brettz9/6093105
-if browser
+if backwards.CLIENT_SIDE
   try
     slice.call document.documentElement
   catch error
@@ -1093,11 +1130,43 @@ backwards.log = (x) ->
 # , "Arguments Array Boolean Date Error Function Null Number Object Promise RegExp String Undefined".split " "
 
 
+###*
+A monad that may or may not contain a value. The Maybe monad implements the map interface. 
+
+@class Maybe
+@namespace backwards
+@constructor
+@public
+@example
+    var monad = new Maybe( 1234 );  // Maybe( 1234 )
+    monad instanceof Maybe          // true
+###
+
 class Maybe
   constructor: (value) ->
     return new Maybe value if not ( @ instanceof Maybe )
     @value = value
     return @
+
+  
+  ###*
+  The __map__ function takes a transformation function and returns a new monad with the result of the transformation. 
+
+  @method map
+  @public
+  @param f {Function} A function that applies a transform to the value and returns the new value. 
+  @return {Maybe} Returns a new Maybe monad. 
+  @example
+      var monadOne = new Maybe( 1234 )
+        , monadTwo = monad.map( addOne );
+
+      function addOne (x) {
+        return x + 1;
+      }
+
+      monadOne                              // Maybe( 1234 )
+      monadTwo                              // Maybe( 2345 )
+  ###
 
   map: (f) ->
     value = @value
