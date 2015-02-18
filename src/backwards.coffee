@@ -213,7 +213,7 @@ Check if an Object is an Arguments object.
 isArguments = do () ->
   if isTypeOf "Arguments", arguments then isTypeOf "Arguments"
   else (x) ->
-    x? and hasOwnProperty.call x, "callee"
+    x? and hasOwn.call x, "callee"
 
 backwards.isArguments = isArguments
 

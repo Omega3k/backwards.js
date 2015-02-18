@@ -278,7 +278,7 @@
       return isTypeOf("Arguments");
     } else {
       return function(x) {
-        return (x != null) && hasOwnProperty.call(x, "callee");
+        return (x != null) && hasOwn.call(x, "callee");
       };
     }
   })();
