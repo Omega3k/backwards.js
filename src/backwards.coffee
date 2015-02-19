@@ -44,7 +44,7 @@ The __VERSION__ property is a string indicating the version of __backwards__ as 
 @public
 ###
 
-backwards.VERSION = "0.0.2"
+backwards.VERSION = "0.0.3"
 
 
 ###*
@@ -517,10 +517,10 @@ isEmpty = (x) ->
 
 backwards.isEmpty = isEmpty
 
-forEachEscape = (f, xs) ->
-  for x, i in xs
-    result = f x, i, xs
-    return result if result?
+# forEachQuickEscape = (f, xs) ->
+#   for x, i in xs
+#     result = f x, i, xs
+#     return result if result?
 
 
 ###*
@@ -1125,57 +1125,57 @@ backwards.log = (x) ->
 # , "Arguments Array Boolean Date Error Function Null Number Object Promise RegExp String Undefined".split " "
 
 
-###*
-A monad that may or may not contain a value. The Maybe monad implements the map interface. 
+# ###*
+# A monad that may or may not contain a value. The Maybe monad implements the map interface. 
 
-@class Maybe
-@namespace backwards
-@constructor
-@public
-@example
-    var monad = new Maybe( 1234 );  // Maybe( 1234 )
-    monad instanceof Maybe          // true
-###
+# @class Maybe
+# @namespace backwards
+# @constructor
+# @public
+# @example
+#     var monad = new Maybe( 1234 );  // Maybe( 1234 )
+#     monad instanceof Maybe          // true
+# ###
 
-class Maybe
-  constructor: (value) ->
-    return new Maybe value if not ( @ instanceof Maybe )
-    @value = value
-    return @
+# class Maybe
+#   constructor: (value) ->
+#     return new Maybe value if not ( @ instanceof Maybe )
+#     @value = value
+#     return @
 
   
-  ###*
-  The __map__ function takes a transformation function and returns a new monad with the result of the transformation. 
+#   ###*
+#   The __map__ function takes a transformation function and returns a new monad with the result of the transformation. 
 
-  @method map
-  @public
-  @param f {Function} A function that applies a transform to the value and returns the new value. 
-  @return {Maybe} Returns a new Maybe monad. 
-  @example
-      var monadOne = new Maybe( 1234 )
-        , monadTwo = monad.map( addOne );
+#   @method map
+#   @public
+#   @param f {Function} A function that applies a transform to the value and returns the new value. 
+#   @return {Maybe} Returns a new Maybe monad. 
+#   @example
+#       var monadOne = new Maybe( 1234 )
+#         , monadTwo = monad.map( addOne );
 
-      function addOne (x) {
-        return x + 1;
-      }
+#       function addOne (x) {
+#         return x + 1;
+#       }
 
-      monadOne                              // Maybe( 1234 )
-      monadTwo                              // Maybe( 2345 )
-  ###
+#       monadOne                              // Maybe( 1234 )
+#       monadTwo                              // Maybe( 2345 )
+#   ###
 
-  map: (f) ->
-    value = @value
-    if value?
-      new Maybe f value
-    else @
+#   map: (f) ->
+#     value = @value
+#     if value?
+#       new Maybe f value
+#     else @
 
-  toString: () ->
-    "[maybe " + omit 8, toString.call @value
+#   toString: () ->
+#     "[maybe " + omit 8, toString.call @value
 
-  valueOf: () ->
-    @.value
+#   valueOf: () ->
+#     @.value
 
-backwards.Maybe = Maybe
+# backwards.Maybe = Maybe
 
 
 # Export backwards object

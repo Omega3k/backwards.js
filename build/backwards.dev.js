@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-  var Maybe, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, error, every, exists, extend, filter, first, flatten, forEach, forEachEscape, hasOwn, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, multiply, noop, object, objectProto, oldSlice, omit, partition, pick, push, reduce, slice, some, subtract, toString, __curry, _delete,
+  var add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, error, every, exists, extend, filter, first, flatten, forEach, hasOwn, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, multiply, noop, object, objectProto, oldSlice, omit, partition, pick, push, reduce, slice, some, subtract, toString, __curry, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -73,7 +73,7 @@
   @public
    */
 
-  backwards.VERSION = "0.0.2";
+  backwards.VERSION = "0.0.3";
 
 
   /**
@@ -615,17 +615,6 @@
   };
 
   backwards.isEmpty = isEmpty;
-
-  forEachEscape = function(f, xs) {
-    var i, result, x, _i, _len;
-    for (i = _i = 0, _len = xs.length; _i < _len; i = ++_i) {
-      x = xs[i];
-      result = f(x, i, xs);
-      if (result != null) {
-        return result;
-      }
-    }
-  };
 
 
   /**
@@ -1281,72 +1270,6 @@
     }
     return x;
   };
-
-
-  /**
-  A monad that may or may not contain a value. The Maybe monad implements the map interface. 
-  
-  @class Maybe
-  @namespace backwards
-  @constructor
-  @public
-  @example
-      var monad = new Maybe( 1234 );  // Maybe( 1234 )
-      monad instanceof Maybe          // true
-   */
-
-  Maybe = (function() {
-    function Maybe(value) {
-      if (!(this instanceof Maybe)) {
-        return new Maybe(value);
-      }
-      this.value = value;
-      return this;
-    }
-
-
-    /**
-    The __map__ function takes a transformation function and returns a new monad with the result of the transformation. 
-    
-    @method map
-    @public
-    @param f {Function} A function that applies a transform to the value and returns the new value. 
-    @return {Maybe} Returns a new Maybe monad. 
-    @example
-        var monadOne = new Maybe( 1234 )
-          , monadTwo = monad.map( addOne );
-    
-        function addOne (x) {
-          return x + 1;
-        }
-    
-        monadOne                              // Maybe( 1234 )
-        monadTwo                              // Maybe( 2345 )
-     */
-
-    Maybe.prototype.map = function(f) {
-      var value;
-      value = this.value;
-      if (value != null) {
-        return new Maybe(f(value));
-      } else {
-        return this;
-      }
-    };
-
-    Maybe.prototype.toString = function() {
-      return "[maybe " + omit(8, toString.call(this.value));
-    };
-
-    Maybe.prototype.valueOf = function() {
-      return this.value;
-    };
-
-    return Maybe;
-
-  })();
-
-  backwards.Maybe = Maybe;
 
   if ((typeof define !== "undefined" && define !== null) && define.amd) {
     define("backwards", [], function() {
