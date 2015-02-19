@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-  var Maybe, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, either, error, every, exists, extend, filter, first, flatten, forEach, hasOwn, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, noop, object, objectProto, oldSlice, omit, partition, pick, reduce, slice, some, toString, __arrayMap, __curry, __objectMap, _delete,
+  var Maybe, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, error, every, exists, extend, filter, first, flatten, forEach, forEachEscape, hasOwn, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, multiply, noop, object, objectProto, oldSlice, omit, partition, pick, push, reduce, slice, some, subtract, toString, __curry, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -20,24 +20,36 @@
 
   noop = function() {};
 
-  identity = function(x) {
-    return x;
-  };
-
   add = function(a, b) {
     return a + b;
+  };
+
+  subtract = function(a, b) {
+    return a - b;
+  };
+
+  multiply = function(a, b) {
+    return a * b;
+  };
+
+  divide = function(a, b) {
+    return a / b;
+  };
+
+  append = function(a, b) {
+    return a += b;
   };
 
   concat = function(a, b) {
     return a.concat(b);
   };
 
-  append = function(a, b) {
-    if (a.concat) {
-      return a.concat(b);
-    } else {
-      return a += b;
-    }
+  push = function(a, b) {
+    return a.push(b);
+  };
+
+  identity = function(x) {
+    return x;
   };
 
 
@@ -604,6 +616,17 @@
 
   backwards.isEmpty = isEmpty;
 
+  forEachEscape = function(f, xs) {
+    var i, result, x, _i, _len;
+    for (i = _i = 0, _len = xs.length; _i < _len; i = ++_i) {
+      x = xs[i];
+      result = f(x, i, xs);
+      if (result != null) {
+        return result;
+      }
+    }
+  };
+
 
   /**
   forEach executes the provided callback once for each element present in the array in ascending order. It is not invoked for indexes that have been deleted or elided. However, it is executed for elements that are present and have the value undefined.
@@ -626,7 +649,7 @@
   @return {undefined}
   @example
       var f = function (value, key, object) {
-        alert( value, key );
+        console.log( value, key );
       };
   
       forEach( f, [1, 2, 3] );                  // undefined
@@ -634,21 +657,22 @@
       forEach( f, "Hello folks!" );             // undefined
    */
 
-  forEach = function(f, x) {
+  forEach = function(f, xs) {
     var key, value, _i, _len;
-    if (x.length || isArray(x)) {
-      for (key = _i = 0, _len = x.length; _i < _len; key = ++_i) {
-        value = x[key];
-        f(value, key, x);
+    if (xs.length || isArray(xs)) {
+      for (key = _i = 0, _len = xs.length; _i < _len; key = ++_i) {
+        value = xs[key];
+        f(value, key, xs);
       }
-    } else if (isObject(x)) {
-      for (key in x) {
-        if (!__hasProp.call(x, key)) continue;
-        value = x[key];
-        f(value, key, x);
+    } else if (isObject(xs)) {
+      for (key in xs) {
+        value = xs[key];
+        if (hasOwn.call(xs, key)) {
+          f(value, key, xs);
+        }
       }
     } else {
-      f(x);
+      f(xs);
     }
   };
 
@@ -656,7 +680,7 @@
 
 
   /**
-  map calls a provided callback function (f) once for each element in an array, in ascending order, and constructs a new array from the results. callback is invoked only for indexes of the array which have assigned values; it is not invoked for indexes that are undefined, those which have been deleted or which have never been assigned values.
+  The __map__ function calls the provided callback function (f) once for each element in an array, in ascending order, and constructs a new array from the results. __callback__ is invoked only for indexes of the array which have assigned values; it is not invoked for indexes that are undefined, those which have been deleted or which have never been assigned values.
   
   callback is invoked with three arguments:
   
@@ -664,7 +688,7 @@
       the element index, key or undefined
       the array or object being traversed or undefined
   
-  map does not mutate the array on which it is called (although callback, if invoked, may do so).
+  The __map__ function does not mutate the array on which it is called (although callback, if invoked, may do so).
   
   The range of elements processed by map is set before the first invocation of callback. Elements which are appended to the array after the call to map begins will not be visited by callback. If existing elements of the array are changed, or deleted, their value as passed to callback will be the value at the time map visits them; elements that are deleted are not visited.
   
@@ -674,7 +698,7 @@
   @param f.value {"any"} The element value. 
   @param f.key {Number|String|undefined} The element index, key or undefined. 
   @param f.object {Array|Object|undefined} The array or object being traversed or undefined. 
-  @param x {"any"} The object you wish to iterate over. 
+  @param xs {"any"} The object you wish to iterate over. 
   @return {"any"}
   @example
       var addOne = function (x) {
@@ -686,64 +710,46 @@
       map( addOne, "Hello folks!" );             // "Hello folks!1"
    */
 
-  __arrayMap = function(f, xs) {
-    var index, value, _i, _len, _results;
-    _results = [];
-    for (index = _i = 0, _len = xs.length; _i < _len; index = ++_i) {
-      value = xs[index];
-      if (value) {
-        _results.push(f(value, index, xs));
+  map = function(f, xs) {
+    var acc;
+    if (isArray(xs) || isObject(xs)) {
+      acc = [];
+      forEach(function(value, index, object) {
+        if (value != null) {
+          acc.push(f(value, index, object));
+        } else {
+          acc.push(void 0);
+        }
+      }, xs);
+      return acc;
+    } else if (xs != null) {
+      if (isFunction(xs.map)) {
+        return xs.map(f);
+      } else if (isPromise(xs)) {
+        return xs.then(f);
       } else {
-        _results.push(void 0);
+        return f(xs);
       }
-    }
-    return _results;
-  };
-
-  __objectMap = function(f, obj) {
-    var key, value, _results;
-    _results = [];
-    for (key in obj) {
-      if (!__hasProp.call(obj, key)) continue;
-      value = obj[key];
-      if (value) {
-        _results.push(f(value, key, obj));
-      } else {
-        _results.push(void 0);
-      }
-    }
-    return _results;
-  };
-
-  map = function(f, x) {
-    if (isArray(x)) {
-      return __arrayMap(f, x);
-    } else if (isObject(x)) {
-      return __objectMap(f, x);
-    } else if (x && isFunction(x.map)) {
-      return x.map(f);
-    } else if (isPromise(x)) {
-      return x.then(f);
-    } else if (x) {
-      return f(x);
+    } else {
+      return xs;
     }
   };
 
   backwards.map = curry(map);
 
-  filter = function(f, x) {
+  filter = function(f, xs) {
     var acc;
-    if (isArray(x)) {
+    if (isArray(xs)) {
       acc = [];
       map(function(value, index, array) {
         if (f(value, index, array)) {
           return acc.push(value);
         }
-      }, x);
+      }, xs);
       return acc;
     } else {
-      if (f(x)) {
-        return x;
+      if (f(xs)) {
+        return xs;
       }
     }
   };
@@ -911,7 +917,7 @@
       flatten( array ); // [1, 2, 3, 4, 5, 6]
    */
 
-  flatten = backwards.reduce(append, []);
+  flatten = backwards.reduce(concat, []);
 
   backwards.flatten = flatten;
 

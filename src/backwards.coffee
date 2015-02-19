@@ -11,10 +11,17 @@ toString    = objectProto.toString
 hasOwn      = objectProto.hasOwnProperty
 
 noop        = () ->
-identity    = (x) -> x
+
 add         = (a, b) -> a + b
+subtract    = (a, b) -> a - b
+multiply    = (a, b) -> a * b
+divide      = (a, b) -> a / b
+
+append      = (a, b) -> a += b
 concat      = (a, b) -> a.concat b
-append      = (a, b) -> if a.concat then a.concat b else a += b
+push        = (a, b) -> a.push b
+
+identity    = (x) -> x
 
 
 ###*
@@ -500,15 +507,6 @@ exists           = (x) -> x?
 backwards.exists = exists
 
 
-# isObjectEmpty :: Object -> Boolean
-# isObjectEmpty = (x) ->
-#   return false for own prop of x
-#   true
-
-
-# isArrayEmpty :: Array -> Boolean
-# isArrayEmpty = (x) -> if x.length then false else true
-
 # isEmpty :: Array|Object -> Boolean
 isEmpty = (x) ->
   if isObject x 
@@ -518,6 +516,11 @@ isEmpty = (x) ->
   true
 
 backwards.isEmpty = isEmpty
+
+forEachEscape = (f, xs) ->
+  for x, i in xs
+    result = f x, i, xs
+    return result if result?
 
 
 ###*
@@ -541,7 +544,7 @@ The range of elements processed by forEach is set before the first invocation of
 @return {undefined}
 @example
     var f = function (value, key, object) {
-      alert( value, key );
+      console.log( value, key );
     };
 
     forEach( f, [1, 2, 3] );                  // undefined
@@ -549,33 +552,22 @@ The range of elements processed by forEach is set before the first invocation of
     forEach( f, "Hello folks!" );             // undefined
 ###
 
-# forEach = (f, xs) ->
-#   reduce ((acc, x, i, xs) -> f x, i, xs), xs, xs
-#   return
 
-# forEach = (f, x) ->
-#   if isArray x
-#     f value, key, x for value, key in x
-#   else if isObject x
-#     f value, key, x for own key, value of x
-#   else
-#     f x
-#   return
-
-forEach = (f, x) ->
-  if x.length or isArray x
-    f value, key, x for value, key in x
-  else if isObject x
-    f value, key, x for own key, value of x
+forEach = (f, xs) ->
+  if xs.length or isArray xs
+    f value, key, xs for value, key in xs
+  else if isObject xs
+    for key, value of xs
+      f value, key, xs if hasOwn.call xs, key
   else
-    f x
+    f xs
   return
 
 backwards.forEach = curry forEach
 
 
 ###*
-map calls a provided callback function (f) once for each element in an array, in ascending order, and constructs a new array from the results. callback is invoked only for indexes of the array which have assigned values; it is not invoked for indexes that are undefined, those which have been deleted or which have never been assigned values.
+The __map__ function calls the provided callback function (f) once for each element in an array, in ascending order, and constructs a new array from the results. __callback__ is invoked only for indexes of the array which have assigned values; it is not invoked for indexes that are undefined, those which have been deleted or which have never been assigned values.
 
 callback is invoked with three arguments:
 
@@ -583,7 +575,7 @@ callback is invoked with three arguments:
     the element index, key or undefined
     the array or object being traversed or undefined
 
-map does not mutate the array on which it is called (although callback, if invoked, may do so).
+The __map__ function does not mutate the array on which it is called (although callback, if invoked, may do so).
 
 The range of elements processed by map is set before the first invocation of callback. Elements which are appended to the array after the call to map begins will not be visited by callback. If existing elements of the array are changed, or deleted, their value as passed to callback will be the value at the time map visits them; elements that are deleted are not visited.
 
@@ -593,7 +585,7 @@ The range of elements processed by map is set before the first invocation of cal
 @param f.value {"any"} The element value. 
 @param f.key {Number|String|undefined} The element index, key or undefined. 
 @param f.object {Array|Object|undefined} The array or object being traversed or undefined. 
-@param x {"any"} The object you wish to iterate over. 
+@param xs {"any"} The object you wish to iterate over. 
 @return {"any"}
 @example
     var addOne = function (x) {
@@ -605,32 +597,35 @@ The range of elements processed by map is set before the first invocation of cal
     map( addOne, "Hello folks!" );             // "Hello folks!1"
 ###
 
-__arrayMap = (f, xs) ->
-  for value, index in xs
-    f value, index, xs if value
 
-__objectMap = (f, obj) ->
-  for own key, value of obj
-    f value, key, obj if value
-
-map = (f, x) ->
-  if isArray x then __arrayMap f, x
-  else if isObject x then __objectMap f, x
-  else if x and isFunction x.map then x.map f
-  else if isPromise x then x.then f
-  else if x then f x
+map = (f, xs) ->
+  if isArray( xs ) or isObject( xs )
+    acc = []
+    forEach (value, index, object) ->
+      if value?
+        acc.push f value, index, object
+      else
+        acc.push undefined
+      return
+    , xs
+    acc
+  else if xs?
+    if isFunction xs.map then xs.map f
+    else if isPromise xs then xs.then f
+    else f xs
+  else xs
 
 backwards.map = curry map
 
 
-filter = (f, x) ->
-  if isArray x
+filter = (f, xs) ->
+  if isArray xs
     acc = []
     map (value, index, array) ->
       acc.push value if f value, index, array
-    , x
+    , xs
     acc
-  else x if f x
+  else xs if f xs
 
 backwards.filter = curry filter
 
@@ -777,7 +772,7 @@ the array one level.
     flatten( array ); // [1, 2, 3, 4, 5, 6]
 ###
 
-flatten           = backwards.reduce append, []
+flatten           = backwards.reduce concat, []
 backwards.flatten = flatten
 
 
