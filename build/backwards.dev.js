@@ -1281,8 +1281,8 @@
         var acc, f;
         acc = [];
         if (this.charAt) {
-          f = function(x, i) {
-            acc.push(this.charAt(i));
+          f = function(x, i, xs) {
+            acc.push(xs.charAt(i));
           };
         } else {
           f = function(x) {

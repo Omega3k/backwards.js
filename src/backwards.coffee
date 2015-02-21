@@ -1195,8 +1195,8 @@ if backwards.CLIENT_SIDE
     slice = (beginning, end) ->
       acc = []
       if @charAt
-        f = (x, i) ->
-          acc.push @charAt i
+        f = (x, i, xs) ->
+          acc.push xs.charAt i
           return
       else
         f = (x) ->
