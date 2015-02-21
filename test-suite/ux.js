@@ -1,5 +1,5 @@
 (function() {
-  var $body, $failedtests, $message, $modal, $passedtests, $summary, add, addOne, append, assertionsTemplate, backwards, compose, contains, copy, doc, either, every, extend, filter, filterPassedAndFailedTests, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, omit, partition, pick, pluck, predicate, reduce, results, some, stringify, summaryTemplate, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString, _delete,
+  var $body, $failedtests, $message, $passedtests, $summary, add, addOne, append, assertionsTemplate, assign, backwards, buildTestsObject, buildTestsObjectFromPartitionList, compose, contains, copy, curry, doc, either, every, extend, filter, flatten, forEachTemplate, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isError, isFinite, isFunction, isNaN, isNull, isNumber, isObject, isPromise, isRegExp, isString, isUndefined, map, maybe, message_failed, message_passed, omit, partition, pick, pluck, predicate, reduce, results, some, stringify, summaryTemplate, test, testIdToString, testTemplate, testsTemplate, timesTwo, txt, valueToString, _, _delete, _dev,
     __hasProp = {}.hasOwnProperty;
 
   test = require("tape");
@@ -1736,42 +1736,6 @@
 
   "use strict";
 
-  either = function(a, b) {
-    return function(x) {
-      if (x) {
-        return a;
-      } else {
-        return b;
-      }
-    };
-  };
-
-  reduce = function(f, acc, x) {
-    var i, _i, _len, _x;
-    for (i = _i = 0, _len = x.length; _i < _len; i = ++_i) {
-      _x = x[i];
-      acc = f(acc, _x, i, x);
-    }
-    return acc;
-  };
-
-  every = function(f, x) {
-    var i, _i, _len, _x;
-    for (i = _i = 0, _len = x.length; _i < _len; i = ++_i) {
-      _x = x[i];
-      if (!f(_x, i, x)) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  pluck = function(key) {
-    return function(x) {
-      return x[key];
-    };
-  };
-
   valueToString = function(x) {
     if (x) {
       return x.toString();
@@ -1818,51 +1782,46 @@
     return "<h1>" + x.title + "</h1> " + (forEachTemplate(testTemplate, x.tests));
   };
 
-  filterPassedAndFailedTests = function(x) {
-    return reduce((function(acc, test) {
-      if (every(pluck("passed"), test.tests)) {
-        acc.passed.push(test);
-      } else {
-        acc.failed.push(test);
-      }
-      return acc;
-    }), {
-      passed: [],
-      failed: []
-    }, x);
-  };
-
   results = require("tape").results;
 
-  results.tests = filterPassedAndFailedTests(results.tests);
+  _ = require("backwards");
 
-  doc = window.document;
+  compose = _.compose;
 
-  $body = doc.getElementsByTagName("body")[0];
+  curry = _.curry;
 
-  $message = doc.getElementById("message");
+  every = _.every;
 
-  $summary = doc.getElementById("summary");
+  partition = _.partition;
 
-  $failedtests = doc.getElementById("failed-tests");
+  reduce = _.reduce;
 
-  $passedtests = doc.getElementById("passed-tests");
+  _dev = require("../../build/backwards.dev");
 
-  $modal = doc.getElementById("modal");
+  pluck = _dev.pluck;
 
-  message_failed = "Hmmm... Seems you have some more work to do before you can celebrate...";
-
-  message_passed = "Congratulations! All your tests have been successfully completed!";
+  assign = curry(function(a, b) {
+    return a = b;
+  });
 
 
   /*
   Declare Sauce Labs Test Results Object
   ======================================
   
-  Make sure that window.global_test_results.tests only contains the 
-  failed tests since they have a low buffer-size restriction that will 
-  cause the "job" to fail or return undefined if exceeded.
+  Make sure that window.global_test_results.tests only contains information about the failed tests since Sauce Labs have a low buffer-size restriction that will cause the "job" to fail or return undefined if exceeded.
    */
+
+  buildTestsObjectFromPartitionList = function(list) {
+    return {
+      passed: list[0],
+      failed: list[1]
+    };
+  };
+
+  buildTestsObject = compose(buildTestsObjectFromPartitionList, partition(compose(every(pluck("passed")), pluck("tests"))));
+
+  results.tests = buildTestsObject(results.tests);
 
   window.global_test_results = {
     passed: results.passed,
@@ -1876,6 +1835,22 @@
   Build User Interface
   ====================
    */
+
+  doc = window.document;
+
+  $body = doc.getElementsByTagName("body")[0];
+
+  $message = doc.getElementById("message");
+
+  $summary = doc.getElementById("summary");
+
+  $failedtests = doc.getElementById("failed-tests");
+
+  $passedtests = doc.getElementById("passed-tests");
+
+  message_failed = "Hmmm... Seems you have some more work to do before you can celebrate...";
+
+  message_passed = "Congratulations! All your tests have been successfully completed!";
 
   $summary.innerHTML = summaryTemplate({
     title: "backwards.js",
@@ -1907,6 +1882,6 @@
   tests passed or not.
    */
 
-  $message.innerHTML = either(message_failed, message_passed)(results.tests.failed.length);
+  $message.innerHTML = results.tests.failed.length ? message_failed : message_passed;
 
 }).call(this);

@@ -22,6 +22,7 @@ concat      = (a, b) -> a.concat b
 push        = (a, b) -> a.push b
 
 identity    = (x) -> x
+K           = (x) -> (y) -> x
 
 
 ###*
@@ -69,21 +70,6 @@ The __SERVER_SIDE__ property is a boolean indicating if the current environment 
 ###
 
 backwards.SERVER_SIDE = not backwards.CLIENT_SIDE
-
-
-# https://gist.github.com/brettz9/6093105
-if backwards.CLIENT_SIDE
-  try
-    slice.call document.documentElement
-  catch error
-    oldSlice = slice
-    slice = (beginning, end) ->
-      acc = []
-      if @charAt
-        acc.push @charAt i for x, i in @
-      else
-        acc.push x for x, i in @
-      return oldSlice.call acc, beginning, end or acc.length
 
 
 ###*
@@ -964,7 +950,7 @@ The __partition__ function takes a predicate function and an array or a string, 
 partition = (f, xs) ->
     acc = [[], []]
     forEach (x, i, xs) ->
-      if f x then acc[0].push x else acc[1].push x
+      if f x, i, xs then acc[0].push x else acc[1].push x
       return
     , slice.call xs
     acc
@@ -1118,6 +1104,12 @@ backwards.log = (x) ->
   x
 
 
+pluck = (key, xs) ->
+  xs[key]
+
+backwards.pluck = curry pluck
+
+
 # forEach (type) ->
 #   backwards["is#{ type }"] = (x) ->
 #     toString.call( x ).slice( 8, -1 ) is type
@@ -1125,17 +1117,17 @@ backwards.log = (x) ->
 # , "Arguments Array Boolean Date Error Function Null Number Object Promise RegExp String Undefined".split " "
 
 
-# ###*
-# A monad that may or may not contain a value. The Maybe monad implements the map interface. 
+###*
+A monad that may or may not contain a value. The Maybe monad implements the map interface. 
 
-# @class Maybe
-# @namespace backwards
-# @constructor
-# @public
-# @example
-#     var monad = new Maybe( 1234 );  // Maybe( 1234 )
-#     monad instanceof Maybe          // true
-# ###
+@class Maybe
+@namespace backwards
+@constructor
+@public
+@example
+    var monad = new Maybe( 1234 );  // Maybe( 1234 )
+    monad instanceof Maybe          // true
+###
 
 # class Maybe
 #   constructor: (value) ->
@@ -1176,6 +1168,57 @@ backwards.log = (x) ->
 #     @.value
 
 # backwards.Maybe = Maybe
+
+
+# class Either
+#   constructor: (left, right) ->
+#     return new Either left, right if not ( @ instanceof Either )
+#     @left  = left
+#     @right = right
+#     return @
+
+#   map: (f) ->
+#     right = @right
+#     if right?
+#       new Either @left, f right
+#     else @
+
+# backwards.Either = curry Either
+
+
+# https://gist.github.com/brettz9/6093105
+if backwards.CLIENT_SIDE
+  try
+    slice.call document.documentElement
+  catch error
+    oldSlice = slice
+    slice = (beginning, end) ->
+      acc = []
+      if @charAt
+        f = (x, i) ->
+          acc.push @charAt i
+          return
+      else
+        f = (x) ->
+          acc.push x
+          return
+
+      forEach f, @
+      
+      return oldSlice.call acc, beginning, end or acc.length
+
+# if backwards.CLIENT_SIDE
+#   try
+#     slice.call document.documentElement
+#   catch error
+#     oldSlice = slice
+#     slice = (beginning, end) ->
+#       acc = []
+#       if @charAt
+#         acc.push @charAt i for x, i in @
+#       else
+#         acc.push x for x, i in @
+#       return oldSlice.call acc, beginning, end or acc.length
 
 
 # Export backwards object

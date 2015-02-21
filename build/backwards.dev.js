@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-  var add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, error, every, exists, extend, filter, first, flatten, forEach, hasOwn, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, multiply, noop, object, objectProto, oldSlice, omit, partition, pick, push, reduce, slice, some, subtract, toString, __curry, _delete,
+  var K, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, error, every, exists, extend, filter, first, flatten, forEach, hasOwn, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, multiply, noop, object, objectProto, oldSlice, omit, partition, pick, pluck, push, reduce, slice, some, subtract, toString, __curry, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -52,6 +52,12 @@
     return x;
   };
 
+  K = function(x) {
+    return function(y) {
+      return x;
+    };
+  };
+
 
   /**
   A set of utility functions for functional programming in Javascript.
@@ -98,31 +104,6 @@
    */
 
   backwards.SERVER_SIDE = !backwards.CLIENT_SIDE;
-
-  if (backwards.CLIENT_SIDE) {
-    try {
-      slice.call(document.documentElement);
-    } catch (_error) {
-      error = _error;
-      oldSlice = slice;
-      slice = function(beginning, end) {
-        var acc, i, x, _i, _j, _len, _len1;
-        acc = [];
-        if (this.charAt) {
-          for (i = _i = 0, _len = this.length; _i < _len; i = ++_i) {
-            x = this[i];
-            acc.push(this.charAt(i));
-          }
-        } else {
-          for (i = _j = 0, _len1 = this.length; _j < _len1; i = ++_j) {
-            x = this[i];
-            acc.push(x);
-          }
-        }
-        return oldSlice.call(acc, beginning, end || acc.length);
-      };
-    }
-  }
 
 
   /**
@@ -1123,7 +1104,7 @@
     var acc;
     acc = [[], []];
     forEach(function(x, i, xs) {
-      if (f(x)) {
+      if (f(x, i, xs)) {
         acc[0].push(x);
       } else {
         acc[1].push(x);
@@ -1270,6 +1251,49 @@
     }
     return x;
   };
+
+  pluck = function(key, xs) {
+    return xs[key];
+  };
+
+  backwards.pluck = curry(pluck);
+
+
+  /**
+  A monad that may or may not contain a value. The Maybe monad implements the map interface. 
+  
+  @class Maybe
+  @namespace backwards
+  @constructor
+  @public
+  @example
+      var monad = new Maybe( 1234 );  // Maybe( 1234 )
+      monad instanceof Maybe          // true
+   */
+
+  if (backwards.CLIENT_SIDE) {
+    try {
+      slice.call(document.documentElement);
+    } catch (_error) {
+      error = _error;
+      oldSlice = slice;
+      slice = function(beginning, end) {
+        var acc, f;
+        acc = [];
+        if (this.charAt) {
+          f = function(x, i) {
+            acc.push(this.charAt(i));
+          };
+        } else {
+          f = function(x) {
+            acc.push(x);
+          };
+        }
+        forEach(f, this);
+        return oldSlice.call(acc, beginning, end || acc.length);
+      };
+    }
+  }
 
   if ((typeof define !== "undefined" && define !== null) && define.amd) {
     define("backwards", [], function() {

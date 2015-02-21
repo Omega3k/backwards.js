@@ -1,25 +1,5 @@
 "use strict"
 
-either = (a, b) ->
-  (x) ->
-    if x then a
-    else b
-
-reduce = (f, acc, x) ->
-  for _x, i in x
-    acc = f acc, _x, i, x
-  return acc
-
-every = (f, x) ->
-  for _x, i in x
-    if not f _x, i, x
-      return false
-  return true
-
-pluck = (key) ->
-  (x) ->
-    x[key]
-
 valueToString = (x) ->
   if x then x.toString()
   else if x is false then "false"
@@ -74,43 +54,70 @@ testsTemplate = (x) ->
   #{ forEachTemplate testTemplate, x.tests }
   "
 
-filterPassedAndFailedTests = (x) ->
-  reduce ((acc, test) ->
-    if every pluck( "passed" ), test.tests
-      acc.passed.push test
-    else acc.failed.push test
-    acc
-    ), { passed: [], failed: [] }, x
+
+results   = require( "tape" ).results
+_         = require "backwards"
+compose   = _.compose
+curry     = _.curry
+every     = _.every
+partition = _.partition
+reduce    = _.reduce
+
+_dev      = require "../../build/backwards.dev"
+pluck     = _dev.pluck
+
+assign    = curry (a, b) -> a = b
 
 
-results          = require( "tape" ).results
-# EventStream      = require "EventStream"
-results.tests    = filterPassedAndFailedTests results.tests
-doc              = window.document
+# get = curry (key, x) ->
+#   x[key]
 
-$body            = doc.getElementsByTagName( "body" )[ 0 ]
-$message         = doc.getElementById "message"
-$summary         = doc.getElementById "summary"
-$failedtests     = doc.getElementById "failed-tests"
-$passedtests     = doc.getElementById "passed-tests"
-$modal           = doc.getElementById "modal"
+# pluck = get
 
-# $modal.innerHTML = "Mouse Cursor here"
+# set = curry (object, key, value) ->
+#   if key? then object[key] = value else object = value
+#   object
 
-message_failed = "
-  Hmmm... Seems you have some more work to do before you can celebrate..."
-
-message_passed = "
-  Congratulations! All your tests have been successfully completed!"
 
 ###
 Declare Sauce Labs Test Results Object
 ======================================
 
-Make sure that window.global_test_results.tests only contains the 
-failed tests since they have a low buffer-size restriction that will 
-cause the "job" to fail or return undefined if exceeded. 
+Make sure that window.global_test_results.tests only contains information about the failed tests since Sauce Labs have a low buffer-size restriction that will cause the "job" to fail or return undefined if exceeded. 
 ###
+
+
+buildTestsObjectFromPartitionList = (list) ->
+  {
+    passed: list[0]
+    failed: list[1]
+  }
+
+
+# results.tests = compose(
+#   # set results, "tests"
+#   buildTestsObjectFromPartitionList
+#   partition(
+#     compose(
+#       every pluck "passed"
+#       pluck "tests"
+#       )
+#     )
+#   )( results.tests )
+
+
+buildTestsObject = compose(
+  buildTestsObjectFromPartitionList
+  partition(
+    compose(
+      every pluck "passed"
+      pluck "tests"
+      )
+    )
+  )
+
+
+results.tests = buildTestsObject results.tests
 
 window.global_test_results =
   passed: results.passed
@@ -123,6 +130,20 @@ window.global_test_results =
 Build User Interface
 ====================
 ###
+
+doc           = window.document
+$body         = doc.getElementsByTagName( "body" )[ 0 ]
+$message      = doc.getElementById "message"
+$summary      = doc.getElementById "summary"
+$failedtests  = doc.getElementById "failed-tests"
+$passedtests  = doc.getElementById "passed-tests"
+
+
+message_failed = "
+  Hmmm... Seems you have some more work to do before you can celebrate..."
+
+message_passed = "
+  Congratulations! All your tests have been successfully completed!"
 
 $summary.innerHTML = summaryTemplate
   title : "backwards.js"
@@ -149,75 +170,4 @@ Display a humouristic message based on either all
 tests passed or not. 
 ###
 
-$message.innerHTML = either(
-  message_failed
-  message_passed
-  )( results.tests.failed.length )
-
-
-# # Click Events
-
-# globalClickEvent  = new EventStream "click", $body
-# globalClickTarget = globalClickEvent.map (x) -> x.target
-# globalClickNumber = globalClickEvent.map (x, i) -> i + 1
-
-# logClicks = globalClickTarget.subscribe (val, i, ctx) ->
-#   if i is 3
-#     console.log "
-#       globalClickEvent: Has run three times and is therefore 
-#       unsubscribed. 
-#       "
-#     @unsubscribe()
-#   else
-#     console.log "globalClickEvent: ", i, val, ctx
-
-
-# printNumberOfTimesClicked = globalClickNumber.subscribe (x) ->
-#   $message.innerHTML = "
-#     'window.document' has been clicked #{ x } times. 
-#     "
-
-
-# logNameClassClicked = globalClickTarget.subscribe (x) ->
-#   console.log "
-#     '<#{ x.localName } 
-#     id=\"#{ x.id }\" 
-#     class=\"#{ x.className }\">' has been clicked. 
-#     "
-
-# accumulatedNumber = globalClickNumber.reduce ((a, b) -> a += b), '0'
-
-# logAccumulatedNumber = accumulatedNumber.subscribe (acc) ->
-#   console.log "accumulatedNumber: #{ acc }"
-
-
-# # Mouse Move Events
-
-# globalMouseMove = new EventStream "mousemove", $body
-
-# modalMouseMove = globalMouseMove.subscribe (x) ->
-#   $modal.style.top  = "#{ x.pageY + 10 }px"
-#   $modal.style.left = "#{ x.pageX + 10 }px"
-
-
-# # Resize Events
-
-# globalResizeEvent = new EventStream "resize", window
-
-# logHeightWidth = globalResizeEvent.subscribe (x) ->
-#   ref    = x.target
-#   height = ref.innerHeight
-#   width  = ref.innerWidth
-#   console.log "
-#     Window is resized to 
-#     #{ width }px x #{ height }px ( width x height )
-#     "
-
-# globalResize800Plus = globalResizeEvent.filter (e) ->
-#   e.target.innerWidth > 800
-
-# logWidthWhenBiggerThan800 = globalResize800Plus.subscribe (e) ->
-#   console.log "
-#     Window is bigger than 800px in width
-#     ( #{ e.target.innerWidth }px )
-#     "
+$message.innerHTML = if results.tests.failed.length then message_failed else message_passed

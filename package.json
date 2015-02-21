@@ -1,6 +1,6 @@
 {
-  "name": "backwards",
-  "version": "0.0.3",
+  "name": "backwards-build-process",
+  "version": "0.0.0",
   "description": "A set of utility functions for functional programming in JavaScript",
   "main": "build/backwards.min.js",
   "scripts": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Omega3k/backwards.js",
   "devDependencies": {
+    "backwards": "0.0.3",
     "glob": "^4.0.6",
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.0.1",
