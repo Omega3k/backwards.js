@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-  var K, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, error, every, exists, extend, filter, first, flatten, forEach, hasOwn, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, multiply, noop, object, objectProto, oldSlice, omit, partition, pick, pluck, push, reduce, slice, some, subtract, toString, __curry, _delete,
+  var I, K, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, error, every, exists, extend, filter, first, flatten, forEach, hasOwn, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, multiply, noop, object, objectProto, oldSlice, omit, partition, pick, pluck, push, reduce, slice, some, subtract, toArray, toString, __curry, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -48,15 +48,17 @@
     return a.push(b);
   };
 
-  identity = function(x) {
+  I = function(x) {
     return x;
   };
 
   K = function(x) {
-    return function(y) {
+    return function() {
       return x;
     };
   };
+
+  identity = I;
 
 
   /**
@@ -79,7 +81,7 @@
   @public
    */
 
-  backwards.VERSION = "0.0.3";
+  backwards.VERSION = "0.0.5";
 
 
   /**
@@ -371,8 +373,8 @@
       isFinite( Infinity );       // false
    */
 
-  isFinite = isFinite || function(x) {
-    return isNumber(x) && x !== Infinity;
+  isFinite = Number.isFinite || function(x) {
+    return isNumber(x) && !isNaN(x) && x !== Infinity && x > 0;
   };
 
   backwards.isFinite = isFinite;
@@ -477,7 +479,7 @@
    */
 
   isObject = function(x) {
-    if ((x == null) || isArguments(x) || isElement(x)) {
+    if ((x == null) || isArguments(x) || isElement(x) || isFunction(x.then)) {
       return false;
     } else {
       return isTypeOf("Object", x);
@@ -836,8 +838,8 @@
 
   extend = function() {
     var acc, objects;
-    acc = arguments[0], objects = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    acc = acc || {};
+    objects = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    acc = {};
     forEach(function(object) {
       return forEach(function(value, key) {
         acc[key] = value;
@@ -864,7 +866,7 @@
 
   copy = function(x) {
     if (isObject(x)) {
-      return extend({}, x);
+      return extend(x);
     } else {
       return map(identity, x);
     }
@@ -1103,30 +1105,42 @@
   partition = function(f, xs) {
     var acc;
     acc = [[], []];
+    if (isString(xs)) {
+      xs = toArray(xs);
+    }
     forEach(function(x, i, xs) {
       if (f(x, i, xs)) {
         acc[0].push(x);
       } else {
         acc[1].push(x);
       }
-    }, slice.call(xs));
+    }, xs);
     return acc;
   };
 
   backwards.partition = curry(partition);
 
-  either = function(a, b) {
-    if (b) {
-      return b;
+  toArray = function(xs) {
+    var result;
+    if (isFunction(xs.charAt)) {
+      result = [];
+      forEach(function(value, index, string) {
+        return result.push(string.charAt(index));
+      }, xs);
     } else {
-      return a;
+      result = copy(xs);
     }
+    return result;
+  };
+
+  either = function(a, b) {
+    return b != null ? b : a;
   };
 
   backwards.either = curry(either);
 
   maybe = function(f, x) {
-    if (x) {
+    if (x != null) {
       return f(x);
     } else {
       return void 0;
@@ -1308,7 +1322,7 @@
   } else if (typeof window !== "undefined" && window !== null) {
     window.backwards = backwards;
   } else {
-    return backwards;
+    throw new Error("backwards.js has not exported itself. ");
   }
 
 
@@ -1334,5 +1348,3 @@
    */
 
 }).call(this);
-
-//# sourceMappingURL=backwards.dev.js.map

@@ -38,5 +38,6 @@ _tmp
 # Documentation / YUIDOCs
 docs
 
-# Build 
+# Build Artifacts
 # build
+src/specs/*.js

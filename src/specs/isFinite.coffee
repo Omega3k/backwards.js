@@ -8,8 +8,6 @@ test "#{ txt } be a function", (t) ->
 
 test "#{ txt } return true if given a finite Number", (t) ->
   t.equal isFinite( 1234 )           , true
-  t.equal isFinite( NaN )            , true
-  t.equal isFinite( new Number() )   , true
   t.equal isFinite( +new Date() )    , true
   t.end()
 
@@ -34,7 +32,8 @@ test "#{ txt } return false if given anything else", (t) ->
   t.equal isFinite( new Function() ) , false
 
   t.equal isFinite( Infinity )       , false
-  
+  t.equal isFinite( NaN )            , false
+  t.equal isFinite( new Number() )   , false
   t.equal isFinite( {} )             , false
   t.equal isFinite( new Object() )   , false
   t.equal isFinite( /./ )            , false

@@ -21,8 +21,9 @@ append      = (a, b) -> a += b
 concat      = (a, b) -> a.concat b
 push        = (a, b) -> a.push b
 
-identity    = (x) -> x
-K           = (x) -> (y) -> x
+I           = (x) -> x
+K           = (x) -> () -> x
+identity    = I
 
 
 ###*
@@ -45,7 +46,7 @@ The __VERSION__ property is a string indicating the version of __backwards__ as 
 @public
 ###
 
-backwards.VERSION = "0.0.3"
+backwards.VERSION = "0.0.5"
 
 
 ###*
@@ -303,8 +304,8 @@ Check if an Object is a finite number.
 # isFinite = (x) ->
 #   isFinite(x) and not isNaN parseFloat x
 
-isFinite = isFinite or (x) ->
-  isNumber(x) and x isnt Infinity
+isFinite = Number.isFinite or (x) ->
+  isNumber(x) and not isNaN(x) and x isnt Infinity and x > 0
 
 backwards.isFinite = isFinite
 
@@ -400,7 +401,7 @@ Check if an Object is an Object.
 ###
 
 isObject = (x) ->
-  if not x? or isArguments( x ) or isElement( x )
+  if not x? or isArguments( x ) or isElement( x ) or isFunction( x.then )
     return false
   else return isTypeOf "Object", x
 
@@ -711,8 +712,8 @@ The __extend__ function takes two or more objects and returns the first object (
     // { id: 2, age: 0, gender: "male", name: "John Doe Jr." }
 ###
 
-extend = (acc, objects...) ->
-  acc = acc or {}
+extend = (objects...) ->
+  acc = {}
   forEach (object) ->
     forEach (value, key) ->
       acc[key] = value
@@ -738,7 +739,7 @@ the Object.
 ###
 
 copy = (x) ->
-  if isObject x then extend {}, x
+  if isObject x then extend x
   else map identity, x
 
 backwards.copy = copy
@@ -949,23 +950,36 @@ The __partition__ function takes a predicate function and an array or a string, 
 
 partition = (f, xs) ->
     acc = [[], []]
+    xs = toArray xs if isString xs
     forEach (x, i, xs) ->
       if f x, i, xs then acc[0].push x else acc[1].push x
       return
-    , slice.call xs
+    , xs
+    # , slice.call xs
     acc
 
 backwards.partition = curry partition
 
 
+toArray = (xs) ->
+  if isFunction xs.charAt
+    result = []
+    forEach (value, index, string) ->
+      result.push string.charAt index
+    , xs
+  else
+    result = copy xs
+  result
+
+
 either = (a, b) ->
-  if b then b else a
+  b ? a
 
 backwards.either = curry either
 
 
 maybe = (f, x) ->
-  if x then f x else undefined
+  if x? then f x else undefined
 
 backwards.maybe = curry maybe
 
@@ -1240,7 +1254,8 @@ else if window?
   window.backwards = backwards
 
 # Return backwards if none of the above
-else return backwards
+else
+  throw new Error "backwards.js has not exported itself. "
 
 
 ###

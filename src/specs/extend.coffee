@@ -12,8 +12,7 @@ test "#{ txt } be a function", (t) ->
   t.equal typeof extend, "function"
   t.end()
 
-test "#{ txt } extend Objects and return the first object 
-with side-effects", (t) ->
+test "#{ txt } return a new object extended with the properties of the given objects without causing side-effects on the given objects", (t) ->
   obj =
     id    : 1
     age   : 29
@@ -37,9 +36,9 @@ with side-effects", (t) ->
   parent = extend( obj, { age: 30, name: "John Doe Sr." } )
   child  = extend( {}, obj, { id: 2, age: 0, name: "John Doe Jr." } )
 
-  t.equal expected_parent, stringify parent
-  t.equal expected_parent, stringify obj
-  t.equal expected_child , stringify child
+  t.equal expected_parent , stringify parent
+  t.equal expected_child  , stringify child
+  t.equal actual          , stringify obj
   t.end()
 
 

@@ -4,7 +4,7 @@
   "description": "A set of utility functions for functional programming in JavaScript",
   "main": "backwards.min.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "echo \"Error: no tests specified\" && exit 1"
   },
   "repository": {
     "type": "git",

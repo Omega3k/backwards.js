@@ -256,7 +256,7 @@
     return t.end();
   });
 
-  test("" + txt + " extend Objects and return the first object with side-effects", function(t) {
+  test("" + txt + " return a new object extended with the properties of the given objects without causing side-effects on the given objects", function(t) {
     var actual, child, expected_child, expected_parent, obj, parent;
     obj = {
       id: 1,
@@ -287,8 +287,8 @@
       name: "John Doe Jr."
     });
     t.equal(expected_parent, stringify(parent));
-    t.equal(expected_parent, stringify(obj));
     t.equal(expected_child, stringify(child));
+    t.equal(actual, stringify(obj));
     return t.end();
   });
 
@@ -771,8 +771,6 @@
 
   test("" + txt + " return true if given a finite Number", function(t) {
     t.equal(isFinite(1234), true);
-    t.equal(isFinite(NaN), true);
-    t.equal(isFinite(new Number()), true);
     t.equal(isFinite(+new Date()), true);
     return t.end();
   });
@@ -801,6 +799,8 @@
     }), false);
     t.equal(isFinite(new Function()), false);
     t.equal(isFinite(Infinity), false);
+    t.equal(isFinite(NaN), false);
+    t.equal(isFinite(new Number()), false);
     t.equal(isFinite({}), false);
     t.equal(isFinite(new Object()), false);
     t.equal(isFinite(/./), false);
