@@ -9,9 +9,14 @@ module.exports =
   dev:
     options:
       title  : "Dev task completed successfully"
-      message: "Web server is up and running on http://localhost:9999"
+      message: "Server running on http://localhost:9999"
 
-  server:
+  gruntfile:
     options:
-      title  : "http://localhost:9999"
-      message: "Web server is ready!"
+      title  : "Grunt task changed"
+      message: "Remember to restart \"grunt\" for the changes to take effect. "
+
+  version_number:
+    options:
+      title  : "Version number is updated"
+      message: "Updated backwards.VERSION and bower.json"

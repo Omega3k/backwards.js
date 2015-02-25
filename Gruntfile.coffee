@@ -27,7 +27,9 @@ reduce        = _.reduce
 timegrunt     = require "time-grunt"
 fs            = require "fs"
 readDir       = fs.readdirSync
-readFile      = fs.readFileSync
+readFile      = (filename) ->
+  fs.readFileSync filename, encoding: "utf-8"
+
 writeFile     = fs.writeFileSync
 readJSONFile  = compose JSON.parse, readFile
 
@@ -35,6 +37,11 @@ writeJSONFile = curry (filename, data) ->
   fs.writeFileSync filename, JSON.stringify data
 
 replace       = curry (regexp, string, xs) -> xs.replace regexp, string
+split         = curry (regexp, string) -> string.split regexp
+join          = curry (regexp, array) -> array.join regexp
+lines         = split /\r\n|\r|\n/
+unlines       = join "\n"
+
 removeExt     = replace /.coffee$/, ""
 containsGrunt = contains "grunt-", 0
 
@@ -53,21 +60,16 @@ loadNpmTasks = (grunt, npm_tasks) ->
   , npm_tasks
 
 
-# LICENSE       = readFile "LICENSE"
-# package_json  = readJSONFile "package.json"
-
-
 module.exports = (grunt) ->
-  timegrunt grunt
   grunt.initConfig extend(
     loadGruntTasksFromPath "./src/grunt-tasks"
     package  : readJSONFile "package.json"
     LICENSE  : readFile "LICENSE"
     backwards: readJSONFile "build/package.json"
     )
-  # loadNpmTasks grunt, package_json.devDependencies
   loadNpmTasks grunt, grunt.config.get( "package" ).devDependencies
   grunt.task.run "notify_hooks"
+  timegrunt grunt
 
 
   grunt.registerTask "default", "dev"
@@ -82,6 +84,8 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask "build", [
+    "updateVersionNumber"
+    "notify:version_number"
     "coffee"
     # "browserify:dist"
     "jshint"
@@ -95,6 +99,24 @@ module.exports = (grunt) ->
     "connect"
     "saucelabs-custom"
   ]
+
+
+  grunt.registerTask "updateVersionNumber", () ->
+    file           = "src/backwards.coffee"
+    version_number = grunt.config.get( "backwards" ).version
+    
+    replaceVersionNumber = replace(
+      "backwards.VERSION = \"0.0.5\""
+      "backwards.VERSION = \"#{ version_number }\""
+      )
+
+    writeFile file, compose(
+      unlines
+      map replaceVersionNumber
+      lines
+      ) readFile file
+    return
+
 
   grunt.registerTask "createGitConfigJSON", () ->
     writeJSONFile "gitinfo.json", grunt.config.get "gitinfo"

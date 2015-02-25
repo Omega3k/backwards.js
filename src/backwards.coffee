@@ -23,7 +23,6 @@ push        = (a, b) -> a.push b
 
 I           = (x) -> x
 K           = (x) -> () -> x
-identity    = I
 
 
 ###*
@@ -46,7 +45,7 @@ The __VERSION__ property is a string indicating the version of __backwards__ as 
 @public
 ###
 
-backwards.VERSION = "0.0.5"
+backwards.VERSION = "0.0.6"
 
 
 ###*
@@ -740,7 +739,7 @@ the Object.
 
 copy = (x) ->
   if isObject x then extend x
-  else map identity, x
+  else map I, x
 
 backwards.copy = copy
 
@@ -1123,6 +1122,11 @@ pluck = (key, xs) ->
 
 backwards.pluck = curry pluck
 
+split   = curry (regexp, string) -> string.split regexp
+join    = curry (regexp, array) -> array.join regexp
+lines   = split /\r\n|\r|\n/
+unlines = join "\n"
+
 
 # forEach (type) ->
 #   backwards["is#{ type }"] = (x) ->
@@ -1201,25 +1205,25 @@ A monad that may or may not contain a value. The Maybe monad implements the map 
 
 
 # https://gist.github.com/brettz9/6093105
-if backwards.CLIENT_SIDE
-  try
-    slice.call document.documentElement
-  catch error
-    oldSlice = slice
-    slice = (beginning, end) ->
-      acc = []
-      if @charAt
-        f = (x, i, xs) ->
-          acc.push xs.charAt i
-          return
-      else
-        f = (x) ->
-          acc.push x
-          return
+# if backwards.CLIENT_SIDE
+#   try
+#     slice.call document.documentElement
+#   catch error
+#     oldSlice = slice
+#     slice = (beginning, end) ->
+#       acc = []
+#       if @charAt
+#         f = (x, i, xs) ->
+#           acc.push xs.charAt i
+#           return
+#       else
+#         f = (x) ->
+#           acc.push x
+#           return
 
-      forEach f, @
+#       forEach f, @
       
-      return oldSlice.call acc, beginning, end or acc.length
+#       return oldSlice.call acc, beginning, end or acc.length
 
 # if backwards.CLIENT_SIDE
 #   try
@@ -1255,7 +1259,7 @@ else if window?
 
 # Return backwards if none of the above
 else
-  throw new Error "backwards.js has not exported itself. "
+  throw new Error "backwards.js could not be exported. "
 
 
 ###
@@ -1314,6 +1318,7 @@ IDEAS
 #   render()
 #   lastTime = now
 
+# https://www.youtube.com/watch?v=XcS-LdEBUkE
 # # map :: (a -> b) -> [a] -> [b]
 # map = (f, [x, xs...]) ->
 #   if x is undefined

@@ -1,10 +1,13 @@
 module.exports =
   backwards_dev: 
-    files: ["src/backwards.coffee"]
+    files: ["src/backwards.coffee", "build/package.json"]
     tasks: [
+      "updateVersionNumber"
+      "notify:version_number"
       "coffee:backwards_dev"
       "jshint:backwards_dev"
       "tape"
+      "yuidoc"
     ]
 
   tests: 
@@ -17,13 +20,14 @@ module.exports =
 
   test_suite_front_end: 
     files: ["test-suite/**/*.coffee"]
-    tasks: [
-      "coffee"
-    ]
+    tasks: ["coffee:test_suite_front_end"]
 
-  docs: 
-    files: ["build/backwards.dev.js"]
-    tasks: [
-      "jshint:backwards_dev"
-      "yuidoc"
-    ]
+  gruntfile: 
+    files: ["Gruntfile.coffee", "src/grunt-tasks/**/*.coffee"]
+    tasks: ["notify:gruntfile"]
+
+  # package: 
+  #   files: ["build/package.json"]
+  #   tasks: [
+  #     "updateBackwardsVersionNumber"
+  #   ]

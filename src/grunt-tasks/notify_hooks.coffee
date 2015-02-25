@@ -5,5 +5,5 @@ module.exports =
     enabled                 : true
     max_jshint_notifications: 5
     title                   : "backwards.js"
-    success                 : true
+    success                 : false
     duration                : 3

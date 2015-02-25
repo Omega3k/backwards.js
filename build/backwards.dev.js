@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-  var I, K, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, error, every, exists, extend, filter, first, flatten, forEach, hasOwn, identity, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, keys, last, map, max, maybe, min, multiply, noop, object, objectProto, oldSlice, omit, partition, pick, pluck, push, reduce, slice, some, subtract, toArray, toString, __curry, _delete,
+  var I, K, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, every, exists, extend, filter, first, flatten, forEach, hasOwn, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, join, keys, last, lines, map, max, maybe, min, multiply, noop, object, objectProto, omit, partition, pick, pluck, push, reduce, slice, some, split, subtract, toArray, toString, unlines, __curry, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -58,8 +58,6 @@
     };
   };
 
-  identity = I;
-
 
   /**
   A set of utility functions for functional programming in Javascript.
@@ -81,7 +79,7 @@
   @public
    */
 
-  backwards.VERSION = "0.0.5";
+  backwards.VERSION = "0.0.6";
 
 
   /**
@@ -868,7 +866,7 @@
     if (isObject(x)) {
       return extend(x);
     } else {
-      return map(identity, x);
+      return map(I, x);
     }
   };
 
@@ -1272,6 +1270,18 @@
 
   backwards.pluck = curry(pluck);
 
+  split = curry(function(regexp, string) {
+    return string.split(regexp);
+  });
+
+  join = curry(function(regexp, array) {
+    return array.join(regexp);
+  });
+
+  lines = split(/\r\n|\r|\n/);
+
+  unlines = join("\n");
+
 
   /**
   A monad that may or may not contain a value. The Maybe monad implements the map interface. 
@@ -1284,30 +1294,6 @@
       var monad = new Maybe( 1234 );  // Maybe( 1234 )
       monad instanceof Maybe          // true
    */
-
-  if (backwards.CLIENT_SIDE) {
-    try {
-      slice.call(document.documentElement);
-    } catch (_error) {
-      error = _error;
-      oldSlice = slice;
-      slice = function(beginning, end) {
-        var acc, f;
-        acc = [];
-        if (this.charAt) {
-          f = function(x, i, xs) {
-            acc.push(xs.charAt(i));
-          };
-        } else {
-          f = function(x) {
-            acc.push(x);
-          };
-        }
-        forEach(f, this);
-        return oldSlice.call(acc, beginning, end || acc.length);
-      };
-    }
-  }
 
   if ((typeof define !== "undefined" && define !== null) && define.amd) {
     define("backwards", [], function() {
@@ -1322,7 +1308,7 @@
   } else if (typeof window !== "undefined" && window !== null) {
     window.backwards = backwards;
   } else {
-    throw new Error("backwards.js has not exported itself. ");
+    throw new Error("backwards.js could not be exported. ");
   }
 
 

@@ -17,4 +17,3 @@ module.exports =
       require : true
 
   backwards_dev: ["build/backwards.dev.js"]
-  # tape_tests   : ["_tmp/tape_tests.js"]

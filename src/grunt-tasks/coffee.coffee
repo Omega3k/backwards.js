@@ -7,7 +7,7 @@ module.exports =
     files:
       "build/backwards.dev.js": ["src/backwards.coffee"]
 
-  "test-suite":
+  test_suite_front_end:
     files:
       "test-suite/ux.js": [
         "src/specs/**/*.coffee"
