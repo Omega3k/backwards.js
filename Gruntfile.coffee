@@ -109,7 +109,8 @@ module.exports = (grunt) ->
     grunt.util.spawn(
       cmd : "istanbul"
       args: ["cover", "src/specs/_tape_tests.js"]
-      () ->
+      (error, result) ->
+        return
       )
     return
 
