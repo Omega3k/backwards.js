@@ -5,6 +5,7 @@
 # https://saucelabs.com/platforms/webdriver
 # https://docs.saucelabs.com/reference/rest-api/#jsunit
 
+# https://github.com/gotwarlost/istanbul
 # https://github.com/gruntjs/grunt-contrib-yuidoc
 # http://yui.github.io/yuidoc/syntax
 
@@ -88,6 +89,8 @@ module.exports = (grunt) ->
     "updateVersionNumber"
     "notify:version_number"
     "coffee"
+    "updateTestCoverage"
+    "coveralls"
     # "browserify:dist"
     "jshint"
     "tape"
@@ -100,6 +103,15 @@ module.exports = (grunt) ->
     "connect"
     "saucelabs-custom"
   ]
+
+
+  grunt.registerTask "updateTestCoverage", () ->
+    grunt.util.spawn(
+      cmd : "istanbul"
+      args: ["cover", "src/specs/_tape_tests.js"]
+      () ->
+      )
+    return
 
 
   grunt.registerTask "updateVersionNumber", () ->

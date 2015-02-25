@@ -2,7 +2,6 @@
 
 module.exports =
   options:
-    # src  : "coverage-results/lcov.info"
     force: false
 
   backwards:

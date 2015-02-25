@@ -4,8 +4,8 @@
   "description": "A set of utility functions for functional programming in JavaScript",
   "main": "build/backwards.min.js",
   "scripts": {
-    "test": "istanbul cover src/specs/_tape_tests.js",
-    "cmd": "node tests/_tests.min.js"
+    "test": "grunt test",
+    "coverage": "istanbul cover src/specs/_tape_tests.js"
   },
   "repository": {
     "type": "git",
