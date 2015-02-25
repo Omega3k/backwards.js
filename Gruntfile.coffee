@@ -98,18 +98,23 @@ module.exports = (grunt) ->
 
   grunt.registerTask "test", [
     "build"
-    "updateTestCoverage"
-    "coveralls"
+    # "updateTestCoverage"
     "connect"
     "saucelabs-custom"
   ]
 
+  grunt.registerTask "cover", [
+    "updateTestCoverage"
+    "coveralls"
+  ]
 
-  grunt.registerTask "updateTestCoverage", () ->
+
+  grunt.registerTask "updateTestCoverage", "updates test coverage", () ->
     grunt.util.spawn(
       cmd : "istanbul"
       args: ["cover", "src/specs/_tape_tests.js"]
       (error, result) ->
+        # grunt.task.run ["coveralls"] if not error?
         return
       )
     return
