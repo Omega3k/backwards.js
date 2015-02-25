@@ -3,6 +3,7 @@ node_js:
 - 0.1
 before_script:
 - npm install -g grunt-cli
+- npm install -g istanbul
 - git submodule update --init --recursive
 env:
   global:

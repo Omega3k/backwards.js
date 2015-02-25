@@ -27,6 +27,7 @@ reduce        = _.reduce
 timegrunt     = require "time-grunt"
 fs            = require "fs"
 readDir       = fs.readdirSync
+isFile        = (file) -> fs.statSync( file ).isFile()
 readFile      = (filename) ->
   fs.readFileSync filename, encoding: "utf-8"
 
@@ -35,6 +36,7 @@ readJSONFile  = compose JSON.parse, readFile
 
 writeJSONFile = curry (filename, data) ->
   fs.writeFileSync filename, JSON.stringify data
+
 
 replace       = curry (regexp, string, xs) -> xs.replace regexp, string
 split         = curry (regexp, string) -> string.split regexp
@@ -61,12 +63,11 @@ loadNpmTasks = (grunt, npm_tasks) ->
 
 
 module.exports = (grunt) ->
-  grunt.initConfig extend(
-    loadGruntTasksFromPath "./src/grunt-tasks"
+  grunt.initConfig extend loadGruntTasksFromPath( "./src/grunt-tasks" ),
     package  : readJSONFile "package.json"
     LICENSE  : readFile "LICENSE"
     backwards: readJSONFile "build/package.json"
-    )
+  
   loadNpmTasks grunt, grunt.config.get( "package" ).devDependencies
   grunt.task.run "notify_hooks"
   timegrunt grunt

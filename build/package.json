@@ -22,5 +22,6 @@
   "bugs": {
     "url": "https://github.com/Omega3k/backwards.js/issues"
   },
-  "homepage": "https://github.com/Omega3k/backwards.js"
+  "homepage": "https://github.com/Omega3k/backwards.js",
+  "devDependencies": {}
 }
