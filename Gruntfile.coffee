@@ -86,6 +86,7 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask "build", [
+    "updateREADMEFile"
     "updateVersionNumber"
     "notify:version_number"
     "coffee"
@@ -117,6 +118,17 @@ module.exports = (grunt) ->
         # grunt.task.run ["coveralls"] if not error?
         return
       )
+    return
+
+
+  grunt.registerTask "updateREADMEFile", () ->
+    # writeFile file, compose(
+    #   unlines
+    #   map replaceVersionNumber
+    #   lines
+    #   ) readFile file
+
+    writeFile "build/README.md", readFile "README.md"
     return
 
 
