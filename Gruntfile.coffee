@@ -15,26 +15,28 @@
 
 "use strict"
 
-_            = require "backwards"
-compose      = _.compose
-curry        = _.curry
-forEach      = _.forEach
-contains     = _.contains
-map          = _.map
-reduce       = _.reduce
+_             = require "backwards"
+compose       = _.compose
+curry         = _.curry
+extend        = _.extend
+forEach       = _.forEach
+contains      = _.contains
+map           = _.map
+reduce        = _.reduce
 
-timegrunt    = require "time-grunt"
-fs           = require "fs"
-readDir      = fs.readdirSync
-readFile     = fs.readFileSync
-readJSONFile = compose JSON.parse, readFile
+timegrunt     = require "time-grunt"
+fs            = require "fs"
+readDir       = fs.readdirSync
+readFile      = fs.readFileSync
+writeFile     = fs.writeFileSync
+readJSONFile  = compose JSON.parse, readFile
 
-LICENSE      = readFile "LICENSE"
-package_json = readJSONFile "package.json"
+writeJSONFile = curry (filename, data) ->
+  fs.writeFileSync filename, JSON.stringify data
 
-
-replace      = curry (regexp, string, xs) -> xs.replace regexp, string
-removeExt    = replace /.coffee$/, ""
+replace       = curry (regexp, string, xs) -> xs.replace regexp, string
+removeExt     = replace /.coffee$/, ""
+containsGrunt = contains "grunt-", 0
 
 loadGruntTasksFromPath = (path) ->
   reduce (acc, filename) ->
@@ -42,8 +44,6 @@ loadGruntTasksFromPath = (path) ->
     acc
   , {}, map removeExt, readDir path
 
-
-containsGrunt = contains "grunt-", 0
 
 loadNpmTasks = (grunt, npm_tasks) ->
   forEach (value, key) ->
@@ -53,19 +53,31 @@ loadNpmTasks = (grunt, npm_tasks) ->
   , npm_tasks
 
 
+# LICENSE       = readFile "LICENSE"
+# package_json  = readJSONFile "package.json"
+
+
 module.exports = (grunt) ->
   timegrunt grunt
-  grunt.initConfig loadGruntTasksFromPath "./src/grunt-tasks"
-  loadNpmTasks grunt, package_json.devDependencies
+  grunt.initConfig extend(
+    loadGruntTasksFromPath "./src/grunt-tasks"
+    package  : readJSONFile "package.json"
+    LICENSE  : readFile "LICENSE"
+    backwards: readJSONFile "build/package.json"
+    )
+  # loadNpmTasks grunt, package_json.devDependencies
+  loadNpmTasks grunt, grunt.config.get( "package" ).devDependencies
   grunt.task.run "notify_hooks"
 
 
   grunt.registerTask "default", "dev"
   
   grunt.registerTask "dev", [
+    "gitinfo"
     "build"
     "connect"
     "notify:dev"
+    # "createGitConfigJSON"
     "watch"
   ]
 
@@ -83,3 +95,7 @@ module.exports = (grunt) ->
     "connect"
     "saucelabs-custom"
   ]
+
+  grunt.registerTask "createGitConfigJSON", () ->
+    writeJSONFile "gitinfo.json", grunt.config.get "gitinfo"
+    return

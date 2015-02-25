@@ -1,3 +1,5 @@
+# https://www.npmjs.com/package/grunt-saucelabs
+
 addBrowser = (os, name, version) ->
   return {
     platform   : os
@@ -27,9 +29,11 @@ browsers_list = [
 module.exports =
   all:
     options:
-      urls         : ["http://0.0.0.0:9999/test-suite/"]
       tunnelTimeout: 5
-      build        : process.env.TRAVIS_JOB_ID
       concurrency  : 6
+      build        : process.env.TRAVIS_JOB_ID
       browsers     : browsers_list
-      tags         : ["master"]
+      testname     : "backwards@<%= gitinfo.local.branch.current.SHA %>"
+      tags         : "<%= backwards.keywords %>"
+      # tags         : ["master"]
+      urls         : ["http://0.0.0.0:9999/test-suite/"]
