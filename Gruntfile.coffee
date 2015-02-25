@@ -89,8 +89,6 @@ module.exports = (grunt) ->
     "updateVersionNumber"
     "notify:version_number"
     "coffee"
-    "updateTestCoverage"
-    "coveralls"
     # "browserify:dist"
     "jshint"
     "tape"
@@ -100,6 +98,8 @@ module.exports = (grunt) ->
 
   grunt.registerTask "test", [
     "build"
+    "updateTestCoverage"
+    "coveralls"
     "connect"
     "saucelabs-custom"
   ]
