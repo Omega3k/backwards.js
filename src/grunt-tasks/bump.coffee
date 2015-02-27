@@ -5,13 +5,13 @@ module.exports =
   options:
     files             : ["build/package.json", "bower.json"]
     updateConfigs     : []
-    commit            : false
+    commit            : true
     commitMessage     : "Release v%VERSION%"
     commitFiles       : ["-a"]
     createTag         : true
     tagName           : "v%VERSION%"
     tagMessage        : "Version v%VERSION%"
-    push              : false
+    push              : true
     pushTo            : "upstream"
     gitDescribeOptions: "--tags --always --abbrev=1 --dirty=d"
     globalReplace     : false
