@@ -109,6 +109,10 @@ module.exports = (grunt) ->
     "coveralls"
   ]
 
+  grunt.registerTask "update", [
+    "updateBowerJSON"
+  ]
+
 
   grunt.registerTask "updateTestCoverage", "updates test coverage", () ->
     grunt.util.spawn(
@@ -129,6 +133,35 @@ module.exports = (grunt) ->
     #   ) readFile file
 
     writeFile "build/README.md", readFile "README.md"
+    return
+
+
+  grunt.registerTask "updateBowerJSON", () ->
+    bower_filename   = "build/bower.json"
+    package_filename = "build/package.json"
+    bower_json       = readJSONFile bower_filename
+    package_json     = readJSONFile package_filename
+    keys = [
+      "name"
+      "version"
+      "description"
+      "main"
+      "keywords"
+      "license"
+      "homepage"
+    ]
+
+    bower_json = _.extend(
+      bower_json
+      _.pick(keys, package_json)
+      )
+    
+    bower_json.authors = [package_json.author]
+
+    # writeJSONFile file, 
+    # _.log _.extend bower_json, _.pick keys, package_json
+    _.log bower_json
+    writeJSONFile bower_filename, bower_json
     return
 
 

@@ -1,6 +1,6 @@
 {
   "name": "backwards",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A set of utility functions for functional programming in JavaScript",
   "main": "backwards.min.js",
   "scripts": {
@@ -22,6 +22,5 @@
   "bugs": {
     "url": "https://github.com/Omega3k/backwards.js/issues"
   },
-  "homepage": "https://github.com/Omega3k/backwards.js",
-  "devDependencies": {}
+  "homepage": "https://github.com/Omega3k/backwards.js"
 }
