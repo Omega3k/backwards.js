@@ -5,6 +5,7 @@
   "test",
   "tests",
   "test-suite",
+  "coverage"
   "_tmp",
   "docs",
   "src"
