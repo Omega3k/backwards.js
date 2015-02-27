@@ -1,6 +1,6 @@
 {
   "name": "backwards",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A set of utility functions for functional programming in JavaScript",
   "main": "backwards.min.js",
   "scripts": {

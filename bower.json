@@ -1,4 +1,4 @@
-{"name":"backwards","version":"0.0.9","homepage":"https://github.com/Omega3k/backwards.js","authors":["Svein Olav Risdal"],"description":"A set of utility functions for functional programming in JavaScript","main":"build/backwards.min.js","moduleType":["amd","globals","node"],"keywords":["js","javascript","fp","functional","functional programming"],"license":"MIT","ignore":[
+{"name":"backwards","version":"0.0.10","homepage":"https://github.com/Omega3k/backwards.js","authors":["Svein Olav Risdal"],"description":"A set of utility functions for functional programming in JavaScript","main":"build/backwards.min.js","moduleType":["amd","globals","node"],"keywords":["js","javascript","fp","functional","functional programming"],"license":"MIT","ignore":[
   "node_modules",
   "bower_components",
   "test",
