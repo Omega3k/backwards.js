@@ -1,8 +1,9 @@
 # https://github.com/vojtajina/grunt-bump
+# http://bob.yexley.net/creating-and-maintaining-your-own-bower-package/
 
 module.exports = 
   options:
-    files             : ["build/package.json", "build/bower.json"]
+    files             : ["build/package.json", "bower.json"]
     updateConfigs     : []
     commit            : false
     commitMessage     : "Release v%VERSION%"
