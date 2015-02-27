@@ -185,3 +185,6 @@ module.exports = (grunt) ->
   grunt.registerTask "createGitConfigJSON", () ->
     writeJSONFile "gitinfo.json", grunt.config.get "gitinfo"
     return
+
+# http://shields.io/
+# https://img.shields.io/badge/Awesome-Yes-green.svg
