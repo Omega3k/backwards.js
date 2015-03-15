@@ -23,5 +23,5 @@ module.exports =
 
   publish:
     options:
-      title  : "<%= package.name %> v<%= package.version %> published"
+      title  : "<%= package.name %> v<%= package.version + 1 %> published"
       message: "Published <%= package.name %> to both NPM and Bower. "

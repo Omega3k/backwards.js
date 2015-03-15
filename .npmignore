@@ -1,0 +1,14 @@
+.DS_Store
+.coveralls.yml
+.git
+.gitignore
+.npmignore
+.travis.yml
+Gruntfile.coffee
+TODO.md
+_tmp
+coverage
+docs
+node_modules
+src
+test-suite
