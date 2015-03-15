@@ -3,7 +3,7 @@
 
 module.exports = 
   options:
-    files             : ["build/package.json", "bower.json"]
+    files             : ["package.json", "bower.json"]
     updateConfigs     : []
     commit            : true
     commitMessage     : "Release v%VERSION%"
