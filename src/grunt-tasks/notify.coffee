@@ -18,5 +18,10 @@ module.exports =
 
   version_number:
     options:
-      title  : "Version number is updated"
-      message: "Updated backwards.VERSION and bower.json"
+      title  : "<%= package.name %> v<%= package.version %> updated"
+      message: "Updated backwards.VERSION variable and bower.json"
+
+  publish:
+    options:
+      title  : "<%= package.name %> v<%= package.version %> published"
+      message: "Published <%= package.name %> to both NPM and Bower. "

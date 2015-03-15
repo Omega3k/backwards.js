@@ -1,17 +1,1 @@
-{"name":"backwards","version":"0.0.10","homepage":"https://github.com/Omega3k/backwards.js","authors":["Svein Olav Risdal"],"description":"A set of utility functions for functional programming in JavaScript","main":"build/backwards.min.js","moduleType":["amd","globals","node"],"keywords":["js","javascript","fp","functional","functional programming"],"license":"MIT","ignore":[
-  "node_modules",
-  "bower_components",
-  "test",
-  "tests",
-  "test-suite",
-  "coverage",
-  "_tmp",
-  "docs",
-  "src",
-  ".coveralls.yml",
-  ".gitignore",
-  ".travis.yml",
-  "Gruntfile.coffee",
-  "LICENSE",
-  "TODO.md"
-]}
+{"name":"backwards","version":"0.0.11","homepage":"https://github.com/Omega3k/backwards.js","authors":["Svein Olav Risdal"],"description":"A set of utility functions for functional programming in JavaScript","main":"build/backwards.min.js","moduleType":["amd","globals","node"],"keywords":["js","javascript","fp","functional","functional programming"],"license":"MIT","ignore":["node_modules","bower_components","test","tests","test-suite","coverage","_tmp","docs","src",".coveralls.yml",".gitignore",".travis.yml","Gruntfile.coffee","TODO.md",".DS_Store",".git",".npmignore"]}

@@ -24,26 +24,29 @@ forEach       = _.forEach
 contains      = _.contains
 map           = _.map
 reduce        = _.reduce
+unique        = require( "underscore" ).unique
 
-timegrunt     = require "time-grunt"
 fs            = require "fs"
 readDir       = fs.readdirSync
 isFile        = (file) -> fs.statSync( file ).isFile()
-readFile      = (filename) ->
-  fs.readFileSync filename, encoding: "utf-8"
+readFile      = (file) ->
+  fs.readFileSync file, encoding: "utf-8"
 
 writeFile     = fs.writeFileSync
 readJSONFile  = compose JSON.parse, readFile
 
-writeJSONFile = curry (filename, data) ->
-  fs.writeFileSync filename, JSON.stringify data
+writeJSONFile = curry (file, data) ->
+  fs.writeFileSync file, JSON.stringify data
 
 
-replace       = curry (regexp, string, xs) -> xs.replace regexp, string
+replace       = curry (regexp, str, string) -> string.replace regexp, str
 split         = curry (regexp, string) -> string.split regexp
 join          = curry (regexp, array) -> array.join regexp
+concat        = curry (a, b) -> a.concat b
 lines         = split /\r\n|\r|\n/
 unlines       = join "\n"
+words         = split " "
+unwords       = join " "
 
 removeExt     = replace /.coffee$/, ""
 containsGrunt = contains "grunt-", 0
@@ -55,23 +58,38 @@ loadGruntTasksFromPath = (path) ->
   , {}, map removeExt, readDir path
 
 
-loadNpmTasks = (grunt, npm_tasks) ->
+
+
+module.exports = (grunt) ->
+
+  bashExec = (command_string, callback) ->
+    callback = callback or () ->
+    tmp      = split " ", command_string
+    cmd      = tmp[0]
+    args     = _.omit 1, tmp
+
+    grunt.util.spawn
+      cmd : cmd
+      args: args
+      callback
+    return
+
+
+  grunt.initConfig extend loadGruntTasksFromPath( "./src/grunt-tasks" ),
+    package  : readJSONFile "package.json"
+    bower    : readJSONFile "bower.json"
+    LICENSE  : readFile "LICENSE"
+    # backwards: readJSONFile "package.json"
+
   forEach (value, key) ->
     if containsGrunt key
       grunt.loadNpmTasks key
       return
-  , npm_tasks
+  , grunt.config.get( "package" ).devDependencies
 
 
-module.exports = (grunt) ->
-  grunt.initConfig extend loadGruntTasksFromPath( "./src/grunt-tasks" ),
-    package  : readJSONFile "package.json"
-    LICENSE  : readFile "LICENSE"
-    backwards: readJSONFile "build/package.json"
-  
-  loadNpmTasks grunt, grunt.config.get( "package" ).devDependencies
   grunt.task.run "notify_hooks"
-  timegrunt grunt
+  require( "time-grunt" )( grunt )
 
 
   grunt.registerTask "default", "dev"
@@ -86,25 +104,25 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask "build", [
-    "updateREADMEFile"
+    # "updateREADMEFile"
     "updateVersionNumber"
-    "notify:version_number"
+    # "notify:version_number"
     "coffee"
     # "browserify:dist"
     "jshint"
-    "tape"
+    # "tape"
     "uglify"
     "yuidoc"
   ]
 
   grunt.registerTask "test", [
     "build"
-    # "updateTestCoverage"
+    "updateTestCoverage"
     "connect"
     "saucelabs-custom"
   ]
 
-  grunt.registerTask "cover", [
+  grunt.registerTask "coverage", [
     "updateTestCoverage"
     "coveralls"
   ]
@@ -113,32 +131,88 @@ module.exports = (grunt) ->
     "updateBowerJSON"
   ]
 
+  grunt.registerTask "publish", [
+    "coverage"
+    "bump"
+    "publishToNPM"
+    "publishToBower"
+    "notify:publish"
+  ]
 
-  grunt.registerTask "updateTestCoverage", "updates test coverage", () ->
-    grunt.util.spawn(
-      cmd : "istanbul"
-      args: ["cover", "src/specs/_tape_tests.js"]
-      (error, result) ->
-        # grunt.task.run ["coveralls"] if not error?
-        return
-      )
+  grunt.registerTask "ignore", [
+    "updateIgnoreFiles"
+  ]
+
+  grunt.registerTask "updateIgnoreFiles", () ->
+    keep_files = [
+      "build"
+      "README.md"
+      "package.json"
+      "bower.json"
+      "LICENSE"
+    ]
+
+    directory_files = readDir __dirname
+    npm_ignore_file = readFile ".npmignore"
+
+    # Aggregate files in keep_files and lines in ".npmignore" that are negated. 
+    keep_files = concat keep_files, compose(
+      _.map _.omit 1
+      _.filter (str) -> /^!/.test str
+      lines
+      )( npm_ignore_file )
+
+    directory_files = compose(
+      _.filter (str) -> not _.contains str, 0, keep_files
+      )( readDir __dirname )
+
+    # Aggregate files 
+    ignore_files = compose(
+      unique
+      concat directory_files
+      # Filter out strings that should be kept
+      _.filter (str) -> not _.contains str, 0, keep_files
+      # Filter out strings that points to files that does not exist
+      _.filter (str) -> _.contains str, 0, directory_files
+      # Filter out empty strings
+      _.filter (str) -> str isnt ""
+      # Filter out comments
+      _.filter (str) -> not /^#/.test str
+      lines
+      )( npm_ignore_file )
+
+    bower        = grunt.config.get "bower"
+    bower.ignore = unique concat bower.ignore, ignore_files
+    grunt.config.set "bower", bower
+
+    writeFile ".npmignore", unlines ignore_files
+    writeFile "bower.json", JSON.stringify bower
     return
 
 
-  grunt.registerTask "updateREADMEFile", () ->
-    # writeFile file, compose(
-    #   unlines
-    #   map replaceVersionNumber
-    #   lines
-    #   ) readFile file
-
-    writeFile "build/README.md", readFile "README.md"
+  grunt.registerTask "publishToNPM", () ->
+    bashExec "sudo npm publish"
     return
+
+  grunt.registerTask "publishToBower", () ->
+    repo = grunt.config.get( "package" ).repository.url
+    bashExec "sudo bower register backwards #{ repo }"
+    return
+
+
+  grunt.registerTask "updateTestCoverage", () ->
+    bashExec "istanbul cover src/specs/_tape_tests.js"
+    return
+
+
+  # grunt.registerTask "updateREADMEFile", () ->
+  #   writeFile "build/README.md", readFile "README.md"
+  #   return
 
 
   grunt.registerTask "updateBowerJSON", () ->
-    bower_filename   = "build/bower.json"
-    package_filename = "build/package.json"
+    bower_filename   = "bower.json"
+    package_filename = "package.json"
     bower_json       = readJSONFile bower_filename
     package_json     = readJSONFile package_filename
     keys = [
@@ -154,23 +228,22 @@ module.exports = (grunt) ->
     bower_json = _.extend(
       bower_json
       _.pick(keys, package_json)
+      {
+        authors: [package_json.author]
+      }
       )
     
-    bower_json.authors = [package_json.author]
-
-    # writeJSONFile file, 
-    # _.log _.extend bower_json, _.pick keys, package_json
-    _.log bower_json
+    # bower_json.authors = [package_json.author]
     writeJSONFile bower_filename, bower_json
     return
 
 
   grunt.registerTask "updateVersionNumber", () ->
     file           = "src/backwards.coffee"
-    version_number = grunt.config.get( "backwards" ).version
+    version_number = grunt.config.get( "package" ).version
     
     replaceVersionNumber = replace(
-      "backwards.VERSION = \"0.0.5\""
+      "backwards.VERSION = \"undefined\""
       "backwards.VERSION = \"#{ version_number }\""
       )
 

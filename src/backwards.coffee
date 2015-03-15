@@ -45,7 +45,7 @@ The __VERSION__ property is a string indicating the version of __backwards__ as 
 @public
 ###
 
-backwards.VERSION = "0.0.6"
+backwards.VERSION = "0.0.10"
 
 
 ###*
@@ -934,7 +934,7 @@ The __partition__ function takes a predicate function and an array or a string, 
     };
 
     predicateString = function (x) {
-      return indexOf( x, 0, string );
+      return indexOf( x, 0, "element" );
     };
 
     partition( predicateArray, array );
@@ -954,7 +954,6 @@ partition = (f, xs) ->
       if f x, i, xs then acc[0].push x else acc[1].push x
       return
     , xs
-    # , slice.call xs
     acc
 
 backwards.partition = curry partition
@@ -969,6 +968,25 @@ toArray = (xs) ->
   else
     result = copy xs
   result
+
+
+escape = (html) ->
+  # result = new String html
+  result = html
+    .replace /&/g, "&amp;"
+    .replace /</g, "&lt;"
+    .replace />/g, "&gt;"
+    .replace /"/g, "&quot;"
+  if result is "#{ html }" then html else result
+
+unescape = (html) ->
+  # result = new String html
+  result = html
+    .replace /&amp;/g, "&"
+    .replace /&lt;/g, "<"
+    .replace /&gt;/g, ">"
+    .replace /&quot;/g, '"'
+  if result is "#{ html }" then html else result
 
 
 either = (a, b) ->

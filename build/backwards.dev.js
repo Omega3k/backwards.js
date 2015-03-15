@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-  var I, K, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, every, exists, extend, filter, first, flatten, forEach, hasOwn, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, join, keys, last, lines, map, max, maybe, min, multiply, noop, object, objectProto, omit, partition, pick, pluck, push, reduce, slice, some, split, subtract, toArray, toString, unlines, __curry, _delete,
+  var I, K, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, escape, every, exists, extend, filter, first, flatten, forEach, hasOwn, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, join, keys, last, lines, map, max, maybe, min, multiply, noop, object, objectProto, omit, partition, pick, pluck, push, reduce, slice, some, split, subtract, toArray, toString, unescape, unlines, __curry, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
 
@@ -79,7 +79,7 @@
   @public
    */
 
-  backwards.VERSION = "0.0.6";
+  backwards.VERSION = "0.0.10";
 
 
   /**
@@ -1087,7 +1087,7 @@
       };
   
       predicateString = function (x) {
-        return indexOf( x, 0, string );
+        return indexOf( x, 0, "element" );
       };
   
       partition( predicateArray, array );
@@ -1129,6 +1129,26 @@
       result = copy(xs);
     }
     return result;
+  };
+
+  escape = function(html) {
+    var result;
+    result = html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    if (result === ("" + html)) {
+      return html;
+    } else {
+      return result;
+    }
+  };
+
+  unescape = function(html) {
+    var result;
+    result = html.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"');
+    if (result === ("" + html)) {
+      return html;
+    } else {
+      return result;
+    }
   };
 
   either = function(a, b) {

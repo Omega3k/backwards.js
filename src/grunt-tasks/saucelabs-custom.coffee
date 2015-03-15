@@ -33,7 +33,6 @@ module.exports =
       concurrency  : 6
       build        : process.env.TRAVIS_JOB_ID
       browsers     : browsers_list
-      testname     : "<%= backwards.name %>@<%= backwards.version %>"
-      tags         : "<%= backwards.keywords %>"
-      # tags         : ["master"]
+      testname     : "<%= package.name %>@<%= package.version %>"
+      tags         : "<%= package.keywords %>"
       urls         : ["http://0.0.0.0:9999/test-suite/"]

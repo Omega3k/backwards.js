@@ -1,9 +1,10 @@
 module.exports =
   backwards_dev: 
-    files: ["src/backwards.coffee", "build/package.json"]
+    files: ["src/backwards.coffee", "package.json"]
     tasks: [
       "updateVersionNumber"
       "notify:version_number"
+      "updateBowerJSON"
       "coffee:backwards_dev"
       "jshint:backwards_dev"
       "tape"
@@ -26,8 +27,8 @@ module.exports =
     files: ["Gruntfile.coffee", "src/grunt-tasks/**/*.coffee"]
     tasks: ["notify:gruntfile"]
 
-  # package: 
-  #   files: ["build/package.json"]
-  #   tasks: [
-  #     "updateBackwardsVersionNumber"
-  #   ]
+  npm_ignore: 
+    files: [".npmignore"]
+    tasks: [
+      "updateBowerJSON"
+    ]
