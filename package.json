@@ -9,8 +9,7 @@
   "scripts": {
     "development": "grunt dev",
     "build": "grunt build",
-    "test": "grunt test",
-    "publish": "grunt publish"
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
