@@ -240,7 +240,8 @@ module.exports = (grunt) ->
 
 
   grunt.registerTask "updateVersionNumber", () ->
-    file           = "src/backwards.coffee"
+    devFile        = "build/backwards.dev.js"
+    minFile        = "build/backwards.min.js"
     version_number = grunt.config.get( "package" ).version
     
     replaceVersionNumber = replace(
@@ -248,17 +249,8 @@ module.exports = (grunt) ->
       "backwards.VERSION = \"#{ version_number }\""
       )
 
-    devFile = "build/backwards.dev.js"
-    minFile = "build/backwards.min.js"
-
     writeFile devFile, replaceVersionNumber readFile devFile
     writeFile minFile, replaceVersionNumber readFile minFile
-
-    # writeFile file, compose(
-    #   unlines
-    #   map replaceVersionNumber
-    #   lines
-    #   ) readFile file
     return
 
 
