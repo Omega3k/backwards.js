@@ -1,6 +1,6 @@
 {
   "name": "backwards",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "build/backwards.min.js",
   "author": "Svein Olav Risdal",
   "license": "MIT",
