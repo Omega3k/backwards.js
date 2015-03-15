@@ -45,7 +45,7 @@ The __VERSION__ property is a string indicating the version of __backwards__ as 
 @public
 ###
 
-backwards.VERSION = "0.0.10"
+backwards.VERSION = "undefined"
 
 
 ###*

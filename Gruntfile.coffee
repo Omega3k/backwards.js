@@ -105,12 +105,12 @@ module.exports = (grunt) ->
 
   grunt.registerTask "build", [
     # "updateREADMEFile"
-    "updateVersionNumber"
     # "notify:version_number"
     "coffee"
     # "browserify:dist"
     "jshint"
     # "tape"
+    "updateVersionNumber"
     "uglify"
     "yuidoc"
   ]
@@ -132,6 +132,7 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask "publish", [
+    "build"
     "coverage"
     "bump"
     "publishToNPM"
@@ -247,11 +248,17 @@ module.exports = (grunt) ->
       "backwards.VERSION = \"#{ version_number }\""
       )
 
-    writeFile file, compose(
-      unlines
-      map replaceVersionNumber
-      lines
-      ) readFile file
+    devFile = "build/backwards.dev.js"
+    minFile = "build/backwards.min.js"
+
+    writeFile devFile, replaceVersionNumber readFile devFile
+    writeFile minFile, replaceVersionNumber readFile minFile
+
+    # writeFile file, compose(
+    #   unlines
+    #   map replaceVersionNumber
+    #   lines
+    #   ) readFile file
     return
 
 
