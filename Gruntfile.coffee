@@ -9,6 +9,9 @@
 # https://github.com/gruntjs/grunt-contrib-yuidoc
 # http://yui.github.io/yuidoc/syntax
 
+# https://github.com/spadgos/sublime-jsdocs
+# http://stackoverflow.com/questions/4967886/custom-tag-in-jsdoc-toolkit
+
 # http://www.thomasboyt.com/2013/09/01/maintainable-grunt.html
 # http://www.jayway.com/2014/01/20/clean-grunt/
 # http://www.html5rocks.com/en/tutorials/tooling/supercharging-your-gruntfile/
@@ -16,7 +19,7 @@
 
 "use strict"
 
-_             = require "backwards"
+_             = require "./src/backwards.coffee"
 compose       = _.compose
 curry         = _.curry
 extend        = _.extend
@@ -27,7 +30,19 @@ reduce        = _.reduce
 unique        = require( "underscore" ).unique
 
 fs            = require "fs"
+###*
+ * @function readDir
+### 
+###*
+ * [readDir description]
+ * @type {[type]}
+###
 readDir       = fs.readdirSync
+
+###*
+ * @param  {String} file
+ * @return {Boolean}
+###
 isFile        = (file) -> fs.statSync( file ).isFile()
 readFile      = (file) ->
   fs.readFileSync file, encoding: "utf-8"
@@ -50,6 +65,12 @@ unwords       = join " "
 
 removeExt     = replace /.coffee$/, ""
 containsGrunt = contains "grunt-", 0
+
+loadGruntTasksFromPath = (path) ->
+  reduce (acc, filename) ->
+    acc[ filename ] = require "#{ path }/#{ filename }"
+    acc
+  , {}, map removeExt, readDir path
 
 loadGruntTasksFromPath = (path) ->
   reduce (acc, filename) ->
