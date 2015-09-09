@@ -1,11 +1,9 @@
 # https://www.npmjs.com/package/grunt-saucelabs
 
 addBrowser = (os, name, version) ->
-  return {
-    platform   : os
-    browserName: name
-    version    : version
-  }
+  platform   : os
+  browserName: name
+  version    : version
 
 browsers_list = [
   addBrowser "Windows 8.1", "firefox"
@@ -19,8 +17,8 @@ browsers_list = [
   addBrowser "Windows XP" , "internet explorer", "8"
   addBrowser "OS X 10.9"  , "firefox"
   addBrowser "OS X 10.9"  , "chrome"
-  addBrowser "OS X 10.9"  , "iphone"
-  addBrowser "OS X 10.9"  , "ipad"
+  # addBrowser "OS X 10.9"  , "iphone"
+  # addBrowser "OS X 10.9"  , "ipad"
   addBrowser "Linux"      , "firefox"
   addBrowser "Linux"      , "chrome"
   addBrowser "Linux"      , "opera"
