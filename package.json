@@ -9,8 +9,8 @@
   "scripts": {
     "start": "grunt dev",
     "build": "grunt build",
-    "test" : "grunt test",
-    "docs" : "jsdoc build/backwards.dev.js --destination ./docs/"
+    "test": "grunt test",
+    "docs": "jsdoc build/backwards.dev.js --destination ./docs/"
   },
   "repository": {
     "type": "git",
