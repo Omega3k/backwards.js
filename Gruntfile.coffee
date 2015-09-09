@@ -31,22 +31,7 @@ reduce        = _.reduce
 unique        = require( "underscore" ).unique
 
 fs            = require "fs"
-###*
- * @function readDirs
-### 
-###*
- * [readDir description]
- * @type {Function}
- * @name {readDir}
- * @param {String} file Filepath/filename. 
- * @return {String} The contents of the file (utf-8 formatted text). 
-###
 readDir       = fs.readdirSync
-
-###*
- * @param  {String} file
- * @return {Boolean}
-###
 isFile        = (file) -> fs.statSync( file ).isFile()
 readFile      = (file) ->
   fs.readFileSync file, encoding: "utf-8"
@@ -56,6 +41,14 @@ readJSONFile  = compose JSON.parse, readFile
 
 writeJSONFile = curry (file, data) ->
   fs.writeFileSync file, JSON.stringify data
+
+# https://www.npmjs.com/package/shelljs
+
+require "shelljs/global"
+grunt = require "grunt"
+
+grunt.registerTask "docs"     , () -> exec "npm run docs"
+grunt.registerTask "coverage" , () -> exec "npm run coverage"
 
 
 replace       = curry (regexp, str, string) -> string.replace regexp, str

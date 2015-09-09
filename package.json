@@ -10,7 +10,8 @@
     "start": "grunt dev",
     "build": "grunt build",
     "test": "grunt test",
-    "docs": "jsdoc build/backwards.dev.js --destination ./docs/"
+    "docs": "jsdoc build/backwards.dev.js --destination ./docs/",
+    "coverage": "istanbul cover src/specs/_tape_tests.js"
   },
   "repository": {
     "type": "git",
@@ -52,6 +53,7 @@
     "grunt-tape": "0.0.2",
     "has-ansi": "^2.0.0",
     "hooker": "^0.2.3",
+    "istanbul": "^0.3.19",
     "jquery": "^2.1.1",
     "jsdoc": "^3.3.2",
     "lodash": "^2.4.1",
