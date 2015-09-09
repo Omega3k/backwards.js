@@ -9,6 +9,7 @@
 # https://github.com/gruntjs/grunt-contrib-yuidoc
 # http://yui.github.io/yuidoc/syntax
 
+# https://github.com/jsdoc3/jsdoc
 # https://github.com/spadgos/sublime-jsdocs
 # http://stackoverflow.com/questions/4967886/custom-tag-in-jsdoc-toolkit
 
@@ -31,11 +32,14 @@ unique        = require( "underscore" ).unique
 
 fs            = require "fs"
 ###*
- * @function readDir
+ * @function readDirs
 ### 
 ###*
  * [readDir description]
- * @type {[type]}
+ * @type {Function}
+ * @name {readDir}
+ * @param {String} file Filepath/filename. 
+ * @return {String} The contents of the file (utf-8 formatted text). 
 ###
 readDir       = fs.readdirSync
 
@@ -133,7 +137,8 @@ module.exports = (grunt) ->
     # "tape"
     "updateVersionNumber"
     "uglify"
-    "yuidoc"
+    # "yuidoc"
+    # "jsdoc"
   ]
 
   grunt.registerTask "test", [

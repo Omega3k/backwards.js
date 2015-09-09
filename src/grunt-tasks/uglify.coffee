@@ -6,19 +6,19 @@ LICENSE      = readFile "LICENSE"
 package_json = readJSONFile "package.json"
 
 module.exports =
-  options:
-    banner: """
-            /*
-            #{ LICENSE }
+  # options:
+  #   banner: """
+  #           /*
+  #           #{ LICENSE }
 
-            Source-Code: https://github.com/Omega3k/backwards.js
-            */
+  #           Source-Code: https://github.com/Omega3k/backwards.js
+  #           */
 
 
 
-            """
-    mangle:
-      except: ["jQuery", "Backbone"]
+  #           """
+  #   mangle:
+  #     except: ["jQuery", "Backbone"]
 
   backwards:
     files:

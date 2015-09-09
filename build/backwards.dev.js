@@ -1,8 +1,40 @@
 (function() {
   "use strict";
+
+  /**
+   * A set of utility functions for funtional programming in JavaScript. 
+   * @type {Object}
+   * @module backwards
+   * @author Svein Olav Risdal
+   * @license
+   * The MIT License (MIT)
+   * 
+   * Copyright (c) 2014 - 2015 Svein Olav Risdal
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining a
+   * copy of this software and associated documentation files (the
+   * "Software"), to deal in the Software without restriction, including 
+   * without limitation the rights to use, copy, modify, merge, publish, 
+   * distribute, sublicense, and/or sell copies of the Software, and to permit 
+   * persons to whom the Software is furnished to do so, subject to the 
+   * following conditions:
+   * 
+   * The above copyright notice and this permission notice shall be included
+   * in all copies or substantial portions of the Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+   * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+   * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+   * DEALINGS IN THE SOFTWARE.
+   */
   var I, K, add, append, array, arrayProto, backwards, compose, concat, contains, copy, curry, divide, either, escape, every, exists, extend, filter, first, flatten, forEach, hasOwn, indexOf, isArguments, isArray, isBoolean, isDate, isElement, isEmpty, isError, isFinite, isFunction, isNull, isNumber, isObject, isPromise, isRegExp, isString, isTypeOf, isUndefined, join, keys, last, lines, map, max, maybe, min, multiply, noop, object, objectProto, omit, partition, pick, pluck, push, reduce, slice, some, split, subtract, toArray, toString, unescape, unlines, __curry, _delete,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty;
+
+  backwards = {};
 
   array = Array;
 
@@ -48,6 +80,17 @@
     return a.push(b);
   };
 
+
+  /**
+   * [I description]
+   * @param {*} x Any value. 
+   * @return {*} Any value.
+   */
+
+  backwards.I = function(x) {
+    return x;
+  };
+
   I = function(x) {
     return x;
   };
@@ -57,38 +100,6 @@
       return x;
     };
   };
-
-
-  /**
-   * A set of utility functions for funtional programming in JavaScript. 
-   * @type {Object}
-   * @exports backwards
-   * @author Svein Olav Risdal
-   * @license
-   * The MIT License (MIT)
-   * 
-   * Copyright (c) 2014 - 2015 Svein Olav Risdal
-   *
-   * Permission is hereby granted, free of charge, to any person obtaining a copy
-   * of this software and associated documentation files (the "Software"), to deal
-   * in the Software without restriction, including without limitation the rights
-   * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-   * copies of the Software, and to permit persons to whom the Software is
-   * furnished to do so, subject to the following conditions:
-   * 
-   * The above copyright notice and this permission notice shall be included in 
-   * all copies or substantial portions of the Software.
-   *
-   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-   * SOFTWARE.
-   */
-
-  backwards = {};
 
 
   /**
@@ -228,6 +239,35 @@
   };
 
   backwards.compose = compose;
+
+
+  /**
+   * Compose your functions into a single function. 
+   * @type {Function}
+   * @param {...Function} fs Two or more functions that should be composed together. 
+   * @return {Function} The resulting function that is the result of composing together all the given functions.
+   */
+
+
+  /**
+   * Compose your functions into a single function. 
+   * @param  {...function} fs Two or functions that should be composed together. 
+   * @return {function}       The resulting function.
+   */
+
+  backwards.composer = function() {
+    var fs;
+    fs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    return function() {
+      var args, i;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      i = fs.length;
+      while (i--) {
+        args = [fs[i].apply(this, args)];
+      }
+      return args[0];
+    };
+  };
 
 
   /**

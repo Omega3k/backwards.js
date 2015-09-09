@@ -1,3 +1,15 @@
+# https://www.npmjs.com/package/shelljs
+# 
+require "shelljs/global"
+grunt = require "grunt"
+
+grunt.registerTask "docs", () ->
+  exec "npm run docs"
+
+#grunt.registerTask "updateTestCoverage", () ->
+  #bashExec "istanbul cover src/specs/_tape_tests.js"
+  #return
+
 module.exports =
   backwards_dev: 
     files: ["src/backwards.coffee", "package.json"]
@@ -8,7 +20,8 @@ module.exports =
       "coffee:backwards_dev"
       "jshint:backwards_dev"
       "tape"
-      "yuidoc"
+      # "yuidoc"
+      "docs"
     ]
 
   tests: 

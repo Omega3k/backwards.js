@@ -1,6 +1,38 @@
 "use strict"
 
 
+###*
+ * A set of utility functions for funtional programming in JavaScript. 
+ * @type {Object}
+ * @module backwards
+ * @author Svein Olav Risdal
+ * @license
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) 2014 - 2015 Svein Olav Risdal
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including 
+ * without limitation the rights to use, copy, modify, merge, publish, 
+ * distribute, sublicense, and/or sell copies of the Software, and to permit 
+ * persons to whom the Software is furnished to do so, subject to the 
+ * following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+###
+backwards = {}
+
+
 array       = Array
 arrayProto  = array.prototype
 slice       = arrayProto.slice
@@ -21,39 +53,14 @@ append      = (a, b) -> a += b
 concat      = (a, b) -> a.concat b
 push        = (a, b) -> a.push b
 
+###*
+ * [I description]
+ * @param {*} x Any value. 
+ * @return {*} Any value. 
+###
+backwards.I = (x) -> x
 I           = (x) -> x
 K           = (x) -> () -> x
-
-
-###*
- * A set of utility functions for funtional programming in JavaScript. 
- * @type {Object}
- * @exports backwards
- * @author Svein Olav Risdal
- * @license
- * The MIT License (MIT)
- * 
- * Copyright (c) 2014 - 2015 Svein Olav Risdal
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
-###
-backwards = {}
 
 
 ###*
@@ -167,6 +174,23 @@ compose = (fs...) ->
     args[0]
 
 backwards.compose = compose
+
+###*
+ * Compose your functions into a single function. 
+ * @type {Function}
+ * @param {...Function} fs Two or more functions that should be composed together. 
+ * @return {Function} The resulting function that is the result of composing together all the given functions. 
+###
+###*
+ * Compose your functions into a single function. 
+ * @param  {...function} fs Two or functions that should be composed together. 
+ * @return {function}       The resulting function. 
+###
+backwards.composer = (fs...) ->
+  (args...) ->
+    i = fs.length
+    while i-- then args = [fs[i].apply @, args]
+    args[0]
 
 
 ###*

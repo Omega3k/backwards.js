@@ -7,9 +7,10 @@
   "homepage": "https://github.com/Omega3k/backwards.js",
   "description": "A set of utility functions for functional programming in JavaScript",
   "scripts": {
-    "development": "grunt dev",
+    "start": "grunt dev",
     "build": "grunt build",
-    "test": "grunt test"
+    "test" : "grunt test",
+    "docs" : "jsdoc build/backwards.dev.js --destination ./docs/"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,6 @@
   },
   "devDependencies": {
     "ansi-styles": "^2.1.0",
-    "backwards": "0.0.6",
     "chalk": "^1.1.1",
     "date-time": "^1.0.0",
     "escape-string-regexp": "^1.0.3",
@@ -45,15 +45,18 @@
     "grunt-contrib-yuidoc": "^0.5.2",
     "grunt-coveralls": "^1.0.0",
     "grunt-gitinfo": "^0.1.7",
+    "grunt-jsdoc-plugin": "^0.1.4",
     "grunt-notify": "^0.4.1",
     "grunt-saucelabs": "^8.4.1",
     "grunt-tape": "0.0.2",
     "has-ansi": "^2.0.0",
     "hooker": "^0.2.3",
     "jquery": "^2.1.1",
+    "jsdoc": "^3.3.2",
     "lodash": "^2.4.1",
     "number-is-nan": "^1.0.0",
     "pretty-ms": "^2.0.0",
+    "shelljs": "^0.5.3",
     "strip-ansi": "^3.0.0",
     "supports-color": "^3.1.1",
     "tape": "^3.0.0",
