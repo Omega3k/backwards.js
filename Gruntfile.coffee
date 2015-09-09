@@ -1,5 +1,6 @@
 # Instructions for setting up saucelabs with Jasmine Testing Framework 
 # and Travis CI. 
+# http://docs.travis-ci.com/user/migrating-from-legacy/?utm_source=legacy-notice&utm_medium=banner&utm_campaign=legacy-upgrade
 # https://saucelabs.com/javascript/jasmine-js
 # http://docs.travis-ci.com/user/encrypting-files/#Manual-Encryption
 # https://saucelabs.com/platforms/webdriver
