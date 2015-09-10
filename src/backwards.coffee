@@ -4,12 +4,14 @@
 ###*
  * A set of utility functions for funtional programming in JavaScript. 
  * @type {Object}
- * @module backwards
+ * @exports backwards
+ * @namespace backwards
  * @author Svein Olav Risdal
+ * @copyright 2014 Svein Olav Risdal
  * @license
  * The MIT License (MIT)
  * 
- * Copyright (c) 2014 - 2015 Svein Olav Risdal
+ * Copyright (c) 2014 Svein Olav Risdal
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
@@ -30,6 +32,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
  * DEALINGS IN THE SOFTWARE.
 ###
+
 backwards = {}
 
 
@@ -147,13 +150,11 @@ backwards.curry = curry
 
 
 ###*
-Compose your functions to a single function. 
-
-@method compose
-@public
-@param fs* {Function} Two or more functions that should be composed together. 
-@return {Function} The result of composing all the argument functions. 
-@example
+ * Compose your functions into a single function. 
+ * @memberOf backwards
+ * @param  {...function} fs Two or more functions to compose. 
+ * @return {function}       The resulting function. 
+ * @example
     function addOne ( x ) {
       return x + 1;
     }
@@ -174,23 +175,6 @@ compose = (fs...) ->
     args[0]
 
 backwards.compose = compose
-
-###*
- * Compose your functions into a single function. 
- * @type {Function}
- * @param {...Function} fs Two or more functions that should be composed together. 
- * @return {Function} The resulting function that is the result of composing together all the given functions. 
-###
-###*
- * Compose your functions into a single function. 
- * @param  {...function} fs Two or functions that should be composed together. 
- * @return {function}       The resulting function. 
-###
-backwards.composer = (fs...) ->
-  (args...) ->
-    i = fs.length
-    while i-- then args = [fs[i].apply @, args]
-    args[0]
 
 
 ###*
@@ -1201,7 +1185,7 @@ unlines = join "\n"
 A monad that may or may not contain a value. The Maybe monad implements the map interface. 
 
 @class Maybe
-@namespace backwards
+@memberof backwards
 @constructor
 @public
 @example
