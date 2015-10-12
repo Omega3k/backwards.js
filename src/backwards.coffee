@@ -56,13 +56,22 @@ append      = (a, b) -> a += b
 concat      = (a, b) -> a.concat b
 push        = (a, b) -> a.push b
 
+
 ###*
- * [I description]
- * @param {*} x Any value. 
- * @return {*} Any value. 
+ * The identity function. 
+ * @memberOf backwards
+ * @sign a -> a
+ * @param  {x} x Any value. 
+ * @return {x} Any value. 
+ * @example
+ *    id( "some value" );   //=> "some value"
+ *    id( 1234 );           //=> 1234
 ###
-backwards.I = (x) -> x
+
 I           = (x) -> x
+backwards.I = I
+
+
 K           = (x) -> () -> x
 
 
@@ -152,20 +161,21 @@ backwards.curry = curry
 ###*
  * Compose your functions into a single function. 
  * @memberOf backwards
+ * @sign (b -> c) -> (a -> b) -> (a -> c)
  * @param  {...function} fs Two or more functions to compose. 
  * @return {function}       The resulting function. 
  * @example
-    function addOne ( x ) {
-      return x + 1;
-    }
-
-    function timesTwo ( x ) {
-      return x * 2;
-    }
-
-    var nine = compose( addOne, timesTwo )( 4 )   // 9
-      , ten  = compose( timesTwo, addOne )( 4 )   // 10
-    ;
+ *    function addOne (x) {
+ *      return x + 1;
+ *    }
+ *
+ *    function timesTwo (x) {
+ *      return x * 2;
+ *    }
+ *
+ *    var nine = compose( addOne, timesTwo )  //=> 9
+ *      , ten  = compose( timesTwo, addOne )  //=> 10
+ *    ;
 ###
 
 compose = (fs...) ->

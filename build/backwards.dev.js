@@ -113,7 +113,7 @@
   @public
    */
 
-  backwards.VERSION = "undefined";
+  backwards.VERSION = "0.0.15";
 
 
   /**
